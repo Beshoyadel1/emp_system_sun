@@ -1,0 +1,99 @@
+import '../../../../../../../../features/internal_services/custom_widget/container_return_to_page_setting.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../../../../core/api/dio_function/api_constants.dart';
+import '../../../../../../../../core/api_functions/order/update_order_status_model/update_order_status_request.dart';
+import '../../../../../../../../core/pages_widgets/general_widgets/snakbar.dart';
+import '../../../../../../../../features/order_status_design/cubit/order_status_cubit/order_status_cubit.dart';
+import '../../../../../../../../features/order_status_design/cubit/order_status_cubit/order_status_state.dart';
+import '../../../../../../core/api_functions/order/get_provider_orders_model/order_model.dart';
+import '../../../../../../features/order_status_design/order_details_new_order_emp/screens/custom_container_order.dart';
+import '../../../../../../core/language/language_constant.dart';
+import '../../../../../../features/order_status_design/custom_widget/container_sold.dart';
+import '../../../../../../features/order_status_design/custom_widget/title_with_sub_title_in_order_details_emp.dart';
+import '../../../../../../features/order_status_design/order_details_on_the_way_emp/screens/part_left_screen/container_contact_with_customer_order_details_on_the_way_emp.dart';
+import '../../../../../../features/order_status_design/order_details_on_the_way_emp/screens/part_left_screen/data_time_line_tile_order_details_on_the_way_emp.dart';
+import '../../../../../../core/theming/colors.dart';
+
+class DataContainerInListOrderDetailsWaitingEmp extends StatelessWidget {
+  final OrderModel order;
+  const DataContainerInListOrderDetailsWaitingEmp({super.key,required this.order});
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    bool isMobile = size.width <= 950;
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 30,
+        children: [
+          if(isMobile)
+            ContainerReturnToPageSetting(
+              text: AppLanguageKeys.back,
+              onTap: (){
+                Navigator.pop(context);
+              },
+            ),
+          const TitleWithSubTitleInOrderDetailsEmp(),
+          CustomContainerOrder(
+               order:order
+           ),
+          if(isMobile)
+            const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 30,
+              children: [
+                ContainerContactWithCustomerOrderDetailsOnTheWayEmp(),
+                DataTimeLineTileOrderDetailsOnTheWayEmp()
+              ],
+            ),
+          BlocProvider(
+            create: (_) => OrderStatusCubit(),
+            child: BlocListener<OrderStatusCubit, OrderStatusState>(
+              listener: (context, state) {
+                if (!context.mounted) return;
+
+                if (state is OrderStatusSuccess) {
+                  AppSnackBar.showSuccess(
+                    AppLanguageKeys.updateOrderStatusSuccessfully,
+                  );
+
+                  Navigator.pop(context, true);
+                }
+
+                if (state is OrderStatusError) {
+                  AppSnackBar.showError(state.message);
+                }
+              },
+              child: BlocBuilder<OrderStatusCubit, OrderStatusState>(
+                builder: (context, state) {
+                  return Stack(
+                    children: [
+                      ContainerSold(
+                        text: AppLanguageKeys.onTheWay,
+                        backGroundColor: AppColors.orangeColor,
+                        onTap: () {
+                          context.read<OrderStatusCubit>().updateOrderStatus(
+                            updateOrderStatusRequest: UpdateOrderStatusRequest(
+                              orderId: order.id ?? 0,
+                              status: OrderStatus.employeeInRoad,
+                            ),
+                          );
+                        },
+                      ),
+
+                      if (state is OrderStatusLoading)
+                        const Center(child: CircularProgressIndicator()),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
