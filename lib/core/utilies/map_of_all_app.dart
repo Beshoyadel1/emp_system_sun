@@ -1,5 +1,3 @@
-import '../../../features/accounts_management/first_screen_accounts_management_admin_sun/first_screen_accounts_management_admin_sun.dart';
-import '../../../features/accounts_management/list_payment_view/list_payment_view.dart';
 import '../../../features/internal_services/internal_services_statistics/Internal_services_page/ui/internal_orders_page.dart';
 import '../../../features/mobile_services/mobile_services_orders/first_screen_mobile_services_orders/first_screen_mobile_services_orders.dart';
 import '../../../features/mobile_services/mobile_services_statistics/spare_parts_page/ui/mobile_services_statistics_page.dart';
@@ -330,22 +328,6 @@ void getPages() {
             name: AppLanguageKeys.facilityAccountKey,
             number: PagesOfAllApp.permissionsGroupPageNumber,
             page: FacilityAccount(),
-          ),
-        ]),
-    const PageNodeModel(
-        name: AppLanguageKeys.accountManagementKey,
-        image: AppImageKeys.wallet,
-        number: PagesOfAllApp.walletPageNumber,
-        children: [
-          PageNodeModel(
-            name: AppLanguageKeys.accountManagementKey,
-            number: PagesOfAllApp.amountPageNumber,
-            page: FirstScreenAccountsManagementAdminSun(),
-          ),
-          PageNodeModel(
-            name: AppLanguageKeys.allPayments,
-            number: PagesOfAllApp.amountPageNumber2,
-            page: ListPaymentView(),
           ),
         ]),
     const PageNodeModel(

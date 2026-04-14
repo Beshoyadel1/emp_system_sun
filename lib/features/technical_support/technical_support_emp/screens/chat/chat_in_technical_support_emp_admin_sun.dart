@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../../../../../features/technical_support/technical_support_emp/screens/chat/screens/message/chat_list_design_in_technical_support_admin_sun.dart';
-import '../../../../../../features/technical_support/technical_support_emp/screens/chat/screens/message/design_text_field_technical_support_admin_sun.dart';
+import '../../../../../features/technical_support/technical_support_emp/screens/chat/screens/message/chat_list_design_in_technical_support_admin_sun.dart';
+import '../../../../../features/technical_support/technical_support_emp/screens/chat/screens/message/design_text_field_technical_support_admin_sun.dart';
 import '../../../../../../../core/theming/colors.dart';
-
 class ChatInTechnicalSupportEmpAdminSun  extends StatelessWidget {
   const ChatInTechnicalSupportEmpAdminSun({super.key});
 

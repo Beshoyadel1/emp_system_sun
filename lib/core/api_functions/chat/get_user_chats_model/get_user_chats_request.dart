@@ -1,16 +1,16 @@
-class GetWorkTeamChatRequest {
-  final int user;
+class GetUserChatsRequest {
+  final int userId;
   final int userType;
 
-  GetWorkTeamChatRequest({
-    required this.user,
+  GetUserChatsRequest({
+    required this.userId,
     required this.userType,
 
   });
 
   Map<String, dynamic> toJson() {
     return {
-      "user": user,
+      "userId": userId,
       "userType": userType,
     };
   }

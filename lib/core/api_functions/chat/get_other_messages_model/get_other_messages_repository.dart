@@ -12,7 +12,7 @@ Future<void> getOtherMessagesFunction({
   try {
     await Network.postDataWithBodyAndParams(
       {},
-      getOtherMessagesRequest.toJson(), // params
+      getOtherMessagesRequest.toJson(),
       ApiLink.getOtherMessages,
     );
     AppSnackBar.showSuccess(AppLanguageKeys.getOtherMessagesSuccessfully);

@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../../../features/technical_support/logic/chat_details_cubit/chat_details_cubit.dart';
 import '../../../../../../../../../core/language/language_constant.dart';
 import '../../../../../../../../../core/pages_widgets/text_form_field_widget.dart';
 import '../../../../../../../../../core/theming/colors.dart';
@@ -45,6 +47,13 @@ class _DesignTextFieldTechnicalSupportAdminSunState extends State<DesignTextFiel
         enabledBorderRadius:BorderRadius.circular(10),
         focusedBorderRadius: BorderRadius.circular(10),
         suffixIcon: Icons.send,
+        suffixOnPressed: () {
+          final text = textFormFieldWidget.text;
+
+          context.read<ChatDetailsCubit>().sendMessage(text);
+
+          textFormFieldWidget.clear();
+        },
       ),
     );
   }

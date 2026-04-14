@@ -5,14 +5,15 @@ import '../../../../../../../../../core/theming/fonts.dart';
 import '../../../../../../../../../core/theming/text_styles.dart';
 
 class TextDirectionTechnicalSupportAdminSun extends StatelessWidget {
-  final String textMessage;
+  final String? textMessage,timeMessage;
   final bool isSender, isSeen;
 
   const TextDirectionTechnicalSupportAdminSun({
     super.key,
-    required this.textMessage,
+     this.textMessage,
     this.isSender = false,
     this.isSeen = false,
+    this.timeMessage
   });
 
   @override
@@ -23,8 +24,8 @@ class TextDirectionTechnicalSupportAdminSun extends StatelessWidget {
         crossAxisAlignment:
         isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
-          TextInAppWidget(
-            text: '8:10 pm',
+           TextInAppWidget(
+            text: timeMessage??'8:10 pm',
             textColor: AppColors.darkColor,
             fontWeightIndex: FontSelectionData.regularFontFamily,
             textSize: 10,
@@ -76,11 +77,11 @@ class TextDirectionTechnicalSupportAdminSun extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 5.0),
       padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
-        color: isSender ? AppColors.orangeColor : AppColors.whiteColor,
+        color: isSender ? AppColors.orangeColor : AppColors.blackColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: TextInAppWidget(
-        text: textMessage,
+        text: textMessage??"",
         textColor: isSender ? AppColors.whiteColor : AppColors.darkColor,
         fontWeightIndex: FontSelectionData.regularFontFamily,
         textSize: 14,

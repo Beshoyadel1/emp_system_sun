@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../../../../../features/technical_support/technical_support_emp/screens/team_work/list_data_container_design_team_work_admin_sun.dart';
-import '../../../../../../../core/theming/colors.dart';
+import '../../../../../features/technical_support/technical_support_emp/screens/team_work/list_data_container_design_team_work_admin_sun.dart';
+import '../../../../../core/theming/colors.dart';
 
 class ContainerDesignTeamWorkAdminSun extends StatelessWidget {
   const ContainerDesignTeamWorkAdminSun({super.key});

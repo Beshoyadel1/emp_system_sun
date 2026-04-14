@@ -23,4 +23,12 @@ class OrderFunctions {
 
     return "${parsed.day}/${parsed.month}/${parsed.year}";
   }
+  static String formatDateFromDateTime(DateTime? date) {
+    if (date == null) return "";
+    return "${date.year}/${date.month}/${date.day}";
+  }
+  static String formatTime(DateTime? date) {
+    if (date == null) return "";
+    return "${date.hour}:${date.minute}";
+  }
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
-import '../../../../../../features/technical_support/custom_widget/row_message_support_widget.dart';
-import '../../../../../../../core/theming/assets.dart';
-import '../../../../../../../core/language/language_constant.dart';
-import '../../../../../../../core/pages_widgets/text_form_field_widget.dart';
-import '../../../../../../../core/theming/colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../features/technical_support/logic/chat_details_cubit/chat_details_cubit.dart';
+import '../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/order_funcations/order_functions.dart';
+import '../../../../../features/technical_support/custom_widget/row_message_support_widget.dart';
+import '../../../../../features/technical_support/logic/message_cubit/message_cubit.dart';
+import '../../../../../features/technical_support/logic/message_cubit/message_state.dart';
+
 
 class SearchWithListDataChatAdminSun extends StatefulWidget {
   const SearchWithListDataChatAdminSun({super.key});
@@ -15,6 +17,7 @@ class SearchWithListDataChatAdminSun extends StatefulWidget {
 
 class _SearchWithListDataChatAdminSunState
     extends State<SearchWithListDataChatAdminSun> {
+
   final TextEditingController textFormController = TextEditingController();
 
   @override
@@ -23,90 +26,85 @@ class _SearchWithListDataChatAdminSunState
     super.dispose();
   }
 
-  final List<Map<String, String>> data = const [
-    {
-      "image": AppImageKeys.support_message_emp1,
-      "name": "الأدمن",
-      "message": "تمام",
-      "time": "12m"
-    },
-    {
-      "image": AppImageKeys.support_message_emp2,
-      "name": "المحاسب",
-      "message": "شكرا أخي",
-      "time": "12m"
-    },
-    {
-      "image": AppImageKeys.support_message_emp3,
-      "name": "الأدمن",
-      "message": "رقم الطلب #444 فيه مشكلة",
-      "time": "12m"
-    },
-    {
-      "image": AppImageKeys.support_message_emp4,
-      "name": "المحاسب",
-      "message": "شكرا أخي",
-      "time": "12m"
-    },
-    {
-      "image": AppImageKeys.support_message_emp4,
-      "name": "الأدمن",
-      "message": "رقم الطلب #444 فيه مشكلة",
-      "time": "12m"
-    },
-    {
-      "image": AppImageKeys.support_message_emp4,
-      "name": "المحاسب",
-      "message": "شكرا أخي",
-      "time": "12m"
-    },
-    {
-      "image": AppImageKeys.support_message_emp4,
-      "name": "الأدمن",
-      "message": "رقم الطلب #444 فيه مشكلة",
-      "time": "12m"
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 400,
-      child: Column(
-        children: [
-          TextFormFieldWidget(
-            textFormController: textFormController,
-            fillColor: AppColors.greyColorSearch,
-            hintText: AppLanguageKeys.searchInMessages,
-            hintTextSize: 11,
-            hintTextColor: AppColors.darkColor.withOpacity(0.4),
-            textSize: 12,
-            contentPadding: const EdgeInsets.all(5),
-            focusedBorderRadius: BorderRadius.circular(5),
-            enabledBorderRadius: BorderRadius.circular(5),
-          ),
+    return BlocBuilder<MessageCubit, MessageState>(
+      builder: (context, state) {
 
-          const SizedBox(height: 20),
+        if (state is MessageLoading) {
+          return const SizedBox(
+            height: 300,
+            child: Center(child: CupertinoActivityIndicator()),
+          );
+        }
 
-          Expanded(
-            child: ListView.separated(
-              padding: EdgeInsets.zero,
-              itemCount: data.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 10),
-              itemBuilder: (context, index) {
-                final item = data[index];
+        if (state is MessageError) {
+          return SizedBox(
+            height: 300,
+            child: Center(child: Text(state.message)),
+          );
+        }
 
-                return RowMessageSupportWidget(
-                  imagePath: item["image"]!,
-                  userName: item["name"]!,
-                  message: item["message"]!,
-                  time: item["time"]!,
-                );
-              },
+        if (state is MessageSuccess) {
+
+          final messages = state.messages;
+
+          if (messages.isEmpty) {
+            return const SizedBox(
+              height: 300,
+              child: Center(child: Text("No messages")),
+            );
+          }
+
+          return SizedBox(
+            height: 400,
+            child: Column(
+              children: [
+                // TextFormFieldWidget(
+                //   textFormController: textFormController,
+                //   fillColor: AppColors.greyColorSearch,
+                //   hintText: AppLanguageKeys.searchInMessages,
+                //   hintTextSize: 11,
+                //   hintTextColor: AppColors.darkColor.withOpacity(0.4),
+                //   textSize: 12,
+                //   contentPadding: const EdgeInsets.all(5),
+                //   focusedBorderRadius: BorderRadius.circular(5),
+                //   enabledBorderRadius: BorderRadius.circular(5),
+                // ),
+                // const SizedBox(height: 20),
+
+                Expanded(
+                  child: ListView.separated(
+                    padding: EdgeInsets.zero,
+                    itemCount: messages.length,
+                    separatorBuilder: (_, __) =>
+                    const SizedBox(height: 10),
+                    itemBuilder: (context, index) {
+
+                      final msg = messages[index];
+
+                      return RowMessageSupportWidget(
+                        imageBytes: msg.userImage,
+                        userName: msg.userName,
+                        message: msg.lastMessage?.message ?? "",
+                        time: OrderFunctions.formatTime(msg.lastMessage?.date),
+                        onTap: (){
+                          context.read<ChatDetailsCubit>().loadChat(
+                            toUserId: msg.userId ?? 0,
+                            toUserType: msg.userType ?? 0,
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
+          );
+        }
+
+        return const SizedBox();
+      },
     );
   }
 }
