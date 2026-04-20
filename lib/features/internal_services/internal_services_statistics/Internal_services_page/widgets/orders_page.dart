@@ -1,11 +1,15 @@
+import 'package:emp_system_sun/features/cars_haraj_page/model/car_filter/car_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/cubit/new_orders_cubit/new_orders_cubit.dart';
 import '../../../../../core/language/language_constant.dart';
 import '../../../../../core/pages_widgets/general_widgets/custom_container.dart';
 import '../../../../../core/theming/colors.dart';
 import '../../../../../core/theming/text_styles.dart';
 import '../../../../../features/cars_haraj_page/model/filter_orders_model/filter_orders_model.dart';
+import '../../../../../features/cars_haraj_page/model/internal_orders_filter/internal_orders_filter.dart';
+import '../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/get_provider_internal_order/get_provider_internal_order_state.dart';
 import '../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/tabs_cubit/tabs_cubit.dart';
 import '../../../../../features/internal_services/internal_services_statistics/Internal_services_page/widgets/filters_tabs_widget.dart';
 
@@ -47,12 +51,23 @@ class OrdersPage extends StatelessWidget {
               ],
             ),
             Expanded(
-                child: BlocProvider(
-              create: (_) => TabsCubit(),
-              child: FiltersTabsWidget(
-                filterOptions: filterOrders,
+              child: MultiBlocProvider(
+                providers: [
+                  BlocProvider(create: (_) => TabsCubit()),
+                  BlocProvider(
+                    create: (_) => GetProviderInternalOrderCubit()
+                      ..loadInternalOrders(
+                        serviceId: MainCategoryConstants.maintenanceAndInternalServicesID,
+                        orderType: mapOrderType(0),
+                      ),
+                  ),
+                ],
+                child: FiltersTabsWidget(
+                  filterOptions: filterOrders,
+
+                ),
               ),
-            )),
+            ),
             // Center(child: NumberIndicator())
           ],
         ),

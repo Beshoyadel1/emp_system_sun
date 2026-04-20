@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
-import '../../../../../../../../core/api_functions/order/get_provider_orders_model/order_model.dart';
-import '../../../../../../../../features/internal_services/internal_orders/custom_widget/row_image_with_title_widget.dart';
+import '../../../../../../../core/api_functions/order/get_provider_orders_model/order_model.dart';
+import '../../../../../../../features/internal_services/internal_orders/custom_widget/row_image_with_title_widget.dart';
 import '../../../../../../../../features/internal_services/internal_orders/custom_widget/row_image_with_title_orange_and_sub_title_black_widget.dart';
 import '../../../../../../../../features/internal_services/internal_orders/custom_widget/text_with_container_status.dart';
 import '../../../../../../../../features/internal_services/internal_orders/custom_widget/Column_date_order_with_time_widget.dart';
@@ -22,7 +22,7 @@ class CustomTabSecondPartDataContainerInListDataFirstScreenInternalOrders
       timePart5,
       pricePart6;
 
-  final int? status;
+  final int? status,serviceId;
   final Uint8List? imagePathPart1,imagePathPart3;
   final OrderModel order;
 
@@ -41,6 +41,7 @@ class CustomTabSecondPartDataContainerInListDataFirstScreenInternalOrders
     required this.timePart5,
     required this.pricePart6,
     required this.order,
+    required this.serviceId
   });
 
   @override
@@ -94,9 +95,11 @@ class CustomTabSecondPartDataContainerInListDataFirstScreenInternalOrders
         ),
          Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [Expanded(child: ContainerDetailsWidget(
+          children: [Expanded(child:
+          ContainerDetailsWidget(
             status: status ?? 0,
             order: order,
+            serviceId: serviceId??5,
           ))],
         ),
       ],

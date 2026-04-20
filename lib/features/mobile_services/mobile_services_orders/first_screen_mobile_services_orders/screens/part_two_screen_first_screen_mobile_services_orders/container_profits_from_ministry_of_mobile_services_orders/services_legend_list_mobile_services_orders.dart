@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../../../../../core/api_functions/statistics/get_provider_main_service_statistics_model/sub_service_summaries_request.dart';
-import '../../../../../../../../core/theming/colors.dart';
-import '../../../../../../../../features/internal_services/internal_orders/custom_widget/row_circle_color_text_percentage_widget.dart';
+import '../../../../../../../core/api_functions/statistics/get_provider_main_service_statistics_model/sub_service_summaries_request.dart';
+import '../../../../../../../core/theming/colors.dart';
+import '../../../../../../../features/internal_services/internal_orders/custom_widget/row_circle_color_text_percentage_widget.dart';
 
 class ServicesLegendListMobileServicesOrders extends StatelessWidget {
 

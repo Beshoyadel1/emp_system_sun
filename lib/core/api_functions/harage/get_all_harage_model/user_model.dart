@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:flutter/cupertino.dart';
+import '../../../../core/language/language_cubit/language_cubit.dart';
 
 class UserModel {
   final int? id;
@@ -30,5 +32,21 @@ class UserModel {
       branchName: json['branchname'],
       branchLatinName: json['branchlatinname'],
     );
+  }
+  String getName(BuildContext context) {
+    final isArabic =
+        LanguageCubit.get(context).isAllAppLanguageArabic;
+
+    return isArabic
+        ? (name ?? "")
+        : (latinName ?? "");
+  }
+  String getBranch(BuildContext context) {
+    final isArabic =
+        LanguageCubit.get(context).isAllAppLanguageArabic;
+
+    return isArabic
+        ? (branchName ?? "")
+        : (branchLatinName ?? "");
   }
 }

@@ -16,7 +16,7 @@ Future<void> makeChatViewedFunction({
       makeChatViewedRequest.toJson(), // params
       ApiLink.makeChatViewed,
     );
-    AppSnackBar.showSuccess(AppLanguageKeys.makeChatViewedSuccessfully);
+    //AppSnackBar.showSuccess(AppLanguageKeys.makeChatViewedSuccessfully);
   } catch (e) {
     AppSnackBar.showError(
       e is DioException

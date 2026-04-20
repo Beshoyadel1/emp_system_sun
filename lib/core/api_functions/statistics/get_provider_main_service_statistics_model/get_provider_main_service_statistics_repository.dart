@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import '../../../../core/api_functions/statistics/get_provider_main_service_statistics_model/data_points_request.dart';
 import '../../../../core/api/dio_function/failures.dart';
-import '../../../../core/language/language_constant.dart';
 import '../../../../core/pages_widgets/general_widgets/snakbar.dart';
 import '../../../../core/api_functions/statistics/get_provider_main_service_statistics_model/statistics_response.dart';
 import '../../../../core/api_functions/statistics/get_provider_main_service_statistics_model/sub_service_summaries_request.dart';
@@ -32,9 +31,9 @@ Future<StatisticsResponse> getProviderMainServiceStatisticsFunction({
     final chartPoints =
         (chartJson as List).map((e) => DataPointsRequest.fromJson(e)).toList();
 
-    AppSnackBar.showSuccess(
-      AppLanguageKeys.getProviderMainServiceStatisticsSuccessfully,
-    );
+    // AppSnackBar.showSuccess(
+    //   AppLanguageKeys.getProviderMainServiceStatisticsSuccessfully,
+    // );
     return StatisticsResponse(
       services: services,
       averageRate: averageRate,

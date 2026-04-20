@@ -1,6 +1,8 @@
-import 'package:emp_system_sun/core/api_functions/order/get_provider_orders_model/order_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/api_functions/order/get_provider_orders_model/order_model.dart';
+import '../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/get_provider_internal_order/get_provider_internal_order_state.dart';
 import '../../../../../../../core/pages_widgets/general_widgets/navigate_to_page_widget.dart';
 import '../../../../../../../features/order_status_design/order_details_cancel_order_emp/order_details_cancel_order_emp.dart';
 import '../../../../../../../features/order_status_design/order_details_new_order_emp/order_details_new_order_emp.dart';
@@ -18,7 +20,7 @@ import '../../../../core/api/dio_function/api_constants.dart';
 
 class ContainerDetailsWidget extends StatelessWidget {
   final String? title;
-  final int status;
+  final int status,serviceId;
   final Color? backGroundColor, textColor, borderColor;
   final OrderModel order;
 
@@ -30,104 +32,59 @@ class ContainerDetailsWidget extends StatelessWidget {
     this.borderColor,
     this.backGroundColor,
     required this.order,
+    required this.serviceId
   });
 
-  void _handleNavigation(BuildContext context) {
+  void _handleNavigation(BuildContext context) async {
+    Widget page;
+
     switch (status) {
       case OrderStatus.newOrderForProvider:
-        Navigator.push(
-          context,
-          NavigateToPageWidget(
-            OrderDetailsNewOrderEmp(
-              order: order,
-            ),
-          ),
-        );
-        break;
       case OrderStatus.newOrderForCompany:
-        Navigator.push(
-          context,
-          NavigateToPageWidget(
-            OrderDetailsNewOrderEmp(order: order),
-          ),
-        );
+        page = OrderDetailsNewOrderEmp(order: order);
         break;
 
       case OrderStatus.orderCompleted:
-        Navigator.push(
-          context,
-          NavigateToPageWidget(
-             OrderDetailsOrderReceivedEmp(
-              order: order,
-            ),
-          ),
-        );
+        page = OrderDetailsOrderReceivedEmp(order: order);
         break;
 
       case OrderStatus.employeeInRoad:
-        Navigator.push(
-          context,
-          NavigateToPageWidget(
-            OrderDetailsOnTheWayEmp(
-              order: order,
-            ),
-          ),
-        );
+        page = OrderDetailsOnTheWayEmp(order: order);
         break;
 
       case OrderStatus.workInProgress:
-        Navigator.push(
-          context,
-          NavigateToPageWidget(
-             OrderDetailsUnderServiceEmp(
-                order:order
-            ),
-          ),
-        );
+        page = OrderDetailsUnderServiceEmp(order: order);
         break;
 
       case OrderStatus.rejectedByProvider:
-        Navigator.push(
-          context,
-          NavigateToPageWidget(
-             OrderDetailsRejectByProviderOrderEmp(
-              order: order,
-            ),
-          ),
-        );
+        page = OrderDetailsRejectByProviderOrderEmp(order: order);
         break;
+
       case OrderStatus.rejectedByCompany:
-        Navigator.push(
-          context,
-          NavigateToPageWidget(
-             OrderDetailsRejectByCompanyOrderEmp(
-              order: order,
-            ),
-          ),
-        );
+        page = OrderDetailsRejectByCompanyOrderEmp(order: order);
         break;
+
       case OrderStatus.cancelledByUser:
-        Navigator.push(
-          context,
-          NavigateToPageWidget(
-            OrderDetailsCancelOrderEmp(
-              order: order,
-            ),
-          ),
-        );
+        page = OrderDetailsCancelOrderEmp(order: order);
         break;
+
       case OrderStatus.waitingAppointment:
-        Navigator.push(
-          context,
-          NavigateToPageWidget(
-             OrderDetailsWaitingEmp(
-                order:order
-            ),
-          ),
-        );
+        page = OrderDetailsWaitingEmp(order: order);
         break;
+
       default:
-        break;
+        return;
+    }
+
+    final result = await Navigator.push(
+      context,
+      NavigateToPageWidget(page),
+    );
+
+    if (result == true && context.mounted) {
+      context.read<GetProviderInternalOrderCubit>().loadInternalOrders(
+        serviceId:serviceId,
+      );
     }
   }
 

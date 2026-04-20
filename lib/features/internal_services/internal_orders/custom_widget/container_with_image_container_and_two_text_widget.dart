@@ -8,6 +8,7 @@ import '../../../../../core/theming/text_styles.dart';
 class ContainerWithImageContainerAndTwoTextWidget extends StatelessWidget {
   final String title, subTitle;
   final Uint8List? imagePath;
+
   const ContainerWithImageContainerAndTwoTextWidget({
     super.key,
     required this.imagePath,
@@ -18,10 +19,10 @@ class ContainerWithImageContainerAndTwoTextWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:const EdgeInsetsGeometry.symmetric(vertical: 10, horizontal: 25),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
-        borderRadius:const BorderRadius.all(Radius.circular(20)),
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
         border: Border.all(color: AppColors.greyColor.withOpacity(0.3)),
         boxShadow: [
           BoxShadow(
@@ -32,43 +33,40 @@ class ContainerWithImageContainerAndTwoTextWidget extends StatelessWidget {
         ],
       ),
       child: Row(
-        spacing: 10,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Flexible(
-            child: Container(
-              padding: const EdgeInsetsGeometry.symmetric(vertical: 10, horizontal: 10),
-              decoration: BoxDecoration(
-                color: AppColors.pinkColor,
-                borderRadius:const BorderRadius.all(Radius.circular(20)),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.darkColor.withOpacity(0.1),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Image.memory(imagePath!,width: 30,)
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: const BoxDecoration(
+              color: AppColors.pinkColor,
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+            ),
+            child: imagePath != null
+                ? Image.memory(imagePath!, width: 30)
+                : const SizedBox(width: 30),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextInAppWidget(
+                  text: title,
+                  textSize: 12,
+                  fontWeightIndex: FontSelectionData.regularFontFamily,
+                  textColor: AppColors.blackColor,
+                  maxLines: 1,
+                ),
+                const SizedBox(height: 5),
+                TextInAppWidget(
+                  text: subTitle,
+                  textSize: 12,
+                  fontWeightIndex: FontSelectionData.regularFontFamily,
+                  textColor: AppColors.orangeColor,
+                ),
+              ],
             ),
           ),
-          Column(
-            spacing: 5,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextInAppWidget(
-                text: title,
-                textSize: 12,
-                fontWeightIndex: FontSelectionData.regularFontFamily,
-                textColor: AppColors.blackColor,
-              ),
-              TextInAppWidget(
-                text: subTitle,
-                textSize: 12,
-                fontWeightIndex: FontSelectionData.regularFontFamily,
-                textColor: AppColors.orangeColor,
-              )
-            ],
-          )
         ],
       ),
     );

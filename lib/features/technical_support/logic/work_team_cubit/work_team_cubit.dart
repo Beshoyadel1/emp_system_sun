@@ -22,7 +22,7 @@ class WorkTeamCubit extends Cubit<WorkTeamState> {
       final data = await getWorkTeamChatFunction(
         request: GetWorkTeamChatRequest(
           user: user.userid??58,
-          userType: user.type??58,
+          userType: UserType.providerUser,
         ),
       );
 

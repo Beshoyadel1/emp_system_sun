@@ -13,3 +13,5 @@ class HideMenuState extends AppStates {}
 class ChangeSelectedPageIndexState extends AppStates {}
 
 class ChangeOpenedPagesState extends AppStates {}
+
+

@@ -26,4 +26,3 @@ Future<void> updateHarageFunction({required UpdateHarageRequest updateHarageRequ
     );
   }
 }
-

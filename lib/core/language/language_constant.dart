@@ -1,5 +1,4 @@
-
-import 'package:emp_system_sun/core/utilies/map_of_all_app.dart';
+import '../../../../core/utilies/map_of_all_app.dart';
 
 class AppLanguageKeys {
   //status//
@@ -20,6 +19,28 @@ class AppLanguageKeys {
   //end//
 
   //others//
+  static const String oldService = 'oldService';
+  static const String createService = 'createService';
+  static const String serviceNameAr = 'serviceNameAr';
+  static const String serviceNameEn = 'serviceNameEn';
+  static const String restAll = 'restAll';
+  static const String selectPricingTypeFirst = "selectPricingTypeFirst";
+  static const String cost = 'cost';
+  static const String confirmDelete = 'confirmDelete';
+  static const String description = 'description';
+  static const String mileage = 'mileage';
+  static const String carStatus = 'carStatus';
+  static const String emailOrPhoneInvalid = 'emailOrPhoneInvalid';
+  static const String phoneInvalid = 'phoneInvalid';
+  static const String userNotFound = 'userNotFound';
+  static const String wrongCode = 'wrongCode';
+  static const String loginFailed = 'loginFailed';
+  static const String enterOtp = 'enterOtp';
+  static const String verify = 'verify';
+  static const String subscriptionEndDate = 'subscriptionEndDate';
+  static const String subscriptionStartDate = 'subscriptionStartDate';
+  static const String annualPrice = 'annualPrice';
+  static const String monthlyPrice = 'monthlyPrice';
   static const String invoiceServices = 'invoiceServices';
   static const String transferDate = 'transferDate';
   static const String ordersCommission = 'ordersCommission';

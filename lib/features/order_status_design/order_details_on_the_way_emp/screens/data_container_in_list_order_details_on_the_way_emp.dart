@@ -1,11 +1,11 @@
-import '../../../../../../features/internal_services/custom_widget/container_return_to_page_setting.dart';
+import 'package:emp_system_sun/features/order_status_design/custom_widget/container_return_to_page_setting.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../../core/pages_widgets/general_widgets/snakbar.dart';
-import '../../../../../../features/order_status_design/cubit/order_status_cubit/order_status_cubit.dart';
-import '../../../../../../features/order_status_design/cubit/order_status_cubit/order_status_state.dart';
-import '../../../../../../features/order_status_design/order_details_on_the_way_emp/screens/part_left_screen/container_received_reject_user.dart';
+import '../../../../../../../core/pages_widgets/general_widgets/snakbar.dart';
+import '../../../../../../../features/order_status_design/cubit/order_status_cubit/order_status_cubit.dart';
+import '../../../../../../../features/order_status_design/cubit/order_status_cubit/order_status_state.dart';
+import '../../../../../../../features/order_status_design/order_details_on_the_way_emp/screens/part_left_screen/container_received_reject_user.dart';
 import '../../../../../../core/api_functions/order/get_provider_orders_model/order_model.dart';
 import '../../../../../../core/language/language_constant.dart';
 import '../../../../../../features/order_status_design/custom_widget/title_with_sub_title_in_order_details_emp.dart';

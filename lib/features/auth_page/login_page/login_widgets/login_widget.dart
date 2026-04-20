@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../features/auth_page/otp_page/otp_page.dart';
 import '../../../../core/api/dio_function/api_constants.dart';
 import '../../../../features/auth_page/check_email_exist/check_email_exist_page.dart';
 import '../../../../core/theming/colors.dart';
@@ -52,56 +53,50 @@ class LoginWidget extends StatelessWidget {
             text: AppLanguageKeys.password,
           ),
 
-      BlocBuilder<AuthCubit, AuthState>(
-        buildWhen: (previous, current) =>
-        current is AuthLoginLoading ||
-            current is AuthLoginSuccess ||
-            current is AuthLoginError ||
-            previous is AuthLoginLoading,
+          BlocListener<AuthCubit, AuthState>(
+            listener: (context, state) {
+              if (state is AuthAuthenticated) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => const StorePage()),
+                );
+              }
 
-        builder: (context, state) {
-          final bool isLoading = state is AuthLoginLoading;
-
-          if (state is AuthLoginSuccess) {
-            Future.microtask(() {
-              Navigator.of(context).pushReplacement(
-                NavigateToPageWidget(const StorePage()),
-              );
-            });
-          }
-
-          if (state is AuthLoginError) {
-            Future.microtask(() {
-              AppSnackBar.showError(state.message);
-            });
-          }
-
-          return LoginButtonWidget(
-            text: AppLanguageKeys.login,
-            isLoading: isLoading,
-            onPressed: isLoading
-                ? null
-                : () {
-              if (!_formKey.currentState!.validate()) return;
-
-              final loginRequest = LoginRequest(
-                user: userNameController.text.trim(),
-                password: passwordController.text.trim(),
-                type: UserType.employeeUser,
-              );
-
-              context.read<AuthCubit>().login(loginRequest);
+              if (state is AuthLoginError) {
+                AppSnackBar.showError(state.message);
+              }
             },
-          );
-        },
-      ),
+            child: BlocBuilder<AuthCubit, AuthState>(
+              builder: (context, state) {
+                final isLoading = state is AuthLoginLoading;
+
+                return LoginButtonWidget(
+                  text: AppLanguageKeys.login,
+                  isLoading: isLoading,
+                  onPressed: isLoading
+                      ? null
+                      : () {
+                    if (!_formKey.currentState!.validate()) return;
+
+                    final loginRequest = LoginRequest(
+                      user: userNameController.text.trim(),
+                      password: passwordController.text.trim(),
+                      type: UserType.providerUser,
+                    );
+
+                    context.read<AuthCubit>().login(loginRequest);
+                  },
+                );
+              },
+            ),
+          ),
           InkWell(
             onTap: () {
               context.read<AuthCubit>().showRestPassword();
               Navigator.push(
                 context,
                 NavigateToPageWidget(
-                    const CheckEmailExistPage()
+                     const CheckEmailExistPage()
                 ),
               );
             },

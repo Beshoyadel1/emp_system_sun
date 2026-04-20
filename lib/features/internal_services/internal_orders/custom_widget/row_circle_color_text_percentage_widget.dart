@@ -1,7 +1,7 @@
-import 'package:emp_system_sun/features/internal_services/internal_orders/custom_widget/container_percentage.dart';
-import 'package:emp_system_sun/features/internal_services/internal_orders/custom_widget/small_circle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../../../features/internal_services/internal_orders/custom_widget/container_percentage.dart';
+import '../../../../features/internal_services/internal_orders/custom_widget/small_circle.dart';
 import '../../../../../../../../core/theming/colors.dart';
 import '../../../../../../../../core/theming/fonts.dart';
 import '../../../../../../../../core/theming/text_styles.dart';

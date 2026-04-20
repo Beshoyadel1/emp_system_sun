@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../../../../../core/api_functions/order/get_provider_orders_model/order_model.dart';
-import '../../../../../../features/order_status_design/order_details_on_the_way_emp/screens/list_data_order_details_on_the_way_emp.dart';
-import '../../../../../../features/order_status_design/order_details_on_the_way_emp/screens/part_left_screen/data_part_left_screen_order_details_on_the_way_emp.dart';
+import '../../../../../../../core/api_functions/order/get_provider_orders_model/order_model.dart';
+import '../../../../../../../features/order_status_design/order_details_on_the_way_emp/screens/list_data_order_details_on_the_way_emp.dart';
+import '../../../../../../../features/order_status_design/order_details_on_the_way_emp/screens/part_left_screen/data_part_left_screen_order_details_on_the_way_emp.dart';
 import '../../../../../core/utilies/map_of_all_app.dart';
 import '../../../../../core/theming/colors.dart';
 

@@ -7,6 +7,8 @@ import '../../../../../../../features/internal_services/internal_orders/custom_w
 import '../../../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/get_provider_internal_order/get_provider_internal_order_cubit.dart';
 import '../../../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/get_provider_internal_order/get_provider_internal_order_state.dart';
 import '../../../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/order_funcations/order_functions.dart';
+import '../../../../../../../features/order_status_design/cubit/order_status_cubit/order_status_cubit.dart';
+import '../../../../../../../features/order_status_design/cubit/order_status_cubit/order_status_state.dart';
 
 class SecondPartDataContainerInListDataFirstScreenMobileServicesOrders
     extends StatefulWidget {
@@ -22,68 +24,88 @@ class SecondPartDataContainerInListDataFirstScreenMobileServicesOrders
 
 class _SecondPartDataContainerInListDataFirstScreenMobileServicesOrdersState extends State<SecondPartDataContainerInListDataFirstScreenMobileServicesOrders> {
 
-  String _formatDate(String? date) {
-    if (date == null || date.isEmpty) return "";
-    final parsed = DateTime.tryParse(date);
-    if (parsed == null) return date;
-    return "${parsed.day}/${parsed.month}/${parsed.year}";
-  }
+
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => GetProviderInternalOrderCubit()
-        ..loadInternalOrders(
-          serviceId: MainCategoryConstants.mobileServicesAndTransportationID
-        ),
-      child: BlocBuilder<GetProviderInternalOrderCubit,
-          GetProviderInternalOrderState>(
-        builder: (context, state) {
-          if (state is GetProviderInternalOrderLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state is GetProviderInternalOrderSuccess) {
-            final orders = state.orders;
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (_) =>
+            GetProviderInternalOrderCubit()
+              ..loadInternalOrders(
+                serviceId: MainCategoryConstants
+                    .mobileServicesAndTransportationID,
+              ),
+          ),
+          BlocProvider(
+            create: (_) => OrderStatusCubit(),
+          ),
+        ],
+        child: BlocListener<OrderStatusCubit, OrderStatusState>(
+          listener: (context, state) {
+            if (state is OrderStatusSuccess) {
+              context.read<GetProviderInternalOrderCubit>().loadInternalOrders(
+                serviceId:
+                MainCategoryConstants.mobileServicesAndTransportationID,
+              );
+            }
+          },
+          child: BlocBuilder<GetProviderInternalOrderCubit,
+              GetProviderInternalOrderState>(
+            builder: (context, state) {
+              if (state is GetProviderInternalOrderLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-            return ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: orders.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 5),
-                itemBuilder: (context, index) {
-                  final order = orders[index];
+              if (state is GetProviderInternalOrderSuccess) {
+                final orders = state.orders;
 
-                  final service = order.services?.isNotEmpty == true
-                      ? order.services!.first
-                      : null;
+                return ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: orders.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 5),
+                  itemBuilder: (context, index) {
+                    final order = orders[index];
 
-                  final serviceTitle = OrderFunctions.getServiceTitle(
-                    context: context,
-                    service: service,
-                  );
+                    final service = order.services?.isNotEmpty == true
+                        ? order.services!.first
+                        : null;
 
-                  return ContainerOfSecondPartDataContainerInListDataFirstScreenInternalOrdersWidget(
-                    imagePathPart1: service?.image,
-                    titlePart1: serviceTitle,
-                    subTitlePart1: '',
-                    imagePathPart2: AppImageKeys.car501,
-                    textCarPart2: order.branchName ?? "",
-                    titlePart2: order.providerName ?? "",
-                    imagePathPart3: order.providerImage,
-                    titlePart3: AppLanguageKeys.name,
-                    subTitlePart3: order.username ?? "",
-                    status: order.orderStatus,
-                    timePart5: OrderFunctions.formatDate(order.orderDate),
-                    pricePart6: order.totalPrice?.toString() ?? "0",
-                    order: order,
-                  );
-                }
-            );
-          }
+                    final serviceTitle = OrderFunctions.getServiceTitle(
+                      context: context,
+                      service: service,
+                    );
 
-          return const SizedBox();
-        },
-      ),
+                    return ContainerOfSecondPartDataContainerInListDataFirstScreenInternalOrdersWidget(
+                      imagePathPart1: service?.image,
+                      titlePart1: serviceTitle,
+                      subTitlePart1: '',
+                      imagePathPart2: AppImageKeys.car501,
+                      textCarPart2: order.branchName ?? "",
+                      titlePart2: order.providerName ?? "",
+                      imagePathPart3: order.providerImage,
+                      titlePart3: AppLanguageKeys.name,
+                      subTitlePart3: order.username ?? "",
+                      status: order.orderStatus,
+                      timePart5: OrderFunctions.formatDate(order.orderDate),
+                      pricePart6: order.totalPrice?.toString() ?? "0",
+                      order: order,
+                      serviceId:MainCategoryConstants.mobileServicesAndTransportationID,
+                    );
+                  },
+                );
+              }
+
+              if (state is GetProviderInternalOrderError) {
+                return Center(child: Text(state.message));
+              }
+
+              return const SizedBox();
+            },
+          ),
+        )
     );
   }
 }

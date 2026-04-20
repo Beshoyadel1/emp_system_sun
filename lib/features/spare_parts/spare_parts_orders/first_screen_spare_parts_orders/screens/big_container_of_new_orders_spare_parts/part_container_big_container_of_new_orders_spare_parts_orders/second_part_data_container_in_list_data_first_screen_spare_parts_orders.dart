@@ -27,7 +27,7 @@ class _SecondPartDataContainerInListDataFirstScreenSparePartsOrdersState extends
     return BlocProvider(
       create: (_) => GetProviderInternalOrderCubit()
         ..loadInternalOrders(
-          serviceId: MainCategoryConstants.carSparePartsID
+            serviceId: MainCategoryConstants.carSparePartsID
         ),
       child: BlocBuilder<GetProviderInternalOrderCubit,
           GetProviderInternalOrderState>(
@@ -39,10 +39,10 @@ class _SecondPartDataContainerInListDataFirstScreenSparePartsOrdersState extends
             final orders = state.orders;
 
             return ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: orders.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 5),
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: orders.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 5),
                 itemBuilder: (context, index) {
                   final order = orders[index];
 
@@ -69,6 +69,7 @@ class _SecondPartDataContainerInListDataFirstScreenSparePartsOrdersState extends
                     timePart5: OrderFunctions.formatDate(order.orderDate),
                     pricePart6: order.totalPrice?.toString() ?? "0",
                     order: order,
+                    serviceId: MainCategoryConstants.carSparePartsID,
                   );
                 }
             );

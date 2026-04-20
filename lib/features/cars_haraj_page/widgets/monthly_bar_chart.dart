@@ -1,6 +1,8 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../../../../../features/cars_haraj_page/widgets/bar_chart_data_widget.dart';
 import '../../../../../core/language/language_constant.dart';
+import '../../../../../core/theming/colors.dart';
 import '../../../../../core/theming/fonts.dart';
 import '../../../../../core/pages_widgets/general_widgets/custom_container.dart';
 import '../../../../../core/theming/text_styles.dart';

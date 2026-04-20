@@ -1,5 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../features/auth_page/auth_cubit/auth_cubit.dart';
 import '../../../../../../features/auth_page/login_page/login_page.dart';
 import '../../../../../../core/pages_widgets/general_widgets/navigate_to_page_widget.dart';
 import '../../../../../../features/logout_dashboard/first_screen_logout_dashboard/screens/last_two_button_in_logout_dashboard.dart';
@@ -30,12 +32,14 @@ class LogoutDashboard extends StatelessWidget {
               const FirstPartInLogoutDashboard(),
               LastTwoButtonInLogoutDashboard(
                 onTapConfirm: () {
+
                   Navigator.pop(context);
                   Navigator.of(context).push(
                     NavigateToPageWidget(
                       const LoginPage(),
                     ),
                   );
+                  context.read<AuthCubit>().logout();
                 },
               ),
             ],

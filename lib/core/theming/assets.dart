@@ -7,11 +7,10 @@ class AppImageKeys {
   static const String tires = 'assets/images/tires.png';
   static const String routineMaintenance = 'assets/images/routineMaintenance.png';
   static const String oils = 'assets/images/oils.png';
+
   //end//
 
   //FacilityManagement
-  static const String sar_logo_emp = 'assets/images/sar_logo_emp.png';
-  static const String emp_background = 'assets/images/emp_background.png';
   static const String loginImage = 'assets/images/login_image.png';
   static const String sarLogo = 'assets/images/sar_logo.png';
   static const String sarWhiteLogo = 'assets/images/sar_white_logo.png';
@@ -104,14 +103,17 @@ class AppImageKeys {
 
   ////Change the glass////
   static const String glass2 = 'assets/images/glass2.png';
+
   ////End////
 
   ////Change tires////
   static const String tires1 = 'assets/images/tires1.png';
+
   ////End////
 
   ////Car Batteries////
   static const String test50 = 'assets/images/test50.png';
+
   ////End////
 
   ////Request - Service////
@@ -126,17 +128,20 @@ class AppImageKeys {
   static const String person101 = 'assets/images/person101.png';
   static const String call2 = 'assets/images/call2.png';
   static const String send = 'assets/images/send.png';
+
   ////End////
 
   ////Change Car////
   static const String car2 = 'assets/images/car2.png';
   static const String car3 = 'assets/images/car3.png';
   static const String car4 = 'assets/images/car4.png';
+
   ////END////
 
 
   ////Warranty////
   static const String correct = 'assets/images/correct.png';
+
   ////End////
 
   ////Profile////
@@ -144,10 +149,12 @@ class AppImageKeys {
   static const String spare_parts2 = 'assets/images/spare_parts2.png';
   static const String mobile_maintenance =
       'assets/images/mobile_maintenance.png';
+
   ////End////
 
   ////InsuranceNew////
   static const String car1 = 'assets/images/car1.png';
+
   ////End////
 
   ////Insurance////

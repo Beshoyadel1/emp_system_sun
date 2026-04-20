@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../../features/store_page/store_widgets/car_model_widget/widgets/select_date_widget.dart';
 import '../../../../../core/language/language_constant.dart';
 import '../../../../../core/theming/assets.dart';
 import '../../../../../core/theming/colors.dart';
@@ -24,7 +23,6 @@ class SearchWidget extends StatelessWidget {
             runSpacing: 5,
             crossAxisAlignment: WrapCrossAlignment.end,
             children: [
-              const SelectDateWidget(),
               CustomContainer(
                 containerHeight: 35,
                 containerWidth: 131,

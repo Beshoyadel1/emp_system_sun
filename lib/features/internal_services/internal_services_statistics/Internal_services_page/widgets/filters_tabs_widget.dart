@@ -1,8 +1,10 @@
+import 'package:emp_system_sun/features/cars_haraj_page/model/car_filter/car_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/get_provider_internal_order/get_provider_internal_order_state.dart';
-import '../../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/tabs_cubit/tabs_cubit.dart';
-import '../../../../../../features/internal_services/internal_services_statistics/Internal_services_page/widgets/filter_design_internal_orders.dart';
+import '../../../../../features/cars_haraj_page/model/internal_orders_filter/internal_orders_filter.dart';
+import '../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/get_provider_internal_order/get_provider_internal_order_state.dart';
+import '../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/tabs_cubit/tabs_cubit.dart';
+import '../../../../../features/internal_services/internal_services_statistics/Internal_services_page/widgets/filter_design_internal_orders.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/theming/colors.dart';
 import '../../../../../core/theming/text_styles.dart';
@@ -36,7 +38,15 @@ class _FiltersTabsWidgetState extends State<FiltersTabsWidget>
 
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) {
-        context.read<TabsCubit>().changeTab(_tabController.index);
+        final tabIndex = _tabController.index;
+
+        context.read<TabsCubit>().changeTab(tabIndex);
+
+        context.read<GetProviderInternalOrderCubit>().loadInternalOrders(
+          serviceId: widget.serviceId ?? MainCategoryConstants.maintenanceAndInternalServicesID,
+          orderType: mapOrderType(tabIndex),
+          pageNumber: 1,
+        );
       }
     });
   }
@@ -83,17 +93,11 @@ class _FiltersTabsWidgetState extends State<FiltersTabsWidget>
 
             const SizedBox(height: 20),
             Expanded(
-              child: BlocProvider(
-                create: (_) => GetProviderInternalOrderCubit()
-                  ..loadInternalOrders(
-                    serviceId: widget.serviceId??MainCategoryConstants.maintenanceAndInternalServicesID,
-                  ),
-                child: TabBarView(
-                  controller: _tabController,
-                  children: List.generate(
-                    widget.filterOptions.length,
-                        (index) => const FilterDesignInternalOrders(),
-                  ),
+              child: TabBarView(
+                controller: _tabController,
+                children: List.generate(
+                  widget.filterOptions.length,
+                      (index) => const FilterDesignInternalOrders(),
                 ),
               ),
             ),

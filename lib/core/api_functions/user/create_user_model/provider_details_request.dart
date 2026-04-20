@@ -8,7 +8,7 @@ class ProviderDetailsRequest {
   final String? cr;
   final String? vatno;
   final int? packageid;
-
+  final DateTime? subscriptionstartdate,subscriptionenddate;
 
   const ProviderDetailsRequest({
     this.id,
@@ -19,7 +19,9 @@ class ProviderDetailsRequest {
     this.provid,
     this.cr,
     this.vatno,
-    this.packageid
+    this.packageid,
+    this.subscriptionenddate,
+    this.subscriptionstartdate
   });
 
   factory ProviderDetailsRequest.fromJson(Map<String, dynamic> json) =>
@@ -33,6 +35,13 @@ class ProviderDetailsRequest {
         cr: json["cr"],
         vatno: json["vatno"],
         packageid: json["packageid"],
+        subscriptionstartdate: json["subscriptionstartdate"] != null
+            ? DateTime.parse(json["subscriptionstartdate"])
+            : null,
+
+        subscriptionenddate: json["subscriptionenddate"] != null
+            ? DateTime.parse(json["subscriptionenddate"])
+            : null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -45,5 +54,7 @@ class ProviderDetailsRequest {
     "cr": cr??"",
     "vatno": vatno??"",
     "packageid": packageid??0,
+    "subscriptionenddate": subscriptionenddate?.toIso8601String(),
+    "subscriptionstartdate": subscriptionstartdate?.toIso8601String(),
   };
 }

@@ -4,7 +4,6 @@ import '../../../../core/api/dio_function/api_constants.dart';
 import '../../../../core/pages_widgets/general_widgets/snakbar.dart';
 import '../../../../core/api/dio_function/dio_controller.dart';
 import '../../../../core/api/dio_function/failures.dart';
-import '../../../../core/language/language_constant.dart';
 
 
 Future<void> openCloseChatFunction({
@@ -16,7 +15,7 @@ Future<void> openCloseChatFunction({
       openCloseChatRequest.toJson(), // params
       ApiLink.openCloseChat,
     );
-    AppSnackBar.showSuccess(AppLanguageKeys.openCloseChatSuccessfully);
+   // AppSnackBar.showSuccess(AppLanguageKeys.openCloseChatSuccessfully);
   } catch (e) {
     AppSnackBar.showError(
       e is DioException

@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import '../../theming/colors.dart';
+import '../../../../core/theming/colors.dart';
 
 class ApiConfig {
   static const String baseUrlApi = "http://89.117.62.174:809";
@@ -114,7 +114,7 @@ class ApiLink {
   static const String addTax =
       "${ApiConfig.baseUrlApi}/${ApiConfig.tax}/AddTax";
   static const String getAvailableTaxs =
-      "${ApiConfig.baseUrlApi}/${ApiConfig.tax}/getAvailableTaxs";
+      "${ApiConfig.baseUrlApi}/${ApiConfig.tax}/GetAvailableTaxs";
   static const String getPointInfo =
       "${ApiConfig.baseUrlApi}/${ApiConfig.points}/GetPointInfo";
   static const String createCarBrand =
@@ -227,6 +227,8 @@ class ApiLink {
       "${ApiConfig.baseUrlApi}/${ApiConfig.providerServicePackage}/DeleteServicePackage";
   static const String getBranchEmployees =
       "${ApiConfig.baseUrlApi}/${ApiConfig.branch}/GetBranchEmployees";
+  static const String getProvServices =
+      "${ApiConfig.baseUrlApi}/${ApiConfig.provService}/GetProvServices";
   static const String getExpectedPetrolSpend =
       "${ApiConfig.baseUrlApi}/${ApiConfig.expectedPetrolSpend}/GetExpectedPetrolSpend";
   static const String getProviderBranches =

@@ -1,8 +1,8 @@
-import 'package:emp_system_sun/features/internal_services/custom_widget/container_return_to_page_setting.dart';
+import 'package:emp_system_sun/features/order_status_design/custom_widget/container_return_to_page_setting.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../../../../../core/api_functions/order/get_provider_orders_model/order_model.dart';
-import '../../../../../../features/order_status_design/order_details_new_order_emp/screens/custom_container_order.dart';
+import '../../../../../../../core/api_functions/order/get_provider_orders_model/order_model.dart';
+import '../../../../../../../features/order_status_design/order_details_new_order_emp/screens/custom_container_order.dart';
 import '../../../../../../features/order_status_design/custom_widget/title_with_sub_title_in_order_details_emp.dart';
 import '../../../../../../features/order_status_design/order_details_new_order_emp/screens/part_left_screen/container_contact_with_customer_order_details_new_order_emp.dart';
 import '../../../../../../features/order_status_design/order_details_new_order_emp/screens/part_left_screen/data_time_line_tile_order_details_new_order_emp.dart';

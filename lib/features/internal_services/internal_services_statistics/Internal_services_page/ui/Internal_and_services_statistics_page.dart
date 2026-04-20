@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../../../features/dashboard_page/widgets/services_evaluation.dart';
-import '../../../../../../features/dashboard_page/widgets/services_statistics.dart';
+import '../../../../../features/dashboard_page/widgets/services_evaluation.dart';
+import '../../../../../features/dashboard_page/widgets/services_statistics.dart';
+
 import '../widgets/internal_services.dart';
 import '../widgets/new_orders.dart';
 import '../widgets/profits_services.dart';

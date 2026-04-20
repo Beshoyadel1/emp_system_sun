@@ -4,7 +4,6 @@ import '../../../../core/api/dio_function/api_constants.dart';
 import '../../../../core/pages_widgets/general_widgets/snakbar.dart';
 import '../../../../core/api/dio_function/dio_controller.dart';
 import '../../../../core/api/dio_function/failures.dart';
-import '../../../../core/language/language_constant.dart';
 
 Future<void> getOtherMessagesFunction({
   required GetOtherMessagesRequest getOtherMessagesRequest,
@@ -15,7 +14,7 @@ Future<void> getOtherMessagesFunction({
       getOtherMessagesRequest.toJson(),
       ApiLink.getOtherMessages,
     );
-    AppSnackBar.showSuccess(AppLanguageKeys.getOtherMessagesSuccessfully);
+  //  AppSnackBar.showSuccess(AppLanguageKeys.getOtherMessagesSuccessfully);
   } catch (e) {
     AppSnackBar.showError(
       e is DioException

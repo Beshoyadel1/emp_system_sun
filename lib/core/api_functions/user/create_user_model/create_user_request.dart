@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:emp_system_sun/core/api_functions/user/create_user_model/employee_wrapper.dart';
-
 import '../../../../core/api_functions/user/create_user_model/company_details_request.dart';
 import '../../../../core/api_functions/user/create_user_model/driver_details_request.dart';
 import '../../../../core/api_functions/user/create_user_model/employee_details_request.dart';
@@ -27,7 +25,7 @@ class CreateUserRequest {
 
   final AdminDetailsRequest? adminDetails;
   final ProviderDetailsRequest? providerDetails;
-  final EmployeeWrapper? employeeWrapper;
+  final EmployeeDetailsRequest? employeeDetails;
   final CompanyDetailsRequest? companyDetails;
   final DriverDetailsRequest? driverDetails;
 
@@ -49,7 +47,7 @@ class CreateUserRequest {
     this.currentCarId,
     this.adminDetails,
     this.providerDetails,
-    this.employeeWrapper,
+    this.employeeDetails,
     this.companyDetails,
     this.driverDetails,
   });
@@ -80,8 +78,8 @@ class CreateUserRequest {
           ? ProviderDetailsRequest.fromJson(json["providerDetails"])
           : null,
 
-      employeeWrapper: json['employeeDetails'] != null
-          ? EmployeeWrapper.fromJson(json['employeeDetails'])
+      employeeDetails: json["employeeDetails"] != null
+          ? EmployeeDetailsRequest.fromJson(json["employeeDetails"])
           : null,
 
       companyDetails: json["companyDetails"] != null
@@ -113,7 +111,7 @@ class CreateUserRequest {
       "image": image != null ? base64Encode(image!) : null,
       "adminDetails": adminDetails?.toJson(),
       "providerDetails": providerDetails?.toJson(),
-      "employeeDetails": employeeWrapper?.toJson(),
+      "employeeDetails": employeeDetails?.toJson(),
       "companyDetails": companyDetails?.toJson(),
       "driverDetails": driverDetails?.toJson(),
     };

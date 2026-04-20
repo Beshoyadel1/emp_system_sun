@@ -9,10 +9,12 @@ class ContainerViewAllInFirstRowInDataContainerInListDataFirstScreenInternalOrde
     extends StatelessWidget {
   final void Function()? onTap;
   final String? text;
+  final Color? backGroundColor;
   const ContainerViewAllInFirstRowInDataContainerInListDataFirstScreenInternalOrders({
     super.key,
     this.onTap,
-    this.text
+    this.text,
+    this.backGroundColor,
   });
 
   @override
@@ -20,9 +22,10 @@ class ContainerViewAllInFirstRowInDataContainerInListDataFirstScreenInternalOrde
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsetsGeometry.symmetric(horizontal: 15, vertical: 10),
+
+        padding: const EdgeInsetsGeometry.symmetric(horizontal: 40, vertical: 8),
         decoration: BoxDecoration(
-          color: AppColors.orangeColor,
+          color: backGroundColor??AppColors.orangeColor,
           borderRadius: const BorderRadius.all(Radius.circular(20)),
           boxShadow: [
             BoxShadow(
@@ -33,7 +36,7 @@ class ContainerViewAllInFirstRowInDataContainerInListDataFirstScreenInternalOrde
           ],
         ),
         child:  TextInAppWidget(
-          text: text??AppLanguageKeys.viewAll,
+          text: text??AppLanguageKeys.send,
           textSize: 13,
           fontWeightIndex: FontSelectionData.regularFontFamily,
           textColor: AppColors.whiteColor,

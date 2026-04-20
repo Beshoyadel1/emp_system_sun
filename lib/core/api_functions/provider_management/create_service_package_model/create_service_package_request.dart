@@ -1,5 +1,4 @@
-
-import 'package:emp_system_sun/core/api_functions/provider_management/create_service_package_model/car_model_create_service_package_request.dart';
+import '../../../../../../core/api_functions/provider_management/create_service_package_model/car_model_create_service_package_request.dart';
 
 class CreateServicePackageRequest {
   final int? provId;

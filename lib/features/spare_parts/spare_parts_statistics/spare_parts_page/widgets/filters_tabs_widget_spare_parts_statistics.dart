@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../../features/spare_parts/spare_parts_statistics/spare_parts_page/widgets/filter_design_spare_parts_statistics.dart';
+import '../../../../../../../features/cars_haraj_page/model/internal_orders_filter/internal_orders_filter.dart';
+import '../../../../../../../features/spare_parts/spare_parts_statistics/spare_parts_page/widgets/filter_design_spare_parts_statistics.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/get_provider_internal_order/get_provider_internal_order_state.dart';
 import '../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/tabs_cubit/tabs_cubit.dart';
-import '../../../../../features/internal_services/internal_orders/first_screen_internal_orders/screens/big_container_of_new_orders/part_container_big_container_of_new_orders/second_part_data_container_in_list_data_first_screen_internal_orders.dart';
 import '../../../../../core/theming/colors.dart';
 import '../../../../../core/theming/text_styles.dart';
 import '../../../../../features/cars_haraj_page/model/filter_orders_model/filter_orders_model.dart';
@@ -35,7 +35,15 @@ class _FiltersTabsWidgetSparePartsStatisticsState extends State<FiltersTabsWidge
 
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) {
-        context.read<TabsCubit>().changeTab(_tabController.index);
+        final tabIndex = _tabController.index;
+
+        context.read<TabsCubit>().changeTab(tabIndex);
+
+        context.read<GetProviderInternalOrderCubit>().loadInternalOrders(
+          serviceId: MainCategoryConstants.carSparePartsID,
+          orderType: mapOrderType(tabIndex),
+          pageNumber: 1,
+        );
       }
     });
   }
@@ -82,18 +90,11 @@ class _FiltersTabsWidgetSparePartsStatisticsState extends State<FiltersTabsWidge
 
             const SizedBox(height: 20),
             Expanded(
-              child: BlocProvider(
-                create: (_) => GetProviderInternalOrderCubit()
-                  ..loadInternalOrders(
-                    serviceId: MainCategoryConstants.carSparePartsID,
-                    pageNumber: 1
-                  ),
-                child: TabBarView(
-                  controller: _tabController,
-                  children: List.generate(
-                    widget.filterOptions.length,
-                        (index) => const FilterDesignSparePartsStatistics(),
-                  ),
+              child: TabBarView(
+                controller: _tabController,
+                children: List.generate(
+                  widget.filterOptions.length,
+                      (index) => const FilterDesignSparePartsStatistics(),
                 ),
               ),
             ),

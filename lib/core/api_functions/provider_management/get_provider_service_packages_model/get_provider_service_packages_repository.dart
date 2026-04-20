@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:emp_system_sun/core/api_functions/provider_management/get_provider_service_packages_model/provider_service_packages_model.dart';
+import '../../../../../../core/api_functions/provider_management/get_provider_service_packages_model/provider_service_packages_model.dart';
 import '../../../../core/api_functions/provider_management/get_provider_service_packages_model/get_provider_service_packages_request.dart';
 import '../../../../core/api/dio_function/api_constants.dart';
 import '../../../../core/pages_widgets/general_widgets/snakbar.dart';

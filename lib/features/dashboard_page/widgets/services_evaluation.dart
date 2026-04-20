@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../features/dashboard_page/logic/get_provider_total_rate_and_employee_and_balance_cubit/get_provider_total_rate_and_employee_and_balance_cubit.dart';
+import '../../../../../features/dashboard_page/logic/get_provider_total_rate_and_employee_and_balance_cubit/get_provider_total_rate_and_employee_and_balance_state.dart';
 import '../../../../../core/language/language_constant.dart';
 import '../../../../../core/theming/assets.dart';
 import '../../../../../core/theming/colors.dart';
@@ -21,12 +24,12 @@ class ServicesEvaluation extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         spacing: 20,
         children: [
-          const Column(
+          Column(
             spacing: 10,
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextInAppWidget(
+              const TextInAppWidget(
                 text: AppLanguageKeys.servicesRatingKey,
                 textSize: 16,
                 fontWeightIndex: FontSelectionData.regularFontFamily,
@@ -34,15 +37,27 @@ class ServicesEvaluation extends StatelessWidget {
               Row(
                 spacing: 5,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.star,
                     color: AppColors.orangeColor,
                     size: 35,
                   ),
-                  TextInAppWidget(
-                    text: '5.0',
-                    textSize: 16,
-                    fontWeightIndex: FontSelectionData.regularFontFamily,
+                  BlocBuilder<GetProviderTotalRateAndEmployeeAndBalanceCubit,
+                      GetProviderTotalRateAndEmployeeAndBalanceState>(
+                    builder: (context, state) {
+                      double rate = 0;
+
+                      if (state
+                          is GetProviderTotalRateAndEmployeeAndBalanceSuccess) {
+                        rate = state.data.averageRate ?? 0;
+                      }
+
+                      return TextInAppWidget(
+                        text: rate.toStringAsFixed(1),
+                        textSize: 16,
+                        fontWeightIndex: FontSelectionData.regularFontFamily,
+                      );
+                    },
                   ),
                 ],
               ),

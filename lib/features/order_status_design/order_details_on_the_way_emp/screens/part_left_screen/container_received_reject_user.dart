@@ -19,7 +19,9 @@ class ContainerReceivedRejectUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Wrap(
+      spacing: 5,
+      runSpacing: 5,
       children: [
         /// Work in progress
         ContainerSold(

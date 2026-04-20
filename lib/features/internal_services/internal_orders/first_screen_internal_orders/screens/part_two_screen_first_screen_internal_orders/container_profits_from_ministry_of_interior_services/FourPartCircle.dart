@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../../../../../../core/api/dio_function/api_constants.dart';
-import '../../../../../../../../core/api_functions/statistics/get_provider_main_service_statistics_model/sub_service_summaries_request.dart';
-import '../../../../../../../../core/language/language_constant.dart';
-import '../../../../../../../../core/theming/fonts.dart';
-import '../../../../../../../../core/theming/text_styles.dart';
+import '../../../../../../../core/api/dio_function/api_constants.dart';
+import '../../../../../../../core/api_functions/statistics/get_provider_main_service_statistics_model/sub_service_summaries_request.dart';
+import '../../../../../../../core/language/language_constant.dart';
+import '../../../../../../../core/theming/fonts.dart';
+import '../../../../../../../core/theming/text_styles.dart';
 import '../../../../../../../../core/theming/colors.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 

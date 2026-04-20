@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../../features/auth_page/auth_cubit/auth_state.dart';
+import '../../../../features/auth_page/auth_cubit/auth_state.dart';
 import '../../../../../../core/language/language_constant.dart';
 import '../../../../../../core/theming/text_styles.dart';
 import '../../../../../../core/language/language.dart';
@@ -217,7 +217,8 @@ class _PhoneTextFieldState extends State<PhoneTextField> {
             ),
 
             onChanged: (phone) {
-              widget.controller.text = phone.completeNumber;
+
+              widget.controller.text = removePlusFromPhone(phone.completeNumber);
             },
           ),
 
@@ -225,6 +226,13 @@ class _PhoneTextFieldState extends State<PhoneTextField> {
         )
       ],
     );
+  }
+  String removePlusFromPhone(String phone) {
+    if (phone.startsWith('+')) {
+      return phone.substring(1);
+    } else {
+      return phone;
+    }
   }
 
   Map<String, String> parsePhoneNumber(String phone) {

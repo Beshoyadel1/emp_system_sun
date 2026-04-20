@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../features/internal_services/internal_services_statistics/Internal_services_page/model/new_order_steps_model/new_order_steps_model.dart';
+import '../../../../../../features/internal_services/internal_services_statistics/Internal_services_page/model/new_order_steps_model/new_order_steps_model.dart';
 import '../../../../../core/cubit/new_orders_cubit/new_orders_cubit.dart';
 import '../../../../../core/cubit/new_orders_cubit/new_orders_state.dart';
 import '../../../../../core/theming/colors.dart';

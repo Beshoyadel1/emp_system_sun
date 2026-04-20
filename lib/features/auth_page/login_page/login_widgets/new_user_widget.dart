@@ -24,10 +24,10 @@ class NewUserWidget extends StatelessWidget {
       child: const TextInAppWidget(
         text: AppLanguageKeys.newUserKey,
         textSize: 18,
-        textColor: AppColors.secondaryColor,
+        textColor: AppColors.orangeColor,
         fontWeightIndex: FontSelectionData.semiBoldFontFamily,
         decorationText: TextDecoration.underline,
-        decorationTextColor: AppColors.secondaryColor,
+        decorationTextColor: AppColors.orangeColor,
       ),
     );
   }

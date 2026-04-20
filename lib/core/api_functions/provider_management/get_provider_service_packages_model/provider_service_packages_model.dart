@@ -1,6 +1,5 @@
-
-import 'package:emp_system_sun/core/api_functions/provider_management/get_provider_service_packages_model/package_provider_service_packages_model.dart';
-import 'package:emp_system_sun/core/api_functions/provider_management/get_provider_service_packages_model/service_provider_service_packages_model.dart';
+import '../../../../../../core/api_functions/provider_management/get_provider_service_packages_model/package_provider_service_packages_model.dart';
+import '../../../../../../core/api_functions/provider_management/get_provider_service_packages_model/service_provider_service_packages_model.dart';
 
 class ProviderServicePackagesModel {
   final PackageProviderServicePackagesModel package;

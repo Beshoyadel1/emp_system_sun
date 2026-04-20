@@ -7,6 +7,7 @@ class OrdersTabs {
   static const int inProgress = 3;
 }
 class InternalOrdersFilter {
+
   static List filterOrders(List allOrders, int selectedTab) {
     switch (selectedTab) {
       case OrdersTabs.newOrders:
@@ -39,5 +40,21 @@ class InternalOrdersFilter {
       default:
         return allOrders;
     }
+  }
+}
+int mapOrderType(int tab) {
+  switch (tab) {
+    case OrdersTabs.newOrders:
+      return 1;
+
+    case OrdersTabs.completed:
+      return 2;
+
+    case OrdersTabs.inProgress:
+      return 3;
+
+    case OrdersTabs.all:
+    default:
+      return 0;
   }
 }

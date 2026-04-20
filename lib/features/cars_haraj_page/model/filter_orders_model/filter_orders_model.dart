@@ -1,16 +1,16 @@
 import '../../../../../core/language/language_constant.dart';
+
 class filterOrdersModel {
   final String text;
   bool isSelected;
-
   filterOrdersModel({required this.text, this.isSelected = false});
 }
 
 final List<filterOrdersModel> filterOrders = [
   filterOrdersModel(text: AppLanguageKeys.allOrdersKey, isSelected: true),
   filterOrdersModel(text: AppLanguageKeys.newOrdersKey),
-  filterOrdersModel(text: AppLanguageKeys.completedOrdersKey),
   filterOrdersModel(text: AppLanguageKeys.underServiceKey),
+  filterOrdersModel(text: AppLanguageKeys.completedOrders),
 ];
 
 final List<filterOrdersModel> filterOptionsCars = [

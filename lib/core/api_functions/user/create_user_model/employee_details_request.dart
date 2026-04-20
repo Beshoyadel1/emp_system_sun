@@ -12,7 +12,6 @@ class EmployeeDetailsRequest {
     this.joblatinname,
     this.branchid,
   });
-
   factory EmployeeDetailsRequest.fromJson(Map<String, dynamic> json) =>
       EmployeeDetailsRequest(
         id: json["id"],

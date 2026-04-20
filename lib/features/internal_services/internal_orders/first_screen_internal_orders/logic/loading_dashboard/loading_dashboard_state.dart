@@ -1,5 +1,5 @@
-import 'package:emp_system_sun/core/api_functions/statistics/get_provider_main_service_statistics_model/data_points_request.dart';
-import 'package:emp_system_sun/core/api_functions/statistics/get_provider_main_service_statistics_model/sub_service_summaries_request.dart';
+import '../../../../../../../core/api_functions/statistics/get_provider_main_service_statistics_model/data_points_request.dart';
+import '../../../../../../../core/api_functions/statistics/get_provider_main_service_statistics_model/sub_service_summaries_request.dart';
 
 class InternalOrdersState {
 

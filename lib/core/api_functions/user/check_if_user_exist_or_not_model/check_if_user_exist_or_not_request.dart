@@ -1,6 +1,6 @@
 class CheckIfUserExistOrNotRequest {
   final String user;
-  final String type;
+  final int type;
 
   CheckIfUserExistOrNotRequest({
     required this.user,

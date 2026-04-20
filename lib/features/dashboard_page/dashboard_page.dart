@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../features/dashboard_page/logic/get_provider_service_statistics_cubit/get_provider_service_statistics_cubit.dart';
+import '../../../../features/dashboard_page/logic/get_provider_total_rate_and_employee_and_balance_cubit/get_provider_total_rate_and_employee_and_balance_cubit.dart';
+import '../../../../features/dashboard_page/widgets/list_custom_chart.dart';
 import '../../../../core/theming/assets.dart';
 import '../../../../core/theming/colors.dart';
 import 'widgets/account_balance.dart';
@@ -13,7 +17,7 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -26,28 +30,31 @@ class DashboardPage extends StatelessWidget {
                   spacing: 10,
                   runSpacing: 10,
                   children: [
-                    CustomChart(
-                      image: AppImageKeys.carServices,
-                      imageBackground: AppColors.orangeColor,
+                    BlocProvider(
+                      create: (_) => GetProviderServiceStatisticsCubit()
+                        ..getProviderServiceStatistics(),
+                      child: const ListCustomChart(),
                     ),
-                    CustomChart(
-                      image: AppImageKeys.truckBox,
-                      imageBackground: AppColors.seaBlueColor,
-                    ),
-                    CustomChart(
-                      image: AppImageKeys.spare,
-                      imageBackground: AppColors.darkGreyColor,
-                    ),
-                     ServicesStatistics(),
-                     ChartOrder(),
-                    Column(
-                      spacing: 10,
-                      children: [
-                        SizedBox(width: 310, child: ServicesEvaluation()),
-                        EmployeesPerformance()
-                      ],
-                    ),
-                    AccountBalance(),
+                    const ServicesStatistics(),
+                    const ChartOrder(),
+                    BlocProvider(
+                      create: (_) => GetProviderTotalRateAndEmployeeAndBalanceCubit()
+                        ..getProviderTotalRateAndEmployeeAndBalance(),
+                     child: const Wrap(
+                         alignment: WrapAlignment.center,
+                         spacing: 10,
+                         runSpacing: 10,
+                         children: [
+                        Column(
+                          spacing: 10,
+                          children: [
+                            SizedBox(width: 310, child: ServicesEvaluation()),
+                            EmployeesPerformance(),
+                          ],
+                        ),
+                         AccountBalance(),
+                      ]),
+                   ),
                   ],
                 ),
               ),

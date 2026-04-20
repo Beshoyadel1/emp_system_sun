@@ -1,4 +1,6 @@
 import 'dart:ui';
+import 'package:emp_system_sun/features/auth_page/auth_cubit/auth_cubit.dart';
+import 'package:emp_system_sun/features/auth_page/auth_gate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -20,7 +22,11 @@ void main() {
       providers: [
         BlocProvider<LanguageCubit>(
           create: (_) =>
-              getIt<LanguageCubit>()..getLanguageFromSharedPreference(),
+          getIt<LanguageCubit>()..getLanguageFromSharedPreference(),
+        ),
+
+        BlocProvider<AuthCubit>(
+          create: (_) => AuthCubit()..checkAuth(),
         ),
       ],
       child: const MyApp(),
@@ -68,7 +74,7 @@ class MyApp extends StatelessWidget {
               useMaterial3: true,
             ),
             debugShowCheckedModeBanner: false,
-            home: const LoginPage(),
+            home: const AuthGate(),
           );
         },
       ),

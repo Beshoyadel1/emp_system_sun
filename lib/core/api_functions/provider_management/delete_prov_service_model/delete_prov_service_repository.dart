@@ -6,21 +6,18 @@ import '../../../../core/api/dio_function/dio_controller.dart';
 import '../../../../core/api/dio_function/failures.dart';
 import '../../../../core/language/language_constant.dart';
 
-Future<void> deleteProvServiceFunction({
+Future<bool> deleteProvServiceFunction({
   required DeleteProvServiceRequest deleteProvServiceRequest,
 }) async {
   try {
     await Network.postDataWithBodyAndParams(
       {},
-      deleteProvServiceRequest.toJson(), // params
-        ApiLink.deleteProvService
+      deleteProvServiceRequest.toJson(),
+      ApiLink.deleteProvService,
     );
-    AppSnackBar.showSuccess(AppLanguageKeys.deleteProvServiceSuccess);
+
+    return true;
   } catch (e) {
-    AppSnackBar.showError(
-      e is DioException
-          ? responseOfStatusCode(e.response?.statusCode)
-          : e.toString(),
-    );
+    throw e;
   }
 }

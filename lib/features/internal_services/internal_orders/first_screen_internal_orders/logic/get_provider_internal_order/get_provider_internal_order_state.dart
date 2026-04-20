@@ -1,9 +1,9 @@
-import 'package:emp_system_sun/core/api_functions/order/get_provider_orders_model/get_provider_orders_repository.dart';
-import 'package:emp_system_sun/core/api_functions/order/get_provider_orders_model/get_provider_orders_request.dart';
-import 'package:emp_system_sun/core/api_functions/user/login_model/login_repository.dart';
-import 'package:emp_system_sun/features/internal_services/internal_orders/first_screen_internal_orders/logic/get_provider_internal_order/get_provider_internal_order_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../../../../../../../core/api_functions/order/get_provider_orders_model/get_provider_orders_repository.dart';
+import '../../../../../../../core/api_functions/order/get_provider_orders_model/get_provider_orders_request.dart';
+import '../../../../../../../core/api_functions/user/login_model/login_repository.dart';
+import '../../../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/get_provider_internal_order/get_provider_internal_order_cubit.dart';
+import 'get_provider_internal_order_state.dart';
 
 class GetProviderInternalOrderCubit
     extends Cubit<GetProviderInternalOrderState> {
@@ -29,8 +29,8 @@ class GetProviderInternalOrderCubit
 
       final response = await getProviderOrdersFunction(
         getProviderOrdersRequest: GetProviderOrdersRequest(
-          providerId: user.employeeWrapper?.employeeDetails?.provid,
-          employeeId: user.employeeWrapper?.employeeDetails?.id,
+          providerId: user.userid,
+          employeeId: 0,
           pageNumber: pageNumber ?? 1,
           orderType: orderType,
           serviceId: serviceId,

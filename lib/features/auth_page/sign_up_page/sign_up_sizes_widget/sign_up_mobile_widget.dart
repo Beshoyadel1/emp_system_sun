@@ -1,8 +1,6 @@
-import 'package:emp_system_sun/core/api_functions/user/create_user_model/employee_details_request.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
-import '../../../../core/api_functions/user/create_user_model/employee_wrapper.dart';
 import '../../../../core/api_functions/user/create_user_model/provider_details_request.dart';
 import '../../../../core/api/dio_function/api_constants.dart';
 import '../../../../features/auth_page/auth_cubit/auth_cubit.dart';
@@ -56,7 +54,7 @@ class _SignUpMobileWidgetState extends State<SignUpMobileWidget> {
         children: [
           SizedBox(
             height: 40,
-            child: AppBar(backgroundColor: AppColors.secondaryColor),
+            child: AppBar(backgroundColor: AppColors.orangeColor),
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -69,7 +67,7 @@ class _SignUpMobileWidgetState extends State<SignUpMobileWidget> {
                     const LoginLanguageButtonWidget(),
 
                     Image.asset(
-                      AppImageKeys.sar_logo_emp,
+                      AppImageKeys.sarLogo,
                       height: 50,
                       width: 170,
                       fit: BoxFit.fill,
@@ -157,8 +155,8 @@ class _SignUpMobileWidgetState extends State<SignUpMobileWidget> {
                                 phone: phoneController.text.trim(),
                                 email: emailController.text.trim(),
                                 password: password,
-                                type: UserType.employeeUser,
-                                employeeWrapper: EmployeeWrapper(),
+                                type: UserType.providerUser,
+                                providerDetails: const ProviderDetailsRequest(),
                               ),
                             );
                           },

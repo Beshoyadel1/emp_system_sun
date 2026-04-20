@@ -41,18 +41,22 @@ class ContainerContactWithCustomerOrderDetailsOnTheWayEmp extends StatelessWidge
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                spacing: 10,
-                children: [
-                  Image.asset(AppImageKeys.person22),
-                  const TextInAppWidget(
-                    text:'أسم العميل',
-                    textSize: 14,
-                    fontWeightIndex: FontSelectionData.regularFontFamily,
-                    textColor:AppColors.blackColor,
-                  ),
+              Flexible(
+                child: Row(
+                  spacing: 10,
+                  children: [
+                    Image.asset(AppImageKeys.person22),
+                    const Flexible(
+                      child:  TextInAppWidget(
+                        text:AppLanguageKeys.contactCustomer,
+                        textSize: 14,
+                        fontWeightIndex: FontSelectionData.regularFontFamily,
+                        textColor:AppColors.blackColor,
+                      ),
+                    ),
 
-                ],
+                  ],
+                ),
               ),
               const Row(
                 spacing: 15,

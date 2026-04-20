@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../features/auth_page/change_password/change_password_page.dart';
-import '../../../../../core/api_functions/user/check_if_user_exist_model/check_if_user_exist_request.dart';
+import '../../../../features/auth_page/otp_page/otp_page.dart';
 import '../../../../../core/pages_widgets/general_widgets/navigate_to_page_widget.dart';
 import '../../../../../features/auth_page/auth_cubit/auth_cubit.dart';
 import '../../../../../features/auth_page/auth_cubit/auth_state.dart';
@@ -23,18 +22,20 @@ class CheckEmailExistPage extends StatefulWidget {
 }
 
 class _CheckEmailExistPageState extends State<CheckEmailExistPage> {
-  late TextEditingController emailController ;
+  late TextEditingController emailController,phoneController ;
   late GlobalKey<FormState> checkEmailExistFormKey ;
 
   @override
   void initState() {
     emailController = TextEditingController();
+    phoneController = TextEditingController();
     checkEmailExistFormKey = GlobalKey<FormState>();
     super.initState();
   }
   @override
   void dispose() {
     emailController.dispose();
+    phoneController.dispose();
     checkEmailExistFormKey.currentState?.dispose();
     super.dispose();
   }
@@ -61,16 +62,23 @@ class _CheckEmailExistPageState extends State<CheckEmailExistPage> {
                               autovalidateMode: AutovalidateMode.disabled,
                               key: checkEmailExistFormKey,
                               child: Column(
+                                spacing: 10,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const  TextInAppWidget(
-                                    text: AppLanguageKeys.authEnterCorrectEmail,
+                                    text: AppLanguageKeys.email,
                                     textColor: AppColors.darkColor,
                                     textSize: 20,
                                     fontWeightIndex: FontSelectionData.semiBoldFontFamily,
                                   ),
                                   UserTextFieldWidget(type: UserFieldType.email, controller: emailController,),
-                                  const SizedBox(height: 10,),
+                                  const  TextInAppWidget(
+                                    text: AppLanguageKeys.phoneNumber,
+                                    textColor: AppColors.darkColor,
+                                    textSize: 20,
+                                    fontWeightIndex: FontSelectionData.semiBoldFontFamily,
+                                  ),
+                                  UserTextFieldWidget(type: UserFieldType.phone, controller: phoneController,),
                                   BlocBuilder<AuthCubit, AuthState>(
                                     buildWhen: (previous, current) =>
                                     current is AuthLoginLoading ||
@@ -84,7 +92,8 @@ class _CheckEmailExistPageState extends State<CheckEmailExistPage> {
                                       if (state is AuthLoginSuccess) {
                                         Future.microtask(() {
                                           Navigator.of(context).pushReplacement(
-                                            NavigateToPageWidget(ChangePasswordPage(
+                                            NavigateToPageWidget(
+                                                OtpPage(
                                               email: emailController.text.trim(),
                                             )),
                                           );
@@ -105,10 +114,10 @@ class _CheckEmailExistPageState extends State<CheckEmailExistPage> {
                                             : () {
                                           if (!checkEmailExistFormKey.currentState!.validate()) return;
 
-                                          final checkIfUserExistRequest = CheckIfUserExistRequest(
+                                          context.read<AuthCubit>().checkIfUserExistOrNot(
                                             email: emailController.text.trim(),
+                                            phone: phoneController.text.trim(),
                                           );
-                                          context.read<AuthCubit>().checkEmailExist(checkIfUserExistRequest);
                                         },
                                       );
                                     },

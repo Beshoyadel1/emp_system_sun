@@ -1,5 +1,5 @@
-import 'package:emp_system_sun/core/api_functions/provider_management/create_prov_service_model/brand_model_create_prov_service_request.dart';
-import 'package:emp_system_sun/core/api_functions/provider_management/create_prov_service_model/car_model_create_prov_service_request.dart';
+import '../../../../../../core/api_functions/provider_management/create_prov_service_model/brand_model_create_prov_service_request.dart';
+import '../../../../../../core/api_functions/provider_management/create_prov_service_model/car_model_create_prov_service_request.dart';
 
 class UpdateProvServiceRequest {
   final int? id;
@@ -13,16 +13,17 @@ class UpdateProvServiceRequest {
 
   UpdateProvServiceRequest({
     this.id,
-     this.serviceId,
-     this.provId,
-     this.taxId,
-     this.name,
-     this.latinName,
-     this.brands,
-     this.cars,
+    this.serviceId,
+    this.provId,
+    this.taxId,
+    this.name,
+    this.latinName,
+    this.brands,
+    this.cars,
   });
 
   Map<String, dynamic> toJson() => {
+    "id": id,
     "serviceid": serviceId,
     "provid": provId,
     "taxid": taxId,

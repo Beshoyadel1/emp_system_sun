@@ -1,6 +1,6 @@
 import 'dart:typed_data';
-import 'package:emp_system_sun/core/theming/assets.dart';
 import 'package:flutter/cupertino.dart';
+import '../../../../core/theming/assets.dart';
 import '../../../../../../../core/theming/colors.dart';
 import '../../../../../../../core/theming/fonts.dart';
 import '../../../../../../../core/theming/text_styles.dart';

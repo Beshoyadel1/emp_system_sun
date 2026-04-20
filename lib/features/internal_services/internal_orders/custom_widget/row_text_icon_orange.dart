@@ -7,12 +7,16 @@ import '../../../../../core/theming/text_styles.dart';
 class RowTextIconOrange extends StatelessWidget {
   final String text, imagePath;
   final bool isMap;
+  final double? textSize;
+  final Color? textColor;
 
   const RowTextIconOrange({
     super.key,
     required this.text,
     required this.imagePath,
     this.isMap = false,
+    this.textSize,
+    this.textColor
   });
 
   @override
@@ -36,9 +40,9 @@ class RowTextIconOrange extends StatelessWidget {
                 },
                 child: TextInAppWidget(
                   text: text,
-                  textSize: 9,
+                  textSize: textSize ?? 9,
                   fontWeightIndex: FontSelectionData.regularFontFamily,
-                  textColor: AppColors.orangeColor,
+                  textColor:textColor?? AppColors.orangeColor,
                   decorationText: TextDecoration.underline,
                   decorationTextColor: AppColors.orangeColor,
                 ),
@@ -47,9 +51,9 @@ class RowTextIconOrange extends StatelessWidget {
           : [
               TextInAppWidget(
                 text: text,
-                textSize: 12,
+                textSize: textSize ?? 12,
                 fontWeightIndex: FontSelectionData.mediumFontFamily,
-                textColor: AppColors.darkColor,
+                textColor:textColor?? AppColors.darkColor,
               ),
               Image.asset(imagePath),
             ],

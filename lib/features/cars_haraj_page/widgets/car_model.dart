@@ -7,13 +7,13 @@ import '../../../../../core/theming/colors.dart';
 import '../../../../../core/theming/text_styles.dart';
 
 class CarModel extends StatelessWidget {
-  final String? releaseDate, description;
+  final String? releaseDate, addresstext;
   final Uint8List? imageBytes;
 
   const CarModel({
     super.key,
     this.releaseDate,
-    this.description,
+    this.addresstext,
     this.imageBytes,
   });
 
@@ -45,7 +45,7 @@ class CarModel extends StatelessWidget {
               textColor: AppColors.orangeColor,
             ),
             TextInAppWidget(
-              text: description ?? 'BYD Electric',
+              text: addresstext ?? 'BYD Electric',
               textSize: 14,
               textColor: AppColors.darkColor,
             ),

@@ -10,8 +10,8 @@ import '../../../../../core/theming/text_styles.dart';
 import 'car_model.dart';
 
 class AvailableCars extends StatelessWidget {
-  const AvailableCars({super.key,this.price,this.brandName,this.isSold=false,this.isNew=false,this.description,this.releaseDate,this.id, this.spacing, required this.onTap,required this.carImage,required this.brandImage});
-  final String? id,description,releaseDate,brandName,price;
+  const AvailableCars({super.key,this.price,this.brandName,this.isSold=false,this.isNew=false,this.addresstext,this.releaseDate,this.id, this.spacing, required this.onTap,required this.carImage,required this.brandImage});
+  final String? id,addresstext,releaseDate,brandName,price;
   final double? spacing;
   final VoidCallback onTap;
   final bool isNew,isSold;
@@ -25,22 +25,20 @@ class AvailableCars extends StatelessWidget {
       onTap: () {},
       borderRadius: BorderRadius.circular(12),
       typeWidget: Wrap(
-        spacing: spacing ?? 35,
+        spacing: spacing ?? 20,
         runSpacing: 10,
         crossAxisAlignment: WrapCrossAlignment.center,
         alignment: WrapAlignment.spaceBetween,
         children: [
           TextInAppWidget(text: id??'1#', textSize: 16, textColor: AppColors.darkColor),
            CarModel(
-            description:description ,
+            addresstext:addresstext ,
             releaseDate:releaseDate ,
             imageBytes:carImage,
           ),
-          // const OrderState(
-          //
-          // ),
           TextWithContainerStatusCar(
             isNew:isNew,
+            text: AppLanguageKeys.carStatus,
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,7 +94,8 @@ class AvailableCars extends StatelessWidget {
               child: TextInAppWidget(
                   text: AppLanguageKeys.detailsKey,
                   textSize: 14,
-                  textColor: AppColors.orangeColor),
+                  textColor: AppColors.orangeColor
+              ),
             ),
           ),
         ],

@@ -1,6 +1,7 @@
 import '../../../../../core/api_functions/statistics/get_provider_harage_sold_cars_by_type_model/get_provider_harage_sold_cars_by_type_model.dart';
 import '../../../../../core/api_functions/statistics/get_provider_harage_sold_cars_by_type_model/get_provider_harage_sold_cars_by_type_repository.dart';
 import '../../../../../core/api_functions/statistics/get_provider_harage_sold_cars_by_type_model/get_provider_harage_sold_cars_by_type_request.dart';
+
 import '../../../../../core/api_functions/statistics/get_provider_harage_monthly_sales_model/get_provider_harage_monthly_sales_response.dart';
 import '../../../../../core/api_functions/statistics/get_provider_harage_sales_chart_model/get_provider_harage_data_points_response.dart';
 import '../../../../../core/api_functions/statistics/get_provider_harage_sales_chart_model/get_provider_harage_sales_chart_repository.dart';

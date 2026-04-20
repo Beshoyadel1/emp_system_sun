@@ -5,7 +5,6 @@ import '../../../../core/api/dio_function/api_constants.dart';
 import '../../../../core/pages_widgets/general_widgets/snakbar.dart';
 import '../../../../core/api/dio_function/dio_controller.dart';
 import '../../../../core/api/dio_function/failures.dart';
-import '../../../../core/language/language_constant.dart';
 
 Future<GetProviderHarageDataPointsResponse?> getProviderHarageSalesChartFunction({
   required GetProviderHarageSalesChartRequest getProviderHarageSalesChartRequest,

@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import '../../../../../../../../features/order_status_design/custom_widget/time_line_tile_widget.dart';
+import '../../../../../../../features/order_status_design/custom_widget/time_line_tile_widget.dart';
 import '../../../../../../../../core/language/language_constant.dart';
 import '../../../../../../../core/theming/colors.dart';
 

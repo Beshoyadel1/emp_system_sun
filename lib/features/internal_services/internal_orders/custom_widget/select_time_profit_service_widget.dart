@@ -10,7 +10,10 @@ class SelectTimeProfitServiceWidget extends StatefulWidget {
   final List<String>? options;
   final bool isTime;
   final Color? backGroundColor, textColor, borderColor;
-  final double? height, width, borderRadius, textSize;
+  final double?  width, borderRadius, textSize;
+  final Function(String value)? onChanged;
+  final String? Function(String?)? validator;
+  final String? errorText;
 
   const SelectTimeProfitServiceWidget(
       {super.key,
@@ -20,9 +23,11 @@ class SelectTimeProfitServiceWidget extends StatefulWidget {
       this.textColor,
       this.backGroundColor,
       this.width,
-      this.height,
       this.borderColor,
       this.borderRadius,
+      this.onChanged,
+        this.errorText,
+        this.validator,
       this.textSize});
 
   @override
@@ -64,21 +69,37 @@ class _SelectTimeProfitServiceWidgetState
                   }
                 : null,
             child: SizedBox(
-              height: widget.height ?? 35,
               width: widget.width ?? 130,
               child: InputDecorator(
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: widget.backGroundColor ?? AppColors.blueColor,
-                  border: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(widget.borderRadius ?? 25),
-                    borderSide: widget.borderColor != null
-                        ? BorderSide(color: widget.borderColor!)
-                        : BorderSide.none,
+
+                  /// ✅ نفس فكرة TextField
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(widget.borderRadius ?? 10),
+                    borderSide: BorderSide(
+                      color: widget.borderColor ?? Colors.transparent,
+                    ),
                   ),
+
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(widget.borderRadius ?? 10),
+                    borderSide: BorderSide(
+                      color: widget.borderColor ?? Colors.transparent,
+                      width: 1.5, // optional
+                    ),
+                  ),
+
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(widget.borderRadius ?? 10),
+                    borderSide: BorderSide(
+                      color: widget.borderColor ?? Colors.transparent,
+                    ),
+                  ),
+
                   contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 ),
                 child: widget.isTime
                     ? Row(
@@ -101,44 +122,70 @@ class _SelectTimeProfitServiceWidgetState
                               size: widget.textSize ?? 13),
                         ],
                       )
-                    : DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          isExpanded: true,
-                          dropdownColor:
-                              widget.backGroundColor ?? AppColors.blueColor,
-                          value: selectedOption,
-                          hint: TextInAppWidget(
-                            text: widget.hint,
-                            textSize: 13,
-                            fontWeightIndex:
-                                FontSelectionData.regularFontFamily,
-                            textColor: widget.textColor ?? AppColors.whiteColor,
-                          ),
-                          items: widget.options!
-                              .map(
-                                (option) => DropdownMenuItem(
-                                  value: option,
-                                  child: TextInAppWidget(
-                                    text: option,
-                                    textSize: widget.textSize ?? 13,
-                                    fontWeightIndex:
-                                        FontSelectionData.regularFontFamily,
-                                    textColor: widget.textColor ??
-                                        AppColors.whiteColor,
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                          iconEnabledColor:
+                    : FormField<String>(
+                  validator: widget.validator,
+                  builder: (formFieldState) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,                      children: [
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            isExpanded: true,
+                            value: selectedOption,
+                            dropdownColor:
+                            widget.backGroundColor ?? AppColors.blueColor,
+                            hint: TextInAppWidget(
+                              text: widget.hint,
+                              textSize: 13,
+                              fontWeightIndex:
+                              FontSelectionData.regularFontFamily,
+                              textColor:
                               widget.textColor ?? AppColors.whiteColor,
-                          onChanged: (value) {
-                            context
-                                .read<OptionDashboardCubit>()
-                                .selectOption(value);
-                            textFormController.text = value ?? "";
-                          },
+                            ),
+                            items: widget.options!
+                                .map(
+                                  (option) => DropdownMenuItem(
+                                value: option,
+                                child: TextInAppWidget(
+                                  text: option,
+                                  textSize: widget.textSize ?? 12,
+                                  fontWeightIndex:
+                                  FontSelectionData.regularFontFamily,
+                                  textColor: widget.textColor ??
+                                      AppColors.whiteColor,
+                                ),
+                              ),
+                            )
+                                .toList(),
+                            iconEnabledColor:
+                            widget.textColor ?? AppColors.whiteColor,
+                            onChanged: (value) {
+                              context
+                                  .read<OptionDashboardCubit>()
+                                  .selectOption(value);
+
+                              formFieldState.didChange(value);
+
+                              if (value != null && widget.onChanged != null) {
+                                widget.onChanged!(value);
+                              }
+                            },
+                          ),
                         ),
-                      ),
+
+                        if (formFieldState.hasError)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: TextInAppWidget(
+                              text: formFieldState.errorText!,
+                              textColor: AppColors.redColor,
+                              textSize: 12,
+                            ),
+                          ),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
           );

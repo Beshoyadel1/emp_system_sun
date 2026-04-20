@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../features/dashboard_page/logic/get_provider_orders_sales_cubit/get_provider_orders_sales_cubit.dart';
 import '../../../../../core/language/language_constant.dart';
 import '../../../../../core/theming/fonts.dart';
 import '../../../../../core/pages_widgets/general_widgets/custom_container.dart';
@@ -16,10 +18,10 @@ class ChartOrder extends StatelessWidget {
         containerHeight: 504,
         isSelected: false,
         onTap: () {},
-        typeWidget: const Column(
+        typeWidget:  Column(
           spacing: 60,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.only(top: 18.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -29,11 +31,16 @@ class ChartOrder extends StatelessWidget {
                     textSize: 16,
                     fontWeightIndex: FontSelectionData.regularFontFamily,
                   ),
-                  SizedBox(width: 300, child: SelectDateWidget()),
+                 // SizedBox(width: 300, child: SelectDateWidget()),
                 ],
               ),
             ),
-            CustomLineChart(),
+            BlocProvider(
+              create: (_) =>
+              GetProviderOrdersSalesCubit()
+                ..getProviderOrdersSales(),
+              child: const CustomLineChart(),
+            )
           ],
         ));
   }

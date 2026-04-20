@@ -1,4 +1,14 @@
+import 'dart:async';
+import 'dart:math';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/api/dio_function/api_constants.dart';
+import '../../../../core/api_functions/user/check_if_user_exist_or_not_model/check_if_user_exist_or_not_repository.dart';
+import '../../../../core/api_functions/user/check_if_user_exist_or_not_model/check_if_user_exist_or_not_request.dart';
+import '../../../../core/pages_widgets/general_widgets/navigate_to_page_widget.dart';
+import '../../../../features/auth_page/change_password/change_password_page.dart';
 import '../../../../core/api_functions/user/change_password_model/change_password_repository.dart';
 import '../../../../core/api_functions/user/change_password_model/change_password_request.dart';
 import '../../../../core/api_functions/user/check_if_user_exist_model/check_if_user_exist_repository.dart';
@@ -12,8 +22,7 @@ import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
-
-  String otpCode = "";
+  static AuthCubit get(context) => BlocProvider.of(context);
 
   String phoneNumber = "";
 
@@ -22,16 +31,108 @@ class AuthCubit extends Cubit<AuthState> {
   bool get isConfirmPasswordObscure => _isConfirmPasswordObscure;
   bool isPasswordVisible = false;
 
+
+
+// ================= OTP =================
+
+  Timer? _timer;
+  int secondsRemaining = 30;
+  String otpCode = "";
+
+  void generateOtp() {
+    final random = Random();
+    otpCode = (1000 + random.nextInt(9000)).toString();
+
+    print("OTP CODE: $otpCode");
+
+    startTimer();
+    emit(AuthOtpGenerated());
+  }
+
+  void startTimer() {
+    secondsRemaining = 30;
+    _timer?.cancel();
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (secondsRemaining == 0) {
+        timer.cancel();
+        emit(AuthOtpExpired());
+      } else {
+        secondsRemaining--;
+        emit(AuthOtpTimer());
+      }
+    });
+  }
+
+  bool isOtpError = false;
+
+  void validateOtp(String code, BuildContext context,String email) {
+    if (code == otpCode) {
+      isOtpError = false;
+      emit(AuthOtpSuccess());
+
+      Navigator.pop(context);
+      Navigator.push(
+        context,
+        NavigateToPageWidget(ChangePasswordPage(email: email)),
+      );
+    } else {
+      isOtpError = true;
+      emit(AuthOtpError(AppLanguageKeys.wrongCode));
+    }
+  }
+
+  void resetOtpError() {
+    if (isOtpError) {
+      isOtpError = false;
+      emit(AuthOtpReset());
+    }
+  }
+  void resendOtp() {
+    generateOtp();
+    isOtpError = false;
+    emit(AuthOtpGenerated());
+  }
+
   void togglePasswordVisibility() {
     isPasswordVisible = !isPasswordVisible;
     emit(AuthPasswordVisibilityChanged());
   }
   void updatePhone(String phone) {
     phoneNumber = phone;
-    emit(AuthInitial());
+    emit(AuthInitial()); // optional state
   }
 
 
+  Future<void> checkIfUserExistOrNot({
+    required String email,
+    required String phone,
+  }) async {
+    emit(AuthLoginLoading());
+
+    final result = await checkIfUserExistOrNotFunction(
+      request: CheckIfUserExistOrNotRequest(
+        user: email,
+        type: UserType.providerUser,
+      ),
+    );
+
+    if (result != null && result.isNotEmpty) {
+      final user = result.first;
+
+      if (user.value == true &&
+          user.phone == phone) {
+
+        emit(AuthLoginSuccess());
+
+      } else {
+        emit(AuthLoginError(AppLanguageKeys.emailOrPhoneInvalid));
+      }
+
+    } else {
+      emit(AuthLoginError(AppLanguageKeys.userNotFound));
+    }
+  }
 
   void toggleConfirmPasswordVisibility() {
     _isConfirmPasswordObscure = !_isConfirmPasswordObscure;
@@ -42,16 +143,37 @@ class AuthCubit extends Cubit<AuthState> {
   void showSignup() => emit(AuthShowSignup());
   void showRestPassword() => emit(AuthShowRestPassword());
 
+
+
   Future<void> login(LoginRequest request) async {
     emit(AuthLoginLoading());
 
     final user = await loginFunction(loginRequest: request);
 
     if (user != null) {
-      emit(AuthLoginSuccess(user));
+      emit(AuthAuthenticated());
     } else {
-      emit(AuthInitial());
+      emit(AuthLoginError(AppLanguageKeys.loginFailed));
     }
+  }
+
+  Future<void> checkAuth() async {
+    emit(AuthLoading());
+
+    final isLoggedIn = await AuthLocalStorage.isLoggedIn();
+
+    //print("IS LOGGED IN: $isLoggedIn");
+
+    if (isLoggedIn) {
+      emit(AuthAuthenticated());
+    } else {
+      emit(AuthUnauthenticated());
+    }
+  }
+
+  Future<void> logout() async {
+    await AuthLocalStorage.clearUser();
+    emit(AuthUnauthenticated());
   }
 
   Future<void> checkEmailExist(CheckIfUserExistRequest checkIfUserExistRequest) async {

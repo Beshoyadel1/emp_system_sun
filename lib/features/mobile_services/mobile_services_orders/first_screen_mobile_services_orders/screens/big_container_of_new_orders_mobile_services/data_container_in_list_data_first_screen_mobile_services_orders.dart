@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import '../../../../../../features/mobile_services/mobile_services_orders/first_screen_mobile_services_orders/screens/big_container_of_new_orders_mobile_services/part_container_big_container_of_new_orders_mobile_services_orders/second_part_data_container_in_list_data_first_screen_mobile_services_orders.dart';
+import '../../../../../../../features/mobile_services/mobile_services_orders/first_screen_mobile_services_orders/screens/big_container_of_new_orders_mobile_services/part_container_big_container_of_new_orders_mobile_services_orders/second_part_data_container_in_list_data_first_screen_mobile_services_orders.dart';
 import '../../../../../../../features/internal_services/internal_orders/first_screen_internal_orders/screens/big_container_of_new_orders/first_row_in_data_container_in_list_data_first_screen_internal_orders.dart';
 
 class DataContainerInListDataFirstScreenMobileServicesOrders extends StatelessWidget {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../../../core/language/language_constant.dart';
 import '../../../../../../../../core/theming/colors.dart';
 import '../../../../../../../../core/theming/fonts.dart';
 import '../../../../../../../../core/theming/text_styles.dart';
@@ -19,7 +20,7 @@ class TitleWithSubTitleInOrderDetailsEmp extends StatelessWidget {
         //   textColor:AppColors.blackColor,
         // ),
         TextInAppWidget(
-          text:'عرض جميع تفاصيل الطلب ',
+          text:AppLanguageKeys.viewAllOrderDetails,
           textSize: 17,
           fontWeightIndex: FontSelectionData.regularFontFamily,
           textColor:AppColors.blackColor44,

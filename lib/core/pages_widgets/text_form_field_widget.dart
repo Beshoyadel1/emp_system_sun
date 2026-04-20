@@ -10,6 +10,7 @@ class TextFormFieldWidget extends StatefulWidget {
   const TextFormFieldWidget({
     super.key,
     required this.textFormController,
+
     this.textFormWidth,
     this.text,
     this.isValidator,
@@ -59,6 +60,7 @@ class TextFormFieldWidget extends StatefulWidget {
   });
 
   final TextEditingController textFormController;
+
   final FormFieldValidator<String>? validator;
 
   final String? text;
@@ -174,6 +176,7 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
       width: widget.textFormWidth,
       height: widget.textFormHeight,
       child: TextFormField(
+        onChanged: widget.onChanged,
         controller: widget.textFormController,
         focusNode: widget.focusNode ?? internalFocusNode,
         readOnly: widget.readOnly ?? false,
