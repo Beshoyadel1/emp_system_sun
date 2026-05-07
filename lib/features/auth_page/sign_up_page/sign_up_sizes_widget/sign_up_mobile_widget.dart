@@ -104,20 +104,34 @@ class _SignUpMobileWidgetState extends State<SignUpMobileWidget> {
                     const SizedBox(height: 10),
                     BlocListener<AuthCubit, AuthState>(
                       listener: (context, state) async {
+
                         if (state is AuthSignupSuccess) {
+
+
                           AppSnackBar.showSuccess(
-                              "Account created successfully");
-                          Navigator.pop(context);
-                          context.read<AuthCubit>().login(
-                                LoginRequest(
-                                  user: emailController.text.trim(),
-                                  password: passwordController.text.trim(),
-                                  type: UserType.providerUser,
-                                ),
-                              );
+                            "Account created successfully",
+                          );
+
+                          await context.read<AuthCubit>().login(
+                            LoginRequest(
+                              user: emailController.text.trim(),
+                              password: passwordController.text.trim(),
+                              type: UserType.employeeUser,
+                            ),
+                          );
+
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                          }
                         }
 
                         if (state is AuthSignupError) {
+
+                          AppSnackBar.showError(state.message);
+                        }
+
+                        if (state is AuthLoginError) {
+
                           AppSnackBar.showError(state.message);
                         }
                       },

@@ -249,51 +249,102 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
   Future<void> updateUser(CreateUserRequest request) async {
+
     if (isClosed) return;
 
     emit(AuthUpdateLoading());
 
     try {
-      final oldUser = await AuthLocalStorage.getUser();
+
+      final oldUser =
+      await AuthLocalStorage.getUser();
 
       print("========== REQUEST ==========");
       print(jsonEncode(request.toJson()));
 
-      final bool isSuccess = await updateUserFunction(
+      final bool isSuccess =
+      await updateUserFunction(
         createUserRequest: request,
       );
 
       if (isClosed) return;
 
       if (isSuccess) {
+
         final updatedUser = CreateUserRequest(
-          userid: oldUser?.userid,
-          username: request.username ?? oldUser?.username,
-          phone: request.phone ?? oldUser?.phone,
-          email: request.email ?? oldUser?.email,
-          age: request.age ?? oldUser?.age,
-          gander: request.gander ?? oldUser?.gander,
-          image: request.image ?? oldUser?.image,
-          type: oldUser?.type,
-          isActive: oldUser?.isActive,
-          joinDate: oldUser?.joinDate,
+
+          userid:
+          oldUser?.userid,
+
+          username:
+          request.username ??
+              oldUser?.username,
+
+          phone:
+          request.phone ??
+              oldUser?.phone,
+
+          email:
+          request.email ??
+              oldUser?.email,
+
+          age:
+          request.age ??
+              oldUser?.age,
+
+          gander:
+          request.gander ??
+              oldUser?.gander,
+
+          image:
+          request.image ??
+              oldUser?.image,
+
+          type:
+          oldUser?.type,
+
+          isActive:
+          oldUser?.isActive,
+
+          joinDate:
+          oldUser?.joinDate,
+
+          /// ✅ احفظ الجديد
           providerDetails:
-          request.providerDetails ?? oldUser?.providerDetails,
+          request.providerDetails ??
+              oldUser?.providerDetails,
+
+          /// ✅ احفظ القديم لو الجديد null
+          employeeDetails:
+          request.employeeDetails ??
+              oldUser?.employeeDetails,
         );
 
-        await AuthLocalStorage.saveUser(updatedUser);
+        print("========== SAVED USER ==========");
+        print(jsonEncode(updatedUser.toJson()));
+
+        await AuthLocalStorage.saveUser(
+          updatedUser,
+        );
 
         emit(AuthUpdateSuccess());
+
       } else {
-        emit(AuthUpdateError("Update failed"));
+
+        emit(
+          AuthUpdateError("Update failed"),
+        );
       }
+
     } catch (e) {
+
       print("🔥 ERROR: $e");
+
       if (isClosed) return;
+
       emit(AuthUpdateError(e.toString()));
     }
   }
-
   Future<void> logout() async {
     emit(AuthLoading()); // optional loading
 
@@ -330,23 +381,48 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> signup(CreateUserRequest request) async {
+
     if (isClosed) return;
 
     emit(AuthSignupLoading());
 
-    final bool isSuccess =
-    await createUserFunction(createUserRequest: request);
+    try {
 
-    if (isClosed) return;
 
-    if (isSuccess) {
-      emit(AuthSignupSuccess());
-    } else {
-      emit(AuthInitial());
+      final bool isSuccess =
+      await createUserFunction(
+        createUserRequest: request,
+      );
+
+
+      if (isClosed) return;
+
+      if (isSuccess) {
+
+        emit(AuthSignupSuccess());
+
+      } else {
+
+
+        emit(
+          AuthSignupError(
+            AppLanguageKeys.somethingWentWrong,
+          ),
+        );
+      }
+
+    } catch (e, stackTrace) {
+
+
+      if (isClosed) return;
+
+      emit(
+        AuthSignupError(
+          e.toString(),
+        ),
+      );
     }
-  }
-
-  // ================= Validators =================
+  }  // ================= Validators =================
 
   String? nameValidator(String? value) {
     if (value == null || value.trim().isEmpty) {

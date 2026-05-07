@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:emp_system_sun/core/api_functions/user/create_user_model/employee_details_request.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -75,18 +77,25 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
     }
   }
   void _onUpdate() async {
+
     final user = await AuthLocalStorage.getUser();
+
     final facilityCubit = context.read<FacilityTabCubit>();
 
     final oldProvider = user?.providerDetails;
+
     final oldEmployee = user?.employeeDetails;
 
     final request = CreateUserRequest(
+
       userid: user?.userid ?? 0,
-      type: user?.type,
+
       username: user?.username,
 
+      type: user?.type,
+
       phone: safe(phoneController.text),
+
       email: safe(emailController.text),
 
       age: ageController.text.isNotEmpty
@@ -97,35 +106,48 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
           ? int.tryParse(genderController.text)
           : null,
 
-      image: facilityCubit.images['image'] ?? user?.image,
+      image:
+      facilityCubit.images['image'] ??
+          user?.image,
 
       providerDetails: ProviderDetailsRequest(
+
         id: oldProvider?.id,
+
         provid: oldProvider?.provid,
 
-        name: safe(facilityNameController.text),
-        latinname: safe(facilityNameEnController.text),
+        name:
+        safe(facilityNameController.text),
 
-        cr: safe(crController.text),
-        vatno: safe(vatNoController.text),
+        latinname:
+        safe(facilityNameEnController.text),
 
-        nationaladdress: safe(nationalAddressController.text),
+        cr:
+        safe(crController.text),
+
+        vatno:
+        safe(vatNoController.text),
+
+        nationaladdress:
+        safe(nationalAddressController.text),
 
         crimage:
-        facilityCubit.images['crimage'] ?? oldProvider?.crimage,
+        facilityCubit.images['crimage'] ??
+            oldProvider?.crimage,
 
         vatnoimage:
-        facilityCubit.images['vatnoimage'] ?? oldProvider?.vatnoimage,
+        facilityCubit.images['vatnoimage'] ??
+            oldProvider?.vatnoimage,
       ),
 
       employeeDetails: EmployeeDetailsRequest(
-        provid: oldEmployee?.provid,
         id: oldEmployee?.id,
+        provid: oldEmployee?.provid,
       ),
     );
 
     debugPrint("========== REQUEST ==========");
-    debugPrint(request.toJson().toString());
+    debugPrint(jsonEncode(request.toJson()));
 
     context.read<AuthCubit>().updateUser(request);
   }
@@ -215,16 +237,16 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
           spacing: 20,
           runSpacing: 20,
           children: [
-            AttachImage(
-              title: AppLanguageKeys.commercialRecordKey,
-              type: 'crimage',
-              isEditMode: isEditMode,
-            ),
-            AttachImage(
-              title: AppLanguageKeys.taxNumber,
-              type: 'vatnoimage',
-              isEditMode: isEditMode,
-            ),
+            // AttachImage(
+            //   title: AppLanguageKeys.commercialRecordKey,
+            //   type: 'crimage',
+            //   isEditMode: isEditMode,
+            // ),
+            // AttachImage(
+            //   title: AppLanguageKeys.taxNumber,
+            //   type: 'vatnoimage',
+            //   isEditMode: isEditMode,
+            // ),
             AttachImage(
               title: AppLanguageKeys.ownerIdKey,
               type: 'image',

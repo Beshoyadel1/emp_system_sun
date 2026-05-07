@@ -38,9 +38,6 @@ class FacilityValidator {
     if (!isValid(user.phone)) missing.add(AppLanguageKeys.phoneNumber);
     if (!isValid(user.email)) missing.add(AppLanguageKeys.email);
 
-    /// 🔴 Images
-    if (!isValid(p?.crimage?.toString())) missing.add(AppLanguageKeys.commercialRecordKey);
-    if (!isValid(p?.vatnoimage?.toString())) missing.add(AppLanguageKeys.taxNumber);
     if (!isValid(user.image?.toString())) missing.add(AppLanguageKeys.ownerIdKey);
 
     /// 🔴 Branch
