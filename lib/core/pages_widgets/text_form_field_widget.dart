@@ -225,10 +225,10 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
 
         decoration: InputDecoration(
           counterText: widget.maxLength != null ? '' : null,
-
           errorStyle: const TextStyle(
-            fontSize: 12,
-            color: AppColors.redColor,
+              height: 0.01,
+              fontSize: 1,
+              color: AppColors.redColor
           ),
 
           filled: true,

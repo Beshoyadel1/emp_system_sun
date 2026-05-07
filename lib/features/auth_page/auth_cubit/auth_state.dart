@@ -60,3 +60,18 @@ class AuthOtpError extends AuthState {
 class AuthOtpSuccess extends AuthState {}
 
 class AuthOtpReset extends AuthState {}
+
+class AuthUpdateLoading extends AuthState {}
+
+class AuthUpdateSuccess extends AuthState {}
+
+class AuthUpdateError extends AuthState {
+  final String error;
+  AuthUpdateError(this.error);
+}
+class AuthIncompleteProfile extends AuthState {
+  final List<String> missing;
+
+  AuthIncompleteProfile(this.missing);
+}
+class AuthChangePasswordSuccess extends AuthState {}

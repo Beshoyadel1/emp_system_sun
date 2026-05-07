@@ -1,14 +1,14 @@
+import 'package:emp_system_sun/core/api_functions/user/create_user_model/employee_details_request.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
+import '../../../../core/api_functions/user/login_model/login_request.dart';
 import '../../../../core/api_functions/user/create_user_model/provider_details_request.dart';
 import '../../../../core/api/dio_function/api_constants.dart';
 import '../../../../features/auth_page/auth_cubit/auth_cubit.dart';
 import '../../../../features/auth_page/auth_cubit/auth_state.dart';
 import '../../../../core/api_functions/user/create_user_model/create_user_request.dart';
-import '../../../../core/pages_widgets/general_widgets/navigate_to_page_widget.dart';
 import '../../../../core/pages_widgets/general_widgets/snakbar.dart';
-import '../../../../features/auth_page/login_page/login_page.dart';
 import '../../../../core/language/language_constant.dart';
 import '../../../../core/theming/assets.dart';
 import '../../../../core/theming/colors.dart';
@@ -33,7 +33,7 @@ class _SignUpMobileWidgetState extends State<SignUpMobileWidget> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
-  TextEditingController();
+      TextEditingController();
 
   @override
   void dispose() {
@@ -54,7 +54,7 @@ class _SignUpMobileWidgetState extends State<SignUpMobileWidget> {
         children: [
           SizedBox(
             height: 40,
-            child: AppBar(backgroundColor: AppColors.orangeColor),
+            child: AppBar(backgroundColor: AppColors.seaBlueColor),
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -65,34 +65,27 @@ class _SignUpMobileWidgetState extends State<SignUpMobileWidget> {
                   spacing: 10,
                   children: [
                     const LoginLanguageButtonWidget(),
-
                     Image.asset(
-                      AppImageKeys.sarLogo,
+                      AppImageKeys.sarLogoEmp,
                       height: 50,
                       width: 170,
                       fit: BoxFit.fill,
                     ),
-
                     const TextInAppWidget(
                       text: AppLanguageKeys.signUpTitleKey,
                       textSize: 25,
-                      fontWeightIndex:
-                      FontSelectionData.boldFontFamily,
+                      fontWeightIndex: FontSelectionData.boldFontFamily,
                     ),
-
-                    /// fields
                     UserTextFieldWidget(
                       type: UserFieldType.name,
                       controller: usernameController,
                       text: AppLanguageKeys.userName,
                     ),
-
                     UserTextFieldWidget(
                       type: UserFieldType.phone,
                       controller: phoneController,
                       text: AppLanguageKeys.phoneNumberKey,
                     ),
-
                     UserTextFieldWidget(
                       type: UserFieldType.email,
                       controller: emailController,
@@ -109,59 +102,68 @@ class _SignUpMobileWidgetState extends State<SignUpMobileWidget> {
                       text: AppLanguageKeys.confirmPasswordKey,
                     ),
                     const SizedBox(height: 10),
-
-                    BlocBuilder<AuthCubit, AuthState>(
-                      buildWhen: (previous, current) =>
-                      current is AuthSignupLoading ||
-                          current is AuthSignupSuccess ||
-                          current is AuthSignupError ||
-                          previous is AuthSignupLoading,
-                      builder: (context, state) {
-                        final bool isLoading = state is AuthSignupLoading;
-
+                    BlocListener<AuthCubit, AuthState>(
+                      listener: (context, state) async {
                         if (state is AuthSignupSuccess) {
-                          Future.microtask(() {
-                            Navigator.of(context).pushReplacement(
-                              NavigateToPageWidget(const LoginPage()),
-                            );
-                          });
+                          AppSnackBar.showSuccess(
+                              "Account created successfully");
+                          Navigator.pop(context);
+                          context.read<AuthCubit>().login(
+                                LoginRequest(
+                                  user: emailController.text.trim(),
+                                  password: passwordController.text.trim(),
+                                  type: UserType.providerUser,
+                                ),
+                              );
                         }
 
                         if (state is AuthSignupError) {
-                          Future.microtask(() {
-                            AppSnackBar.showError(state.message);
-                          });
+                          AppSnackBar.showError(state.message);
                         }
-
-                        return LoginButtonWidget(
-                          text: AppLanguageKeys.login,
-                          isLoading: isLoading,
-                          onPressed: isLoading
-                              ? null
-                              : () {
-                            if (!_formKey.currentState!.validate()) return;
-
-                            final password = passwordController.text.trim();
-                            final confirm = confirmPasswordController.text.trim();
-
-                            if (password != confirm) {
-                              AppSnackBar.showError(
-                                  AppLanguageKeys.passwordsDoNotMatch);
-                              return;
-                            }
-                            context.read<AuthCubit>().signup(
-                              CreateUserRequest(
-                                username: usernameController.text.trim(),
-                                phone: phoneController.text.trim(),
-                                email: emailController.text.trim(),
-                                password: password,
-                                type: UserType.providerUser,
-                                providerDetails: const ProviderDetailsRequest(),
-                              ),
-                            );
-                          },
-                        );
                       },
+                      child: BlocBuilder<AuthCubit, AuthState>(
+                        buildWhen: (previous, current) =>
+                            current is AuthSignupLoading ||
+                            current is AuthSignupSuccess ||
+                            current is AuthSignupError ||
+                            previous is AuthSignupLoading,
+                        builder: (context, state) {
+                          final isLoading = state is AuthSignupLoading;
+
+                          return LoginButtonWidget(
+                            text: AppLanguageKeys.signUpTitleKey,
+                            isLoading: isLoading,
+                            onPressed: isLoading
+                                ? null
+                                : () {
+                                    if (!_formKey.currentState!.validate())
+                                      return;
+
+                                    final password =
+                                        passwordController.text.trim();
+                                    final confirm =
+                                        confirmPasswordController.text.trim();
+
+                                    if (password != confirm) {
+                                      AppSnackBar.showError(
+                                          AppLanguageKeys.passwordsDoNotMatch);
+                                      return;
+                                    }
+
+                                    context.read<AuthCubit>().signup(
+                                          CreateUserRequest(
+                                            username: usernameController.text.trim(),
+                                            phone: phoneController.text.trim(),
+                                            email: emailController.text.trim(),
+                                            password: password,
+                                            type: UserType.employeeUser,
+                                            employeeDetails: const EmployeeDetailsRequest(),
+                                          ),
+                                        );
+                                  },
+                          );
+                        },
+                      ),
                     ),
                     const SizedBox(height: 10),
                   ],

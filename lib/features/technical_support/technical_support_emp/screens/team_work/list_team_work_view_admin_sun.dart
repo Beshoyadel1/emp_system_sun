@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../../../../features/internal_services/internal_orders/custom_widget/text_empty_view_data.dart';
 import '../../../../../features/technical_support/custom_widget/row_member_team_work_widget.dart';
 import '../../../../../features/technical_support/logic/work_team_cubit/work_team_cubit.dart';
 import '../../../../../features/technical_support/logic/work_team_cubit/work_team_state.dart';
@@ -29,13 +30,9 @@ class ListTeamWorkViewAdminSun extends StatelessWidget {
         if (state is WorkTeamSuccess) {
           final users = state.users;
 
-          if (users.isEmpty) {
-            return const SizedBox(
-              height: 300,
-              child: Center(child: Text("No team members")),
-            );
+          if (state.users.isEmpty) {
+            return const TextEmptyViewData();
           }
-
           return SizedBox(
             height: 300,
             child: ListView.separated(

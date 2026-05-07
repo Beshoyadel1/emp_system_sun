@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../../core/pages_widgets/general_widgets/snakbar.dart';
+import '../../../../../../features/auth_page/auth_cubit/auth_cubit.dart';
+import '../../../../../../features/auth_page/auth_cubit/auth_state.dart';
 import '../../../../../../features/store_page/store_widgets/car_model_widget/widgets/tabs_widget.dart';
-import '../../../../../../features/store_page/store_widgets/navigator_button.dart';
 import '../../../../../../../features/store_page/model/facility_model/facility_model.dart';
 import '../../../../../../../features/store_page/model/facility_cubit/facility_tab_cubit/facility_tab_cubit.dart';
 import '../../../../../../../features/store_page/model/facility_cubit/facility_tab_cubit/facility_tab_state.dart';
@@ -50,31 +52,32 @@ class FacilityAccount extends StatelessWidget {
                         const TabsWidget(),
                         const SizedBox(height: 30),
                         facilityTabs[
-                                context.read<FacilityTabCubit>().selectedIndex]
+                        context.read<FacilityTabCubit>().selectedIndex]
                             .content,
                         const SizedBox(height: 100),
                       ],
                     ),
                     onTap: () {},
                   ),
-                  BlocBuilder<FacilityTabCubit, FacilityTabState>(
-                    builder: (context, state) {
-                      final cubit = context.read<FacilityTabCubit>();
-                      final isLastTab =
-                          cubit.selectedIndex == facilityTabs.length - 1;
-                      return isLastTab
-                          ? NavigatorButton(
-                              textGrayButton: AppLanguageKeys.backKey,
-                              onTapGrayButton: () => cubit.previousTab(),
-                            )
-                          : NavigatorButton(
-                              textOrangeButton: AppLanguageKeys.nextKey,
-                              textGrayButton: AppLanguageKeys.backKey,
-                              onTapGrayButton: () => cubit.previousTab(),
-                              onTapOrangeButton: () => cubit.nextTab(),
-                            );
-                    },
-                  ),
+                  const SizedBox(height: 20),
+                  // BlocBuilder<FacilityTabCubit, FacilityTabState>(
+                  //   builder: (context, state) {
+                  //     final cubit = context.read<FacilityTabCubit>();
+                  //     final isLastTab =
+                  //         cubit.selectedIndex == facilityTabs.length - 1;
+                  //     return isLastTab
+                  //         ? NavigatorButton(
+                  //             textGrayButton: AppLanguageKeys.backKey,
+                  //             onTapGrayButton: () => cubit.previousTab(),
+                  //           )
+                  //         : NavigatorButton(
+                  //             textOrangeButton: AppLanguageKeys.nextKey,
+                  //             textGrayButton: AppLanguageKeys.backKey,
+                  //             onTapGrayButton: () => cubit.previousTab(),
+                  //             onTapOrangeButton: () => cubit.nextTab(),
+                  //           );
+                  //   },
+                  // ),
                 ],
               ),
             ),

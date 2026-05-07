@@ -23,6 +23,9 @@ class ProvService {
   final int taxid;
   final String name;
   final String latinname;
+  final double uniformprice;
+  final double cost;
+  final bool isuniformprice;
 
   ProvService({
     required this.id,
@@ -31,6 +34,9 @@ class ProvService {
     required this.taxid,
     required this.name,
     required this.latinname,
+    required this.uniformprice,
+    required this.cost,
+    required this.isuniformprice,
   });
 
   factory ProvService.fromJson(Map<String, dynamic> json) {
@@ -41,6 +47,9 @@ class ProvService {
       taxid: json['taxid'],
       name: json['name'],
       latinname: json['latinname'],
+      uniformprice: (json['uniformprice'] as num?)?.toDouble() ?? 0.0,
+      cost: (json['cost'] as num?)?.toDouble() ?? 0.0,
+      isuniformprice: (json['isuniformprice'] as bool?) ?? false,
     );
   }
 }
@@ -86,7 +95,7 @@ class ProvServiceBrand {
       provserviceid: json['provserviceid'],
       brandid: json['brandid'],
       uniformprice: json['uniformprice']?.toDouble(),
-      isuniformprice: json['isuniformprice'],
+      isuniformprice: (json['isuniformprice'] as bool?) ?? false,
       cost: json['cost']?.toDouble(),
     );
   }
@@ -114,8 +123,8 @@ class ModelItem {
       provserviceid: json['provserviceid'],
       carbrandid: json['carbrandid'],
       carmodelid: json['carmodelid'],
-      price: json['price'].toDouble(),
-      cost: json['cost'].toDouble(),
+      price: (json['price'] as num?)?.toDouble() ?? 0.0,
+      cost: (json['cost'] as num?)?.toDouble() ?? 0.0,
     );
   }
 }

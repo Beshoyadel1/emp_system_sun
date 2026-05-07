@@ -193,7 +193,7 @@ class _OtpPageState extends State<OtpPage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.orangeColor,
+                    backgroundColor: AppColors.seaBlueColor,
                     padding: const EdgeInsets.symmetric(vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),

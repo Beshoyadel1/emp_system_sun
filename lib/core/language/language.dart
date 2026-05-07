@@ -31,18 +31,61 @@ class AppLocalizations {
       //END//
 
       //others//
+      AppLanguageKeys.check: 'تحقق',
+      AppLanguageKeys.addAtLeastOneBranch: 'أضف فرع واحد على الأقل',
+      AppLanguageKeys.addAtLeastOneWorkingHours: 'أضف مواعيد عمل واحدة على الأقل',
+
+      AppLanguageKeys.noBranchesYet: 'لا توجد فروع حتى الآن',
+      AppLanguageKeys.isSold: 'تم البيع',
+      AppLanguageKeys.releaseDate: 'تاريخ الإصدار',
+      AppLanguageKeys.transmissionType: 'نوع ناقل الحركة',
+      AppLanguageKeys.fuelType: 'نوع الوقود',
+
+      AppLanguageKeys.facilityName: 'اسم المنشأة',
+      AppLanguageKeys.facilityNameEn: 'اسم المنشأة بالإنجليزية',
+      AppLanguageKeys.commercialRegister: 'السجل التجاري',
+      AppLanguageKeys.shortAddress: 'العنوان المختصر',
+      AppLanguageKeys.selectGender: 'اختر النوع',
+      AppLanguageKeys.allWorkingHours: 'كل مواعيد العمل',
+      AppLanguageKeys.editWorkingHours: 'تعديل مواعيد العمل',
+      AppLanguageKeys.addWorkingHours: 'إضافة مواعيد العمل',
+      AppLanguageKeys.branchName: 'اسم الفرع',
+      AppLanguageKeys.branchLatinName: 'اسم الفرع بالإنجليزية',
+      AppLanguageKeys.addressText: 'وصف العنوان',
+      AppLanguageKeys.addressLatinText: 'وصف العنوان بالإنجليزية',
+      AppLanguageKeys.allBrands: 'كل الماركات',
+      AppLanguageKeys.allModels: 'كل الموديلات',
+      AppLanguageKeys.areYouSure: 'هل أنت متأكد؟',
+      AppLanguageKeys.remainingQuantity: 'باقي عدد قطع',
+      AppLanguageKeys.selectCarBrand: 'ماركة السيارة',
+      AppLanguageKeys.selectCarModel: 'موديل السيارة',
+      AppLanguageKeys.outOfStock: 'غير متوفر',
+      AppLanguageKeys.mustImageUpload: 'يجب رفع صورة',
+      AppLanguageKeys.attachImages: 'إرفاق الصور',
+      AppLanguageKeys.productCategoryId: 'معرف فئة المنتج',
+      AppLanguageKeys.latinDesc: 'الوصف اللاتيني',
+      AppLanguageKeys.inStock: 'متوفر في المخزون',
+      AppLanguageKeys.instructions: 'التعليمات',
+      AppLanguageKeys.isNew: 'جديد',
+      AppLanguageKeys.isNotNew: 'مستعمل',
+      AppLanguageKeys.sizes: 'المقاسات',
+      AppLanguageKeys.selectConversation: 'اختر محادثة',
+      AppLanguageKeys.male: 'ذكر',
+      AppLanguageKeys.female: 'أنثى',
+      AppLanguageKeys.servicePackage: 'باقة الخدمة',
       AppLanguageKeys.oldService: 'خدمة سابقة',
       AppLanguageKeys.createService: 'إنشاء خدمة',
       AppLanguageKeys.serviceNameAr: 'اسم الخدمة (عربي)',
       AppLanguageKeys.serviceNameEn: 'اسم الخدمة (إنجليزي)',
       AppLanguageKeys.restAll: 'إعادة تعيين الكل',
-      AppLanguageKeys.selectPricingTypeFirst : "اختار نوع التسعير الأول",
+      AppLanguageKeys.selectPricingTypeFirst: "اختار نوع التسعير الأول",
       AppLanguageKeys.cost: 'التكلفة',
       AppLanguageKeys.confirmDelete: 'هل أنت متأكد أنك تريد حذف هذا العنصر؟',
       AppLanguageKeys.description: 'الوصف',
       AppLanguageKeys.mileage: 'عدد الكيلومترات',
       AppLanguageKeys.carStatus: 'حالة السيارة',
-      AppLanguageKeys.emailOrPhoneInvalid: 'البريد الإلكتروني أو رقم الهاتف غير صحيح أو غير نشط',
+      AppLanguageKeys.emailOrPhoneInvalid:
+          'البريد الإلكتروني أو رقم الهاتف غير صحيح أو غير نشط',
       AppLanguageKeys.phoneInvalid: 'رقم الهاتف غير صحيح أو غير نشط',
       AppLanguageKeys.userNotFound: 'المستخدم غير موجود',
       AppLanguageKeys.wrongCode: 'رمز غير صحيح',
@@ -76,10 +119,12 @@ class AppLocalizations {
       AppLanguageKeys.rejectionReason: 'سبب رفض الطلب',
       AppLanguageKeys.orderInProgress: 'جاري تنفيذ الطلب',
       AppLanguageKeys.waitingForInvoicePayment: 'انتظار دفع الفاتورة',
-      AppLanguageKeys.carsListCurrentAndSold: 'قائمة السيارات من السيارات الحالية والمباعة سابقاً',
+      AppLanguageKeys.carsListCurrentAndSold:
+          'قائمة السيارات من السيارات الحالية والمباعة سابقاً',
       AppLanguageKeys.soldCars: 'سيارة مباعة',
       AppLanguageKeys.carList: 'قائمة السيارات',
-      AppLanguageKeys.availableCarsShortList: 'قائمة مختصرة من السيارات المتاحة',
+      AppLanguageKeys.availableCarsShortList:
+          'قائمة مختصرة من السيارات المتاحة',
       AppLanguageKeys.filling: 'التعبئة',
       AppLanguageKeys.fillingDate: 'تاريخ التعبئة',
       AppLanguageKeys.gender: 'الجنس',
@@ -101,7 +146,8 @@ class AppLocalizations {
       AppLanguageKeys.emailExist: 'البريد الإلكتروني موجود بالفعل',
       AppLanguageKeys.emailNotExist: 'البريد الإلكتروني غير موجود',
       AppLanguageKeys.phoneExist: 'رقم الهاتف موجود بالفعل',
-      AppLanguageKeys.emailOrPhoneExist: 'البريد الإلكتروني أو رقم الهاتف موجود بالفعل',
+      AppLanguageKeys.emailOrPhoneExist:
+          'البريد الإلكتروني أو رقم الهاتف موجود بالفعل',
       AppLanguageKeys.done: 'تمت العملية بنجاح',
       AppLanguageKeys.notFound: 'غير موجود',
       AppLanguageKeys.storeNotExist: 'المتجر غير موجود',
@@ -112,20 +158,26 @@ class AppLocalizations {
       AppLanguageKeys.notEnoughPoints: 'النقاط غير كافية',
       AppLanguageKeys.notEnoughBalance: 'الرصيد غير كافٍ',
       AppLanguageKeys.reservedUser: 'المستخدم محجوز',
-      AppLanguageKeys.haveOperationForDelete: 'لا يمكن الحذف لوجود عمليات مرتبطة',
+      AppLanguageKeys.haveOperationForDelete:
+          'لا يمكن الحذف لوجود عمليات مرتبطة',
       AppLanguageKeys.wrongReferralCode: 'كود الإحالة غير صحيح',
       AppLanguageKeys.empty: 'لا توجد بيانات',
       AppLanguageKeys.expired: 'منتهي الصلاحية',
-      AppLanguageKeys.couponReachMaxUse: 'تم الوصول للحد الأقصى لاستخدام الكوبون',
-      AppLanguageKeys.userReachMaxUseCoupon: 'وصل المستخدم للحد الأقصى لاستخدام الكوبون',
+      AppLanguageKeys.couponReachMaxUse:
+          'تم الوصول للحد الأقصى لاستخدام الكوبون',
+      AppLanguageKeys.userReachMaxUseCoupon:
+          'وصل المستخدم للحد الأقصى لاستخدام الكوبون',
       AppLanguageKeys.pointsFromNewOrder: 'تمت إضافة نقاط من طلب جديد',
       AppLanguageKeys.categoryExist: 'التصنيف موجود بالفعل',
       //End//
 
       //Api Failures//
-      AppLanguageKeys.oopsErrorTryAgain: 'عذراً، حدث خطأ ما، يرجى المحاولة مرة أخرى.',
-      AppLanguageKeys.internalServerError: 'خطأ في الخادم الداخلي، يرجى المحاولة لاحقاً.',
-      AppLanguageKeys.requestNotFound: 'لم يتم العثور على طلبك، يرجى المحاولة لاحقاً!',
+      AppLanguageKeys.oopsErrorTryAgain:
+          'عذراً، حدث خطأ ما، يرجى المحاولة مرة أخرى.',
+      AppLanguageKeys.internalServerError:
+          'خطأ في الخادم الداخلي، يرجى المحاولة لاحقاً.',
+      AppLanguageKeys.requestNotFound:
+          'لم يتم العثور على طلبك، يرجى المحاولة لاحقاً!',
       AppLanguageKeys.badResponseError: 'استجابة غير صحيحة، حدث خطأ ما.',
       AppLanguageKeys.success: 'تمت العملية بنجاح',
       AppLanguageKeys.badRequestError: 'طلب غير صالح',
@@ -145,24 +197,31 @@ class AppLocalizations {
 
       //login//
       AppLanguageKeys.fillAllFields: 'من فضلك قم بملء جميع الحقول',
-      AppLanguageKeys.enterUsernameAndPassword: 'من فضلك أدخل اسم المستخدم وكلمة المرور',
+      AppLanguageKeys.enterUsernameAndPassword:
+          'من فضلك أدخل اسم المستخدم وكلمة المرور',
       //End//
 
       //Model Messages//
       AppLanguageKeys.changePasswordSuccessfully: 'تم تغيير كلمة المرور بنجاح',
-      AppLanguageKeys.checkIfUserExistSuccessfully: 'تم التحقق من وجود المستخدم بنجاح',
-      AppLanguageKeys.checkIfUserExistOrNotSuccessfully: 'تم التحقق من وجود المستخدم أو عدمه بنجاح',
+      AppLanguageKeys.checkIfUserExistSuccessfully:
+          'تم التحقق من وجود المستخدم بنجاح',
+      AppLanguageKeys.checkIfUserExistOrNotSuccessfully:
+          'تم التحقق من وجود المستخدم أو عدمه بنجاح',
       AppLanguageKeys.accountCreatedSuccessfully: 'تم إنشاء الحساب بنجاح',
       AppLanguageKeys.deleteUserSuccessfully: 'تم حذف المستخدم بنجاح',
-      AppLanguageKeys.getAppUserInfoSuccessfully: 'تم جلب معلومات مستخدم التطبيق بنجاح',
+      AppLanguageKeys.getAppUserInfoSuccessfully:
+          'تم جلب معلومات مستخدم التطبيق بنجاح',
       AppLanguageKeys.accountLoginSuccessfully: 'تم تسجيل الدخول بنجاح',
       AppLanguageKeys.restoreUserSuccessfully: 'تم استرجاع المستخدم بنجاح',
       AppLanguageKeys.updateUserSuccessfully: 'تم تحديث المستخدم بنجاح',
 
-      AppLanguageKeys.changeCouponStatusSuccessfully: 'تم تغيير حالة الكوبون بنجاح',
+      AppLanguageKeys.changeCouponStatusSuccessfully:
+          'تم تغيير حالة الكوبون بنجاح',
       AppLanguageKeys.getCarSuccessfully: 'تم جلب بيانات السيارة بنجاح',
-      AppLanguageKeys.getCouponByCodeSuccessfully: 'تم جلب الكوبون بواسطة الكود بنجاح',
-      AppLanguageKeys.getStaticsForCouponSuccessfully: 'تم جلب إحصائيات الكوبون بنجاح',
+      AppLanguageKeys.getCouponByCodeSuccessfully:
+          'تم جلب الكوبون بواسطة الكود بنجاح',
+      AppLanguageKeys.getStaticsForCouponSuccessfully:
+          'تم جلب إحصائيات الكوبون بنجاح',
       AppLanguageKeys.uploadCouponSuccessfully: 'تم رفع الكوبون بنجاح',
 
       AppLanguageKeys.createRateSuccessfully: 'تم إنشاء التقييم بنجاح',
@@ -406,7 +465,7 @@ class AppLocalizations {
       AppLanguageKeys.sundayKey: 'الاحد',
       AppLanguageKeys.mondayKey: 'الاثنين',
       AppLanguageKeys.tuesdayKey: 'الثلاثاء',
-      AppLanguageKeys.wednesdayKey: 'الاربعا',
+      AppLanguageKeys.wednesdayKey: 'الاربعاء',
       AppLanguageKeys.thursdayKey: 'الخميس',
       AppLanguageKeys.fridayKey: 'الجمعة',
       AppLanguageKeys.weekDaysKey: 'ايام الاسبوع',
@@ -433,7 +492,7 @@ class AppLocalizations {
       AppLanguageKeys.attachFileKey: 'إرفاق الملف',
       AppLanguageKeys.ownerIdKey: 'بطاقة الهوية او اقامة صاحب الشركة',
       AppLanguageKeys.bankNameKey: 'اسم البنك',
-      AppLanguageKeys.beneficiaryNameKey: 'اسم االمستفيد',
+      AppLanguageKeys.beneficiaryNameKey: 'اسم المستفيد',
       AppLanguageKeys.bankAccountNumberKey: 'رقم حساب البنكي',
       AppLanguageKeys.swiftCodeKey: 'رقم السويفت',
       AppLanguageKeys.ibanNumberKey: 'رقم حساب الدولي الدولي الايبان',
@@ -716,7 +775,7 @@ class AppLocalizations {
       AppLanguageKeys.providersTermsAndConditions: '''
 1. التسجيل والاعتماد
 يشترط تسجيل المركز ببيانات صحيحة ودقيقة.
-يحق لـ صن مراجعة واعتماد أو رفض طلب التسجيل دون إبداء الأسباب.
+يحق لـ صان مراجعة واعتماد أو رفض طلب التسجيل دون إبداء الأسباب.
 يتحمل المزود مسؤولية تحديث بياناته باستمرار.
 
 2. استخدام المنصة
@@ -730,9 +789,9 @@ class AppLocalizations {
 يحق للعميل إلغاء أو تعديل الطلب وفق سياسات الإلغاء المعلنة.
 
 4. الالتزامات المالية
-يتم الاتفاق على آلية الدفع والتحصيل من خلال منصة صن.
+يتم الاتفاق على آلية الدفع والتحصيل من خلال منصة صان.
 يتحمل المزود أي التزامات مالية تجاه العملاء نتيجة الإخلال بتنفيذ الخدمة.
-قد يتم خصم رسوم خدمة أو عمولات لصالح صن حسب السياسة المعتمدة.
+قد يتم خصم رسوم خدمة أو عمولات لصالح صان حسب السياسة المعتمدة.
 
 5. التقييمات والمراجعات
 يحق للعملاء تقييم الخدمات المقدمة.
@@ -740,24 +799,24 @@ class AppLocalizations {
 
 6. المسؤولية
 يتحمل المزود المسؤولية الكاملة عن جودة الخدمات المقدمة.
-صن ليست مسؤولة عن أي أضرار مباشرة أو غير مباشرة تنتج عن تنفيذ الخدمة، وإنما دورها يقتصر على الوساطة بين المزود والعميل.
+صان ليست مسؤولة عن أي أضرار مباشرة أو غير مباشرة تنتج عن تنفيذ الخدمة، وإنما دورها يقتصر على الوساطة بين المزود والعميل.
 
 7. إنهاء الخدمة
-يحق لـ صن إيقاف أو إنهاء حساب المزود عند مخالفة الشروط أو الإضرار بسمعة المنصة.
+يحق لـ صان إيقاف أو إنهاء حساب المزود عند مخالفة الشروط أو الإضرار بسمعة المنصة.
 يحق للمزود طلب إغلاق حسابه في أي وقت بعد تسوية الالتزامات المالية.
 
 8. التعديلات على الشروط
-تحتفظ صن بحق تعديل أو تحديث الشروط والأحكام في أي وقت.
+تحتفظ صان بحق تعديل أو تحديث الشروط والأحكام في أي وقت.
 يتم إخطار المزودين بالتعديلات عبر المنصة أو البريد الإلكتروني.
 ''',
       AppLanguageKeys.providersPrivacyPolicy:
           "سياسة الخصوصية لمراكز السيارات (المزودين الخدميين)\n\n1. جمع المعلومات\nنقوم بجمع البيانات الأساسية الخاصة بالمراكز المزودة للخدمة مثل:\n- معلومات المركز (الاسم التجاري – الموقع – نوع الخدمات).\n- بيانات التواصل (الهاتف – البريد الإلكتروني).\n- بيانات الحساب (اسم المستخدم – كلمة المرور).\n\n2. استخدام المعلومات\nتُستخدم المعلومات فقط من أجل:\n- إنشاء الحساب وتفعيله.\n- إدارة الطلبات والخدمات.\n- التواصل بين المركز والعميل.\n- تحسين جودة الخدمة وتجربة الاستخدام.\n\n3. مشاركة المعلومات\nلا تتم مشاركة بيانات المزودين مع أي طرف ثالث خارج نطاق المنصة، إلا إذا كان ذلك مطلوبًا قانونيًا.\nبعض المعلومات مثل اسم المركز والخدمات متاحة للعملاء لتمكينهم من اختيار الخدمة.\n\n4. حماية البيانات\nنلتزم بحماية بيانات المزودين من أي وصول غير مصرح به عبر أنظمة آمنة وتشفير المعلومات الحساسة.\n\n5. حقوق المزود\n- الاطلاع على بياناته المسجلة وتحديثها.\n- طلب حذف الحساب من المنصة.\n- تقديم ملاحظات أو شكاوى بخصوص إدارة البيانات.\n\n6. التعديلات على السياسة\nقد نقوم بتحديث سياسة الخصوصية من وقت لآخر، وسيتم إخطار المزودين عند وجود أي تغييرات جوهرية.",
       AppLanguageKeys.aboutSunIntro:
-          "صن هو منصّة رقمية متخصصة في ربط أصحاب السيارات بمراكز الصيانة والخدمات المعتمدة. نهدف إلى تسهيل وصول العملاء إلى خدماتك وزيادة فرص مركزك في النمو، من خلال إدارة الطلبات بشكل منظم واحترافي عبر منصّة موثوقة وسهلة الاستخدام.\n\nمع صن، تحصل مراكز السيارات على:\n- قاعدة عملاء أوسع.\n- إدارة سهلة للطلبات والخدمات.\n- متابعة دقيقة للتقييمات والأداء.\n- فرص أكبر لزيادة الإيرادات وتوسيع النشاط.",
+          "صان هو منصّة رقمية متخصصة في ربط أصحاب السيارات بمراكز الصيانة والخدمات المعتمدة. نهدف إلى تسهيل وصول العملاء إلى خدماتك وزيادة فرص مركزك في النمو، من خلال إدارة الطلبات بشكل منظم واحترافي عبر منصّة موثوقة وسهلة الاستخدام.\n\nمع صان، تحصل مراكز السيارات على:\n- قاعدة عملاء أوسع.\n- إدارة سهلة للطلبات والخدمات.\n- متابعة دقيقة للتقييمات والأداء.\n- فرص أكبر لزيادة الإيرادات وتوسيع النشاط.",
 
       AppLanguageKeys.contactAndPoliciesPages: 'صفحات التواصل والسياسات',
       AppLanguageKeys.contactUs: 'تواصل معنا',
-      AppLanguageKeys.aboutSun: 'عن صن',
+      AppLanguageKeys.aboutSun: 'عن صان ',
       AppLanguageKeys.privacyPolicy: 'سياسة الخصوصية',
       AppLanguageKeys.termsAndConditions: 'الشروط والاحكام',
       AppLanguageKeys.sendUsMessage: 'قم بارسال رسالتك',
@@ -768,7 +827,7 @@ class AppLocalizations {
       AppLanguageKeys.advertisements: 'الاعلانات',
       AppLanguageKeys.bannerImage: 'صورة البنر',
       AppLanguageKeys.bannerSizeNote: 'المقاس المناسب للصورة هو 1108×428 بكسل',
-      AppLanguageKeys.uploadImage: 'ارفع صورة (jpg.jpeg.gif.png.webp)',
+      AppLanguageKeys.uploadImage: 'ارفع صورة',
       AppLanguageKeys.link: 'الرابط',
       AppLanguageKeys.category: 'تصنيف',
       AppLanguageKeys.storeOffers: 'عروض المتجر',
@@ -1009,7 +1068,7 @@ class AppLocalizations {
       توضح هذه السياسة كيفية جمع واستخدام ومشاركة المعلومات عند استخدامك لخدماتنا.
       
       المعلومات التي نقوم بجمعها
-      عند استخدامك لتطبيق صن، قد نقوم بجمع بعض المعلومات اللازمة لتقديم الخدمة، مثل:
+      عند استخدامك لتطبيق صان، قد نقوم بجمع بعض المعلومات اللازمة لتقديم الخدمة، مثل:
       - الاسم الكامل
       - رقم الجوال
       - عنوان البريد الإلكتروني
@@ -1043,7 +1102,7 @@ class AppLocalizations {
       
       التواصل معنا
       لأي استفسارات تتعلق بسياسة الخصوصية، يمكنك التواصل معنا عبر:
-      📧 البريد الإلكتروني: privacy@sun-app.com
+      📧 البريد الإلكتروني: privacy@san-app.com
       📞 الدعم الفني: 9200XXXXXX
       ''',
       AppLanguageKeys.personalData: 'البيانات الشخصية',
@@ -1108,7 +1167,7 @@ class AppLocalizations {
       AppLanguageKeys.insuranceType: 'نوع التأمين',
       AppLanguageKeys.insuranceValue: 'قيمة التأمين',
       AppLanguageKeys.installmentValue: 'قيمة القسط',
-      AppLanguageKeys.linkInsuranceWithSanad: 'ربط حساب التأمين مع صن',
+      AppLanguageKeys.linkInsuranceWithSanad: 'ربط حساب التأمين مع صان',
       AppLanguageKeys.pleaseWait: 'برجاء الانتظار',
       AppLanguageKeys.policyData: 'بيانات بوليصة التأمين',
       AppLanguageKeys.annualPayments: 'الدفعات السنوية',
@@ -1203,10 +1262,10 @@ class AppLocalizations {
       AppLanguageKeys.chooseFavoriteServices: 'أختر الخدمات المفضلة',
       AppLanguageKeys.congratulations: 'مبروووووك, لقد حصلت علي',
       AppLanguageKeys.gift: 'هدية',
-      AppLanguageKeys.sunWarranty: 'ضمان صن',
+      AppLanguageKeys.sunWarranty: 'ضمان صان',
       AppLanguageKeys.fiveYearsWarranty: 'لمدة 5 سنوات هدية',
       AppLanguageKeys.showServicesNow: 'عرض الخدمات الأن',
-      AppLanguageKeys.sunWarrantyFeatures: 'مميزات ضمان صن',
+      AppLanguageKeys.sunWarrantyFeatures: 'مميزات ضمان صان',
       AppLanguageKeys.warrantyCenters:
           'الاستفادة من ضمان الخدمات عبر مراكزنا المتعمدة',
       AppLanguageKeys.carWarrantyAuction:
@@ -1239,8 +1298,6 @@ class AppLocalizations {
     },
     'en': {
       //status//
-      AppLanguageKeys.serviceNameAr: 'Service Name (Arabic)',
-      AppLanguageKeys.serviceNameEn: 'Service Name (English)',
       AppLanguageKeys.notSold: 'Not Sold',
       AppLanguageKeys.sold: 'Sold',
       AppLanguageKeys.newCar: 'New',
@@ -1256,16 +1313,61 @@ class AppLocalizations {
       AppLanguageKeys.cancelledByUser: 'Cancelled by User',
       //END//
       //others//
+      AppLanguageKeys.check: 'Check',
+      AppLanguageKeys.addAtLeastOneBranch: 'Add at least one branch',
+      AppLanguageKeys.addAtLeastOneWorkingHours: 'Add at least one working hour',
+      AppLanguageKeys.noBranchesYet: 'No branches yet',
+      AppLanguageKeys.isSold: 'Is Sold',
+      AppLanguageKeys.releaseDate: 'Release Date',
+      AppLanguageKeys.transmissionType: 'Transmission Type',
+      AppLanguageKeys.fuelType: 'Fuel Type',
+      AppLanguageKeys.facilityName: 'Facility Name',
+      AppLanguageKeys.facilityNameEn: 'Facility Name (EN)',
+      AppLanguageKeys.commercialRegister: 'Commercial Register',
+      AppLanguageKeys.shortAddress: 'Short Address',
+      AppLanguageKeys.serviceNameAr: 'Service Name (Arabic)',
+      AppLanguageKeys.serviceNameEn: 'Service Name (English)',
+      AppLanguageKeys.selectGender: 'Select Gender',
+      AppLanguageKeys.allWorkingHours: 'All Working Hours',
+      AppLanguageKeys.editWorkingHours: 'Edit Working Hours',
+      AppLanguageKeys.addWorkingHours: 'Add Working Hours',
+      AppLanguageKeys.branchName: 'Branch Name',
+      AppLanguageKeys.branchLatinName: 'Branch Name (Latin)',
+      AppLanguageKeys.addressText: 'Address Description',
+      AppLanguageKeys.addressLatinText: 'Address Description (Latin)',
+      AppLanguageKeys.allBrands: 'All Brands',
+      AppLanguageKeys.allModels: 'All Models',
+      AppLanguageKeys.areYouSure: 'Are you sure?',
+      AppLanguageKeys.remainingQuantity: 'Remaining Quantity',
+      AppLanguageKeys.selectCarBrand: 'Car Brand',
+      AppLanguageKeys.selectCarModel: 'Car Model',
+      AppLanguageKeys.outOfStock: 'Out of Stock',
+      AppLanguageKeys.mustImageUpload: 'Image upload is required',
+      AppLanguageKeys.attachImages: 'Attach Images',
+      AppLanguageKeys.productCategoryId: 'Product Category ID',
+      AppLanguageKeys.latinDesc: 'Description',
+      AppLanguageKeys.inStock: 'In Stock',
+      AppLanguageKeys.instructions: 'Instructions',
+      AppLanguageKeys.isNew: 'New',
+      AppLanguageKeys.isNotNew: 'Used',
+      AppLanguageKeys.sizes: 'Sizes',
+      AppLanguageKeys.selectConversation: 'Select Conversation',
+      AppLanguageKeys.male: 'Male',
+      AppLanguageKeys.female: 'Female',
+      AppLanguageKeys.servicePackage: 'Service Package',
       AppLanguageKeys.oldService: 'Old Service',
       AppLanguageKeys.createService: 'Create Service',
       AppLanguageKeys.restAll: 'Reset All',
-      AppLanguageKeys.selectPricingTypeFirst : "Please select the pricing type first",
+      AppLanguageKeys.selectPricingTypeFirst:
+          "Please select the pricing type first",
       AppLanguageKeys.cost: 'Cost',
-      AppLanguageKeys.confirmDelete: 'Are you sure you want to delete this item?',
+      AppLanguageKeys.confirmDelete:
+          'Are you sure you want to delete this item?',
       AppLanguageKeys.description: 'Description',
       AppLanguageKeys.mileage: 'Mileage',
       AppLanguageKeys.carStatus: 'Car Status',
-      AppLanguageKeys.emailOrPhoneInvalid: 'Email or phone number is incorrect or inactive',
+      AppLanguageKeys.emailOrPhoneInvalid:
+          'Email or phone number is incorrect or inactive',
       AppLanguageKeys.phoneInvalid: 'Phone number is incorrect or inactive',
       AppLanguageKeys.userNotFound: 'User not found',
       AppLanguageKeys.wrongCode: 'Incorrect code',
@@ -1299,7 +1401,8 @@ class AppLocalizations {
       AppLanguageKeys.rejectionReason: 'Reason for Request Rejection',
       AppLanguageKeys.orderInProgress: 'Order in Progress',
       AppLanguageKeys.waitingForInvoicePayment: 'Waiting for Invoice Payment',
-      AppLanguageKeys.carsListCurrentAndSold: 'List of current and previously sold cars',
+      AppLanguageKeys.carsListCurrentAndSold:
+          'List of current and previously sold cars',
       AppLanguageKeys.soldCars: 'Sold Cars',
       AppLanguageKeys.carList: 'Car List',
       AppLanguageKeys.availableCarsShortList: 'Short List of Available Cars',
@@ -1310,11 +1413,13 @@ class AppLocalizations {
       AppLanguageKeys.order: 'Order',
       AppLanguageKeys.authCompanyNameRequired: 'Company name is required',
       AppLanguageKeys.authEmailRequired: 'Email is required',
-      AppLanguageKeys.authEnterCorrectEmail: 'Please enter a valid email address',
+      AppLanguageKeys.authEnterCorrectEmail:
+          'Please enter a valid email address',
       AppLanguageKeys.authPasswordRequired: 'Password is required',
       AppLanguageKeys.authWeakPassword: 'Password is too weak',
       AppLanguageKeys.authPhoneNumberRequired: 'Phone number is required',
-      AppLanguageKeys.authEnterCorrectPhoneNumber: 'Please enter a valid phone number',
+      AppLanguageKeys.authEnterCorrectPhoneNumber:
+          'Please enter a valid phone number',
       AppLanguageKeys.createNewPassword: 'Create New Password',
       //end//
       //message api response//
@@ -1335,19 +1440,24 @@ class AppLocalizations {
       AppLanguageKeys.notEnoughPoints: 'Not enough points',
       AppLanguageKeys.notEnoughBalance: 'Not enough balance',
       AppLanguageKeys.reservedUser: 'User is reserved',
-      AppLanguageKeys.haveOperationForDelete: 'Cannot delete, related operations exist',
+      AppLanguageKeys.haveOperationForDelete:
+          'Cannot delete, related operations exist',
       AppLanguageKeys.wrongReferralCode: 'Wrong referral code',
       AppLanguageKeys.empty: 'No data available',
       AppLanguageKeys.expired: 'Expired',
       AppLanguageKeys.couponReachMaxUse: 'Coupon reached maximum usage',
-      AppLanguageKeys.userReachMaxUseCoupon: 'User reached maximum coupon usage',
+      AppLanguageKeys.userReachMaxUseCoupon:
+          'User reached maximum coupon usage',
       AppLanguageKeys.pointsFromNewOrder: 'Points added from new order',
       AppLanguageKeys.categoryExist: 'Category already exists',
       //End//
       //Api Failures//
-      AppLanguageKeys.oopsErrorTryAgain: 'Oops! There was an error, please try again.',
-      AppLanguageKeys.internalServerError: 'Internal server error, please try later.',
-      AppLanguageKeys.requestNotFound: 'Your request was not found, please try later!',
+      AppLanguageKeys.oopsErrorTryAgain:
+          'Oops! There was an error, please try again.',
+      AppLanguageKeys.internalServerError:
+          'Internal server error, please try later.',
+      AppLanguageKeys.requestNotFound:
+          'Your request was not found, please try later!',
       AppLanguageKeys.badResponseError: 'Bad response, something went wrong.',
       AppLanguageKeys.success: 'Success',
       AppLanguageKeys.badRequestError: 'Bad request',
@@ -1366,25 +1476,34 @@ class AppLocalizations {
       //End//
 
       //login//
-      AppLanguageKeys.enterUsernameAndPassword: 'Please enter username and password',
+      AppLanguageKeys.enterUsernameAndPassword:
+          'Please enter username and password',
       AppLanguageKeys.fillAllFields: 'Please fill all fields',
       //End//
 
       //Model Messages//
-      AppLanguageKeys.changePasswordSuccessfully: 'Change Password successfully',
-      AppLanguageKeys.checkIfUserExistSuccessfully: 'Check If User Exist successfully',
-      AppLanguageKeys.checkIfUserExistOrNotSuccessfully: 'Check If User Exist Or Not successfully',
-      AppLanguageKeys.accountCreatedSuccessfully: 'Account created successfully',
+      AppLanguageKeys.changePasswordSuccessfully:
+          'Change Password successfully',
+      AppLanguageKeys.checkIfUserExistSuccessfully:
+          'Check If User Exist successfully',
+      AppLanguageKeys.checkIfUserExistOrNotSuccessfully:
+          'Check If User Exist Or Not successfully',
+      AppLanguageKeys.accountCreatedSuccessfully:
+          'Account created successfully',
       AppLanguageKeys.deleteUserSuccessfully: 'Delete User successfully',
-      AppLanguageKeys.getAppUserInfoSuccessfully: 'Get App User Info successfully',
+      AppLanguageKeys.getAppUserInfoSuccessfully:
+          'Get App User Info successfully',
       AppLanguageKeys.accountLoginSuccessfully: 'Account Login successfully',
       AppLanguageKeys.restoreUserSuccessfully: 'Restore User successfully',
       AppLanguageKeys.updateUserSuccessfully: 'Update User successfully',
 
-      AppLanguageKeys.changeCouponStatusSuccessfully: 'Change Coupon Status successfully',
+      AppLanguageKeys.changeCouponStatusSuccessfully:
+          'Change Coupon Status successfully',
       AppLanguageKeys.getCarSuccessfully: 'Get Car successfully',
-      AppLanguageKeys.getCouponByCodeSuccessfully: 'Get Coupon By Code successfully',
-      AppLanguageKeys.getStaticsForCouponSuccessfully: 'Get Statics For Coupon successfully',
+      AppLanguageKeys.getCouponByCodeSuccessfully:
+          'Get Coupon By Code successfully',
+      AppLanguageKeys.getStaticsForCouponSuccessfully:
+          'Get Statics For Coupon successfully',
       AppLanguageKeys.uploadCouponSuccessfully: 'Upload Coupon successfully',
 
       AppLanguageKeys.createRateSuccessfully: 'Create Rate successfully',
@@ -1909,7 +2028,8 @@ class AppLocalizations {
           'Select car models based on the services you offer to your customers',
       AppLanguageKeys.multipleCarSelectionNote:
           'You can select multiple cars at once',
-      AppLanguageKeys.searchCarModel: 'You can search to select your car api_functions',
+      AppLanguageKeys.searchCarModel:
+          'You can search to select your car api_functions',
       AppLanguageKeys.chooseCategory: 'Choose Category',
       AppLanguageKeys.selectModelYears: 'Select Model Years',
       AppLanguageKeys.carCategory: 'Car Category',
@@ -1948,49 +2068,49 @@ class AppLocalizations {
           'Reviews list for all services',
       AppLanguageKeys.totalReviews: 'Total Reviews',
       AppLanguageKeys.providersTermsAndConditions: '''
-1. Registration and Approval  
-The service center must register with accurate and valid information.  
-Sun reserves the right to review, approve, or reject any registration request without stating reasons.  
-The provider is responsible for keeping their information updated.  
+1. Registration and Approval
+The service center must register with accurate and valid information.
+San reserves the right to review, approve, or reject any registration request without stating reasons.
+The provider is responsible for keeping their information updated.
 
-2. Use of the Platform  
-The provider agrees to use the platform only for authorized purposes (offering car maintenance services).  
-Misuse of the platform or attempts to manipulate the system or customers are strictly prohibited.  
-Any violation may result in account suspension or termination.  
+2. Use of the Platform
+The provider agrees to use the platform only for authorized purposes (offering car maintenance services).
+Misuse of the platform or attempts to manipulate the system or customers are strictly prohibited.
+Any violation may result in account suspension or termination.
 
-3. Orders and Services  
-The provider commits to delivering the agreed services with high quality and within the specified time.  
-Prices offered to customers must be clear and transparent.  
-Customers have the right to cancel or modify their orders according to the published cancellation policy.  
+3. Orders and Services
+The provider commits to delivering the agreed services with high quality and within the specified time.
+Prices offered to customers must be clear and transparent.
+Customers have the right to cancel or modify their orders according to the published cancellation policy.
 
-4. Financial Obligations  
-Payment and collection mechanisms are managed through the Sun platform.  
-The provider is responsible for any financial obligations toward customers resulting from service failure.  
-Service fees or commissions may be deducted by Sun according to the approved policy.  
+4. Financial Obligations
+Payment and collection mechanisms are managed through the San platform.
+The provider is responsible for any financial obligations toward customers resulting from service failure.
+Service fees or commissions may be deducted by San according to the approved policy.
 
-5. Ratings and Reviews  
-Customers have the right to rate the provided services.  
-Ratings are part of the platform’s public system and cannot be deleted unless they violate the policy.  
+5. Ratings and Reviews
+Customers have the right to rate the provided services.
+Ratings are part of the platform’s public system and cannot be deleted unless they violate the policy.
 
-6. Liability  
-The provider bears full responsibility for the quality of services provided.  
-Sun is not responsible for any direct or indirect damages resulting from service execution; its role is limited to mediation between the provider and the customer.  
+6. Liability
+The provider bears full responsibility for the quality of services provided.
+San is not responsible for any direct or indirect damages resulting from service execution; its role is limited to mediation between the provider and the customer.
 
-7. Termination of Service  
-Sun reserves the right to suspend or terminate a provider’s account in case of violations or harm to the platform’s reputation.  
-The provider may request account closure at any time after settling financial obligations.  
+7. Termination of Service
+San reserves the right to suspend or terminate a provider’s account in case of violations or harm to the platform’s reputation.
+The provider may request account closure at any time after settling financial obligations.
 
-8. Amendments to the Terms  
-Sun reserves the right to modify or update these terms and conditions at any time.  
+8. Amendments to the Terms
+San reserves the right to modify or update these terms and conditions at any time.
 Providers will be notified of any major changes via the platform or email.
 ''',
       AppLanguageKeys.providersPrivacyPolicy:
           "Privacy Policy for Car Service Providers\n\n1. Information Collection\nWe collect essential data related to service provider centers such as:\n- Center information (trade name – location – type of services).\n- Contact details (phone – email).\n- Account information (username – password).\n\n2. Use of Information\nThe collected information is used only for:\n- Creating and activating accounts.\n- Managing orders and services.\n- Facilitating communication between the center and the customer.\n- Improving service quality and user experience.\n\n3. Information Sharing\nWe do not share provider data with any third party outside the platform unless legally required.\nSome information, such as the center name and offered services, is visible to customers to help them choose services.\n\n4. Data Protection\nWe are committed to protecting provider data from unauthorized access through secure systems and encryption of sensitive information.\n\n5. Provider Rights\n- Access and update their registered data.\n- Request account deletion from the platform.\n- Submit feedback or complaints regarding data management.\n\n6. Policy Updates\nWe may update the privacy policy from time to time, and providers will be notified of any significant changes.",
       AppLanguageKeys.aboutSunIntro:
-          "Sun is a digital platform that connects car owners with certified maintenance and service centers. We aim to make it easier for customers to reach your services and help your center grow by managing requests efficiently and professionally through a trusted, user-friendly platform.\n\nWith Sun, car centers get:\n- A wider customer base.\n- Easy management of orders and services.\n- Accurate tracking of reviews and performance.\n- Greater opportunities to increase revenue and expand operations.",
+          "San is a digital platform that connects car owners with certified maintenance and service centers. We aim to make it easier for customers to reach your services and help your center grow by managing requests efficiently and professionally through a trusted, user-friendly platform.\n\nWith San, car centers get:\n- A wider customer base.\n- Easy management of orders and services.\n- Accurate tracking of reviews and performance.\n- Greater opportunities to increase revenue and expand operations.",
       AppLanguageKeys.contactAndPoliciesPages: 'Contact & Policy Pages',
       AppLanguageKeys.contactUs: 'Contact Us',
-      AppLanguageKeys.aboutSun: 'About Sun',
+      AppLanguageKeys.aboutSun: 'About San',
       AppLanguageKeys.privacyPolicy: 'Privacy Policy',
       AppLanguageKeys.termsAndConditions: 'Terms and Conditions',
       AppLanguageKeys.sendUsMessage: 'Send Us Your Message',
@@ -2002,7 +2122,7 @@ Providers will be notified of any major changes via the platform or email.
       AppLanguageKeys.bannerImage: 'Banner Image',
       AppLanguageKeys.bannerSizeNote:
           'Recommended image size is 1108×428 pixels',
-      AppLanguageKeys.uploadImage: 'Upload Image (jpg, jpeg, gif, png, webp)',
+      AppLanguageKeys.uploadImage: 'Upload Image',
       AppLanguageKeys.link: 'Link',
       AppLanguageKeys.category: 'Category',
       AppLanguageKeys.storeOffers: 'Store Offers',
@@ -2243,45 +2363,45 @@ Providers will be notified of any major changes via the platform or email.
       AppLanguageKeys.onTheWay: 'On the Way to You',
       AppLanguageKeys.privacyTitle: 'Privacy Policy',
       AppLanguageKeys.privacyIntro: '''
-      At "Sun" app, we place the utmost importance on the privacy of our users and always strive to protect their personal data. 
+      At "San" app, we place the utmost importance on the privacy of our users and always strive to protect their personal data.
       This policy explains how information is collected, used, and shared when you use our services.
-      
+
       Information We Collect
-      When using Sun App, we may collect some necessary information to provide the service, such as:
+      When using San App, we may collect some necessary information to provide the service, such as:
       - Full Name
       - Mobile Number
       - Email Address
       - Location (with your permission, to identify the car location)
       - Order history and payment records
-      
+
       How We Use the Information
       We use the collected information to:
       - Provide maintenance services accurately and efficiently
       - Communicate with you regarding order status or special offers
       - Improve app performance and user experience
       - Ensure security and prevent unauthorized use
-      
+
       Information Sharing
-      We do not share your data with any third party outside the "Sun" app except in the following cases:
+      We do not share your data with any third party outside the "San" app except in the following cases:
       - With authorized maintenance centers to fulfill your requests
       - With online payment gateways to complete transactions
       - When legally required or requested by authorities
-      
+
       Data Protection
       We are committed to applying the highest security standards to protect your data and use advanced protection technologies to prevent unauthorized access.
-      
+
       User Rights
       You have the right at any time to:
       - Request a copy of your personal data
       - Modify or update your data
       - Request to delete your account from the app
-      
+
       Policy Changes
       We may update the privacy policy from time to time. You will be notified of any major changes via the app or email.
-      
+
       Contact Us
       For any inquiries regarding the privacy policy, you can contact us via:
-      📧 Email: privacy@sun-app.com
+      📧 Email: privacy@san-app.com
       📞 Support: 9200XXXXXX
       ''',
       AppLanguageKeys.personalData: 'Personal Data',
@@ -2446,10 +2566,10 @@ Providers will be notified of any major changes via the platform or email.
       AppLanguageKeys.chooseFavoriteServices: 'Choose favorite services',
       AppLanguageKeys.congratulations: 'Congratulations, you got',
       AppLanguageKeys.gift: 'Gift',
-      AppLanguageKeys.sunWarranty: 'Sun warranty',
+      AppLanguageKeys.sunWarranty: 'San warranty',
       AppLanguageKeys.fiveYearsWarranty: '5 years warranty gift',
       AppLanguageKeys.showServicesNow: 'Show services now',
-      AppLanguageKeys.sunWarrantyFeatures: 'Sun warranty features',
+      AppLanguageKeys.sunWarrantyFeatures: 'San warranty features',
       AppLanguageKeys.warrantyCenters:
           'Benefit from warranty at our authorized centers',
       AppLanguageKeys.carWarrantyAuction:

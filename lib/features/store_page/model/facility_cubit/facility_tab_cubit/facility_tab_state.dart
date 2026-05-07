@@ -9,9 +9,9 @@ class IdentityUploadedState extends FacilityTabState {}
 class WorkingHoursState extends FacilityTabState {}
 
 class WorkingHoursDaySelectedState extends FacilityTabState {
-  final int selectedIndex;
+  final Set<int> selectedDays;
 
-  WorkingHoursDaySelectedState(this.selectedIndex);
+  WorkingHoursDaySelectedState(this.selectedDays);
 }
 
 class BranchesState extends FacilityTabState {}

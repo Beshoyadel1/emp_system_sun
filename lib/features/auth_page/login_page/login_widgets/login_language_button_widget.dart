@@ -17,7 +17,7 @@ class LoginLanguageButtonWidget extends StatelessWidget {
       child: ButtonWidget(
         text: AppLanguageKeys.languageKey,
         textSize: 17,
-        textColor: AppColors.orangeColor,
+        textColor: AppColors.seaBlueColor,
         fontWeightIndex: FontSelectionData.semiBoldFontFamily,
         borderRadius: 25,
         onTap: () {

@@ -13,6 +13,7 @@ class AvailableCarsDetails extends StatelessWidget {
   const AvailableCarsDetails(
       {super.key,
       this.price,
+        this.cost,
       this.brandName,
       this.isSold = false,
       this.isNew = false,
@@ -26,7 +27,7 @@ class AvailableCarsDetails extends StatelessWidget {
         this.userName
       });
 
-  final String? id, addresstext, releaseDate, brandName, price,kilometers,userName;
+  final String? id, addresstext, releaseDate, brandName, price,cost,kilometers,userName;
   final double? spacing;
   final bool? isNew, isSold;
   final Uint8List? carImage, brandImage;
@@ -84,6 +85,14 @@ class AvailableCarsDetails extends StatelessWidget {
           TitleWithSubTitle(
             title: AppLanguageKeys.carPrice,
             subTitle: price ?? AppLanguageKeys.priceKey,
+            textSizeTitle:12,
+            titleColor: AppColors.greyColor,
+            textSizeSubTitle: 14,
+            subTitleColor: AppColors.darkColor,
+          ),
+          TitleWithSubTitle(
+            title: AppLanguageKeys.cost,
+            subTitle: cost ?? '',
             textSizeTitle:12,
             titleColor: AppColors.greyColor,
             textSizeSubTitle: 14,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../features/auth_page/otp_page/otp_page.dart';
+import '../../../../../features/auth_page/change_password/change_password_page.dart';
+import '../../../../../core/api_functions/user/check_if_user_exist_model/check_if_user_exist_request.dart';
 import '../../../../../core/pages_widgets/general_widgets/navigate_to_page_widget.dart';
 import '../../../../../features/auth_page/auth_cubit/auth_cubit.dart';
 import '../../../../../features/auth_page/auth_cubit/auth_state.dart';
@@ -51,7 +53,7 @@ class _CheckEmailExistPageState extends State<CheckEmailExistPage> {
                   children: [
                     SizedBox(
                       height: 40,
-                      child: AppBar(backgroundColor: AppColors.orangeColor),
+                      child: AppBar(backgroundColor: AppColors.seaBlueColor),
                     ),
                     Expanded(
                       child: Padding(

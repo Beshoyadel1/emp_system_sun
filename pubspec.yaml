@@ -51,13 +51,16 @@ dependencies:
   http:
   geolocator: ^14.0.2
   flutter_map:
-  image_picker: ^1.0.4
   permission_handler: ^11.3.0
   file_picker: ^8.0.0
   syncfusion_flutter_charts: ^31.1.22
   timeline_tile_plus:
   number_pagination:
-
+  flutter_secure_storage: ^10.0.0
+  image_picker: ^1.2.1
+  flutter_image_compress: ^2.4.0
+  image: ^4.8.0
+  crypto: ^3.0.7
 
 
 

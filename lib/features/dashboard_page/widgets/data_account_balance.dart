@@ -50,16 +50,18 @@ class DataAccountBalance extends StatelessWidget {
               fontWeightIndex: FontSelectionData.regularFontFamily,
               textColor: AppColors.darkColor,
             ),
-             TextInAppWidget(
-              text: " : ${item.recentOrderId ?? 0}",
-              textSize: 12,
-              fontWeightIndex: FontSelectionData.regularFontFamily,
-              textColor: AppColors.darkColor,
+            const SizedBox(width: 4),
+            Flexible(
+              child: TextInAppWidget(
+                text: ": ${item.recentOrderId ?? 0}",
+                textSize: 12,
+                fontWeightIndex: FontSelectionData.regularFontFamily,
+                textColor: AppColors.darkColor,
+              ),
             ),
           ],
         ),
 
-        /// 💰 السعر
         trailing: TextInAppWidget(
           text: "${item.amount ?? 0}",
           textSize: 16,

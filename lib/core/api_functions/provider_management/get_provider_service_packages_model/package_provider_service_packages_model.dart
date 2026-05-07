@@ -7,7 +7,7 @@ class PackageProviderServicePackagesModel {
   final String latinName;
   final String items;
   final num price;
-  final num taxId;
+  final int taxId;
 
   PackageProviderServicePackagesModel({
     required this.id,

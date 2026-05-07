@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../features/dashboard_page/logic/get_provider_orders_sales_cubit/get_provider_orders_sales_cubit.dart';
+import '../../../../../features/dashboard_page/logic/get_provider_orders_sales_cubit/get_provider_orders_sales_cubit.dart';
 import '../../../../../core/language/language_constant.dart';
 import '../../../../../core/theming/fonts.dart';
 import '../../../../../core/pages_widgets/general_widgets/custom_container.dart';
@@ -13,8 +13,10 @@ class ChartOrder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    bool isMobile = size.width <= 1320;
     return CustomContainer(
-        containerWidth: 570,
+        containerWidth: isMobile?double.infinity:520,
         containerHeight: 504,
         isSelected: false,
         onTap: () {},

@@ -14,29 +14,32 @@ class GetProviderTotalRateAndEmployeeAndBalanceCubit
       BlocProvider.of(context);
 
   Future<void> getProviderTotalRateAndEmployeeAndBalance() async {
+    if (isClosed) return;
+
     emit(GetProviderTotalRateAndEmployeeAndBalanceLoading());
 
     final user = await AuthLocalStorage.getUser();
 
+    if (isClosed) return;
+
     if (user == null) {
-      emit(GetProviderTotalRateAndEmployeeAndBalanceError(
-          "User not found"));
+      emit(GetProviderTotalRateAndEmployeeAndBalanceError("User not found"));
       return;
     }
 
     final result =
     await getProviderTotalRateAndEmployeeAndBalanceFunction(
-      request:
-      GetProviderTotalRateAndEmployeeAndBalanceRequest(
+      request: GetProviderTotalRateAndEmployeeAndBalanceRequest(
         providerId: user.userid ?? 0,
       ),
     );
 
+    if (isClosed) return;
+
     if (result != null) {
       emit(GetProviderTotalRateAndEmployeeAndBalanceSuccess(result));
     } else {
-      emit(GetProviderTotalRateAndEmployeeAndBalanceError(
-          "Error loading data"));
+      emit(GetProviderTotalRateAndEmployeeAndBalanceError("Error loading data"));
     }
   }
 }

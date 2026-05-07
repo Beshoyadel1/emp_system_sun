@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
-import '../../../../../../../core/api_functions/order/get_provider_orders_model/order_model.dart';
-import '../../../../../../../features/internal_services/internal_orders/custom_widget/row_image_with_title_widget.dart';
+import '../../../../../../../../core/api_functions/order/get_provider_orders_model/order_model.dart';
+import '../../../../../../../../features/internal_services/internal_orders/custom_widget/row_image_with_title_widget.dart';
 import '../../../../../../../../features/internal_services/internal_orders/custom_widget/row_image_with_title_orange_and_sub_title_black_widget.dart';
 import '../../../../../../../../features/internal_services/internal_orders/custom_widget/text_with_container_status.dart';
 import '../../../../../../../../features/internal_services/internal_orders/custom_widget/Column_date_order_with_time_widget.dart';

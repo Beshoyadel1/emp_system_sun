@@ -12,7 +12,9 @@ class AppImageKeys {
 
   //FacilityManagement
   static const String loginImage = 'assets/images/login_image.png';
+  static const String loginEmp = 'assets/images/login_emp.png';
   static const String sarLogo = 'assets/images/sar_logo.png';
+  static const String sarLogoEmp = 'assets/images/sar_logo_emp.png';
   static const String sarWhiteLogo = 'assets/images/sar_white_logo.png';
   static const String notification = 'assets/images/notification.png';
   static const String profileImage = 'assets/images/profile_image.png';

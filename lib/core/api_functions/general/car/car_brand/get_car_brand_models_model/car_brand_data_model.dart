@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import '../../../../../../core/language/language_cubit/language_cubit.dart';
 import 'package:flutter/cupertino.dart';
+import '../../../../../../core/language/language_cubit/language_cubit.dart';
 
 class CarBrandDataModel {
   final int? id;
@@ -33,3 +33,5 @@ class CarBrandDataModel {
         : (latinName ?? "");
   }
 }
+
+//  final Uint8List? image;       image: json['image'] != null ? base64Decode(json["image"]) : null,

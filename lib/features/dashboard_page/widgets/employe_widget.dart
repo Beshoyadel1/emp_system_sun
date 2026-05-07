@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/api_functions/statistics/get_provider_total_rate_and_employee_and_balance_model/get_provider_total_rate_and_employee_and_balance_model.dart';
+import '../../../../../core/api_functions/statistics/get_provider_total_rate_and_employee_and_balance_model/get_provider_total_rate_and_employee_and_balance_model.dart';
 import '../../../../../core/language/language_constant.dart';
 import '../../../../../core/theming/assets.dart';
 import '../../../../../core/theming/colors.dart';
@@ -15,7 +15,7 @@ class EmployeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
-      containerHeight: 70,
+     // containerHeight: 70,
       borderRadius: BorderRadius.circular(12),
       isSelected: false,
       onTap: () {},
@@ -38,7 +38,6 @@ class EmployeWidget extends StatelessWidget {
 
             const SizedBox(width: 10),
 
-            /// 🔹 Name + Job
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../features/mobile_services/mobile_services_orders/first_screen_mobile_services_orders/screens/list_data_first_screen_mobile_services_orders.dart';
-import '../../../../../features/mobile_services/mobile_services_orders/first_screen_mobile_services_orders/screens/part_two_screen_first_screen_mobile_services_orders/container_mobile_services_orders_statistics/container_mobile_services_orders_statistics.dart';
+import '../../../../../../../../features/mobile_services/mobile_services_orders/first_screen_mobile_services_orders/screens/list_data_first_screen_mobile_services_orders.dart';
+import '../../../../../../../../features/mobile_services/mobile_services_orders/first_screen_mobile_services_orders/screens/part_two_screen_first_screen_mobile_services_orders/container_mobile_services_orders_statistics/container_mobile_services_orders_statistics.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/loading_dashboard/loading_dashboard_cubit.dart';
 import '../../../../../features/internal_services/internal_orders/first_screen_internal_orders/screens/part_two_screen_first_screen_internal_orders/container_interior_services_statistics/container_interior_services_statistics.dart';

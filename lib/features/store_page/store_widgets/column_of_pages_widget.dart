@@ -69,8 +69,8 @@ class ColumnOfPagesWidget extends StatelessWidget {
               color: pageNode.number == appCubit.selectedPageIndex
                   ? AppColors.whiteColor
                   : pageNode.image == null
-                      ? AppColors.secondaryColor.withAlpha(100)
-                      : AppColors.secondaryColor,
+                      ? AppColors.veryLightOrangeColor.withAlpha(100)
+                      : AppColors.seaBlueColor,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,

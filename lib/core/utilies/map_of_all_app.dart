@@ -250,7 +250,7 @@ void getPages() {
         image: AppImageKeys.carServices,
         number: PagesOfAllApp.internalServicesPageNumber,
         children: [
-          PageNodeModel(
+           PageNodeModel(
             name: AppLanguageKeys.permissionsGroupPageKey,
             number: PagesOfAllApp.internalServicesStatisticsPageNumber,
             page: FirstScreenInternalOrders(),
@@ -278,7 +278,6 @@ void getPages() {
             page: SparePartsStatisticsPage(),
           ),
         ]),
-
     const PageNodeModel(
         name: AppLanguageKeys.mobileServices,
         image: AppImageKeys.mobile_maintenance,
@@ -302,23 +301,6 @@ void getPages() {
       page: FirstScreenPermissions(),
     ),
 
-    // const PageNodeModel(
-    //     name: AppLanguageKeys.carMarketKey,
-    //     image: AppImageKeys.sell,
-    //     number: PagesOfAllApp.carPageNumber,
-    //     children: [
-    //       PageNodeModel(
-    //         name: AppLanguageKeys.permissionsGroupPageKey,
-    //         number: PagesOfAllApp.carsHarajStatisticsPageNumber,
-    //         page: CarsHarajStatisticsPage(),
-    //       ),
-    //       PageNodeModel(
-    //         name: AppLanguageKeys.ordersSectionKey,
-    //         number: PagesOfAllApp.carHarajOrdersPageNumber,
-    //         page: CarHarajOrdersPage(),
-    //       ),
-    //     ]),
-
     const PageNodeModel(
         name: AppLanguageKeys.facilityManagementKey,
         image: AppImageKeys.store,
@@ -329,6 +311,7 @@ void getPages() {
             number: PagesOfAllApp.permissionsGroupPageNumber,
             page: FacilityAccount(),
           ),
+
         ]),
     const PageNodeModel(
         name: AppLanguageKeys.technicalSupport,
@@ -336,6 +319,8 @@ void getPages() {
         number: PagesOfAllApp.technicalSupportPageNumber,
         page: TechnicalSupportAdminSun()
     ),
+
+
     const PageNodeModel(
       name: AppLanguageKeys.socialPagesAndPoliciesKey,
       image: AppImageKeys.pages,

@@ -17,7 +17,7 @@ class CustomAddButton extends StatelessWidget {
     return CustomContainer(
       isSelected: false,
       onTap: onTap,
-      containerColor: AppColors.secondaryColor,
+      containerColor: AppColors.orangeColor,
       containerWidth: width ?? 162,
       containerHeight: 42,
       borderRadius: BorderRadius.circular(25),

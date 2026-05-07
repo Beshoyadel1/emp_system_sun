@@ -203,6 +203,12 @@ class ApiLink {
       "${ApiConfig.baseUrlApi}/${ApiConfig.product}/DeleteProduct";
   static const String getProduct =
       "${ApiConfig.baseUrlApi}/${ApiConfig.product}/GetProduct";
+
+  static const String getProductsByCategory =
+      "${ApiConfig.baseUrlApi}/${ApiConfig.product}/GetProductsByCategory";
+
+  static const String getAllProductCategories =
+      "${ApiConfig.baseUrlApi}/${ApiConfig.product}/GetAllProductCategories";
   static const String getProductsSuitableForCar =
       "${ApiConfig.baseUrlApi}/${ApiConfig.product}/getProductsSuitableForCar";
   static const String updateProduct =

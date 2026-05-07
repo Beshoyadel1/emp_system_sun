@@ -1,5 +1,5 @@
-import 'package:emp_system_sun/features/internal_services/internal_services_statistics/Internal_services_page/model/new_order_steps_model/new_order_steps_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../../features/internal_services/internal_services_statistics/Internal_services_page/model/new_order_steps_model/new_order_steps_model.dart';
 import 'new_orders_state.dart';
 
 class NewOrdersCubit extends Cubit<NewOrdersState> {
@@ -29,11 +29,17 @@ class NewOrdersCubit extends Cubit<NewOrdersState> {
     try {
       await Future.delayed(const Duration(seconds: 1));
 
+      if (isClosed) return;
+
       List<String> orders = List.generate(
           5, (index) => "Order ${index + 1} - Page $page");
 
       emit(NewOrdersLoaded(orders));
+
     } catch (e) {
+
+      if (isClosed) return;
+
       emit(NewOrdersError("Failed to load orders"));
     }
   }

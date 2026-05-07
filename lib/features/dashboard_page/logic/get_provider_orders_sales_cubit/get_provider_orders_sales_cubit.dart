@@ -14,11 +14,14 @@ class GetProviderOrdersSalesCubit
       BlocProvider.of(context);
 
   Future<void> getProviderOrdersSales() async {
+    if (isClosed) return;
+
     emit(GetProviderOrdersSalesLoading());
 
     final user = await AuthLocalStorage.getUser();
 
     if (user == null) {
+      if (isClosed) return;
       emit(GetProviderOrdersSalesError("User not found"));
       return;
     }
@@ -28,6 +31,8 @@ class GetProviderOrdersSalesCubit
         providerId: user.userid ?? 0,
       ),
     );
+
+    if (isClosed) return;
 
     if (result != null) {
       emit(GetProviderOrdersSalesSuccess(result));

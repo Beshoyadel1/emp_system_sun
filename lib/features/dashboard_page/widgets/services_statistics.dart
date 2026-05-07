@@ -11,8 +11,10 @@ class ServicesStatistics extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    bool isMobile = size.width <= 1280;
     return CustomContainer(
-      containerWidth: 500,
+      containerWidth:isMobile?double.infinity: 500,
       isSelected: false,
       onTap: () {},
       typeWidget: const Column(

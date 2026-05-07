@@ -16,17 +16,14 @@ class LoginPage extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     bool isMobile = size.width <= ValuesOfAllApp.mobileWidth;
 
-    return BlocProvider(
-      create: (context) => AuthCubit(),
-      child: Scaffold(
-        body: Container(
-          decoration: const BoxDecoration(
-            color: AppColors.scaffoldColor,
-          ),
-          child: isMobile
-              ? const LoginMobileWidget()
-              : const LoginWebWidget(),
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          color: AppColors.scaffoldColor,
         ),
+        child: isMobile
+            ? const LoginMobileWidget()
+            : const LoginWebWidget(),
       ),
     );
   }

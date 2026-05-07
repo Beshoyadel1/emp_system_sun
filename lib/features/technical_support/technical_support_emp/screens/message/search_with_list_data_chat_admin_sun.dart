@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../../../../features/internal_services/internal_orders/custom_widget/text_empty_view_data.dart';
 import '../../../../../features/technical_support/logic/chat_details_cubit/chat_details_cubit.dart';
 import '../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/order_funcations/order_functions.dart';
 import '../../../../../features/technical_support/custom_widget/row_message_support_widget.dart';
@@ -49,11 +50,8 @@ class _SearchWithListDataChatAdminSunState
 
           final messages = state.messages;
 
-          if (messages.isEmpty) {
-            return const SizedBox(
-              height: 300,
-              child: Center(child: Text("No messages")),
-            );
+          if (state.messages.isEmpty) {
+            return const TextEmptyViewData();
           }
 
           return SizedBox(

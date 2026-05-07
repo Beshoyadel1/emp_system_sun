@@ -18,9 +18,9 @@ class IdentityImage extends StatelessWidget {
         isSelected: false,
         border: const Border(),
         onTap: () {
-          if (!isUploaded) {
-            cubit.uploadImage();
-          }
+          // if (!isUploaded) {
+          //   cubit.uploadImage();
+          // }
         },
         containerColor: AppColors.whiteColor,
         typeWidget: Row(
@@ -36,7 +36,7 @@ class IdentityImage extends StatelessWidget {
                 spacing: 10,
                 children: [
                   GestureDetector(
-                    onTap: cubit.deleteImage,
+                  //  onTap: cubit.deleteImage,
                     child: CircleAvatar(
                       radius: 16,
                       backgroundColor: AppColors.redColor,
@@ -48,7 +48,7 @@ class IdentityImage extends StatelessWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: cubit.editImage,
+                   // onTap: cubit.editImage,
                     child: CircleAvatar(
                       radius: 16,
                       backgroundColor: AppColors.darkGreyColor,

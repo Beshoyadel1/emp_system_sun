@@ -1,6 +1,6 @@
-import '../../../../../core/api_functions/statistics/get_provider_harage_sold_cars_by_type_model/get_provider_harage_sold_cars_by_type_model.dart';
-import '../../../../../core/api_functions/statistics/get_provider_harage_sold_cars_by_type_model/get_provider_harage_sold_cars_by_type_repository.dart';
-import '../../../../../core/api_functions/statistics/get_provider_harage_sold_cars_by_type_model/get_provider_harage_sold_cars_by_type_request.dart';
+import '../../../../../../core/api_functions/statistics/get_provider_harage_sold_cars_by_type_model/get_provider_harage_sold_cars_by_type_model.dart';
+import '../../../../../../core/api_functions/statistics/get_provider_harage_sold_cars_by_type_model/get_provider_harage_sold_cars_by_type_repository.dart';
+import '../../../../../../core/api_functions/statistics/get_provider_harage_sold_cars_by_type_model/get_provider_harage_sold_cars_by_type_request.dart';
 
 import '../../../../../core/api_functions/statistics/get_provider_harage_monthly_sales_model/get_provider_harage_monthly_sales_response.dart';
 import '../../../../../core/api_functions/statistics/get_provider_harage_sales_chart_model/get_provider_harage_data_points_response.dart';
@@ -21,9 +21,12 @@ class ProviderHarageStatisticsCubit
     String? startDate,
     String? endDate,
   }) async {
+    if (isClosed) return;
+
     emit(ProviderHarageStatisticsLoading());
 
     try {
+
       final results = await Future.wait([
         getProviderHarageMonthlySalesFunction(
           getProviderHarageMonthlySalesRequest:
@@ -50,6 +53,7 @@ class ProviderHarageStatisticsCubit
         ),
       ]);
 
+      if (isClosed) return;
       final monthlyResponse =
           results[0] as GetProviderHarageMonthlySalesResponse?;
       final chartResponse = results[1] as GetProviderHarageDataPointsResponse?;
@@ -71,6 +75,7 @@ class ProviderHarageStatisticsCubit
         ),
       );
     } catch (e) {
+      if (isClosed) return;
       emit(ProviderHarageStatisticsError(e.toString()));
     }
   }

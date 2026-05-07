@@ -15,7 +15,7 @@ class LoginMobileWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            color: AppColors.orangeColor,
+            color: AppColors.seaBlueColor,
             height: 30,
             width: double.infinity,
           ),
@@ -27,7 +27,7 @@ class LoginMobileWidget extends StatelessWidget {
                 children: [
                   const LoginLanguageButtonWidget(),
                   Image.asset(
-                    AppImageKeys.sarLogo,
+                    AppImageKeys.sarLogoEmp,
                     height: 50,
                     width: 170,
                     fit: BoxFit.fill,

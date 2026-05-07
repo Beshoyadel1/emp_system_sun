@@ -25,7 +25,7 @@ class _PagesSelectionBarState extends State<PagesSelectionBar> {
     return Container(
       width: 256,
       decoration: const BoxDecoration(
-        color: AppColors.secondaryColor,
+        color: AppColors.seaBlueColor,
         borderRadius: BorderRadiusDirectional.only(),
       ),
       child: Column(

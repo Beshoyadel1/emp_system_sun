@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/api_functions/order/get_provider_orders_model/order_model.dart';
-import '../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/get_provider_internal_order/get_provider_internal_order_state.dart';
+import '../../../../../core/api_functions/order/get_provider_orders_model/order_model.dart';
+import '../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/get_provider_internal_order/get_provider_internal_order_state.dart';
 import '../../../../../../../core/pages_widgets/general_widgets/navigate_to_page_widget.dart';
 import '../../../../../../../features/order_status_design/order_details_cancel_order_emp/order_details_cancel_order_emp.dart';
 import '../../../../../../../features/order_status_design/order_details_new_order_emp/order_details_new_order_emp.dart';

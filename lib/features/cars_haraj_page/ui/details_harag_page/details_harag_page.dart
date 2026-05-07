@@ -1,17 +1,18 @@
+import 'package:emp_system_sun/features/dashboard_page/custom_widget/button_edit_delete_setting_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../core/api_functions/harage/get_all_harage_model/harage_data.dart';
-import '../../../../../core/language/language_constant.dart';
-import '../../../../../core/theming/colors.dart';
-import '../../../../../core/theming/fonts.dart';
-import '../../../../../core/theming/text_styles.dart';
-import '../../../../../features/cars_haraj_page/logic/delete_harage_cubit/delete_harage_cubit.dart';
-import '../../../../../features/cars_haraj_page/logic/update_harage_cubit/update_harage_cubit.dart';
-import '../../../../../features/cars_haraj_page/ui/details_harag_page/widgets/available_cars_details.dart';
-import '../../../../../features/cars_haraj_page/ui/details_harag_page/widgets/car_specifications.dart';
-import '../../../../../features/cars_haraj_page/ui/details_harag_page/widgets/delete_dialog.dart';
-import '../../../../../features/cars_haraj_page/ui/details_harag_page/widgets/edit_harag_dialog.dart';
+import '../../../../../../../../core/api_functions/harage/get_all_harage_model/harage_data.dart';
+import '../../../../../../../../core/language/language_constant.dart';
+import '../../../../../../../../core/theming/colors.dart';
+import '../../../../../../../../core/theming/fonts.dart';
+import '../../../../../../../../core/theming/text_styles.dart';
+import '../../../../../../../../features/cars_haraj_page/logic/delete_harage_cubit/delete_harage_cubit.dart';
+import '../../../../../../../../features/cars_haraj_page/logic/update_harage_cubit/update_harage_cubit.dart';
+import '../../../../../../../../features/cars_haraj_page/ui/details_harag_page/widgets/available_cars_details.dart';
+import '../../../../../../../../features/cars_haraj_page/ui/details_harag_page/widgets/car_specifications.dart';
+import '../../../../../../../../features/cars_haraj_page/ui/details_harag_page/widgets/delete_dialog.dart';
+import '../../../../../../../../features/cars_haraj_page/ui/details_harag_page/widgets/edit_harag_dialog.dart';
 
 class DetailsHaragPage extends StatelessWidget {
   final HarageData car;
@@ -41,37 +42,37 @@ class DetailsHaragPage extends StatelessWidget {
                   fontWeightIndex: FontSelectionData.regularFontFamily,
                   textColor:AppColors.blackColor,
                 ),
-                // Wrap(
-                //   spacing: 10,
-                //   runSpacing: 10,
-                //   alignment: WrapAlignment.end,
-                //   crossAxisAlignment: WrapCrossAlignment.center,
-                //   children: [
-                //     ButtonEditDeleteSettingWidget(
-                //       onTap: () {
-                //         showDialog(
-                //           context: context,
-                //           builder: (_) => BlocProvider(
-                //             create: (_) => UpdateHarageCubit(),
-                //             child: EditHaragDialog(car: car),
-                //           ),
-                //         );
-                //       },
-                //     ),
-                //     ButtonEditDeleteSettingWidget(
-                //       isDelete: true,
-                //       onTap: () {
-                //         showDialog(
-                //           context: context,
-                //           builder: (_) => BlocProvider(
-                //             create: (_) => DeleteHarageCubit(),
-                //             child: DeleteDialog(carId: car.id!),
-                //           ),
-                //         );
-                //       },
-                //     ),
-                //   ],
-                // ),
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  alignment: WrapAlignment.end,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    ButtonEditDeleteSettingWidget(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) => BlocProvider(
+                            create: (_) => UpdateHarageCubit(),
+                            child: EditHaragDialog(car: car),
+                          ),
+                        );
+                      },
+                    ),
+                    ButtonEditDeleteSettingWidget(
+                      isDelete: true,
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) => BlocProvider(
+                            create: (_) => DeleteHarageCubit(),
+                            child: DeleteDialog(carId: car.id!),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
             AvailableCarsDetails(
@@ -84,6 +85,7 @@ class DetailsHaragPage extends StatelessWidget {
               isNew: car.isNew ?? false,
               brandName: car.car?.getBrand(context),
               price: car.price.toString(),
+              cost: car.cost.toString(),
               kilometers: car.kilometers.toString(),
               userName: car.user?.getName(context),
             ),

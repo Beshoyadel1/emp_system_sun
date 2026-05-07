@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../core/language/language_constant.dart';
-import '../../../../../core/theming/colors.dart';
-import '../../../../../core/theming/text_styles.dart';
-import '../../../../../features/cars_haraj_page/logic/delete_harage_cubit/delete_harage_cubit.dart';
-import '../../../../../features/cars_haraj_page/logic/delete_harage_cubit/delete_harage_state.dart';
+import '../../../../../../../../core/language/language_constant.dart';
+import '../../../../../../../../core/theming/colors.dart';
+import '../../../../../../../../core/theming/text_styles.dart';
+import '../../../../../../../../features/cars_haraj_page/logic/delete_harage_cubit/delete_harage_cubit.dart';
+import '../../../../../../../../features/cars_haraj_page/logic/delete_harage_cubit/delete_harage_state.dart';
 
 class DeleteDialog extends StatelessWidget {
   final int carId;

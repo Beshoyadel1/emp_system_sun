@@ -1,7 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import '../../../../features/dashboard_page/logic/get_provider_orders_sales_cubit/get_provider_orders_sales_cubit.dart';
-import '../../../../features/dashboard_page/logic/get_provider_orders_sales_cubit/get_provider_orders_sales_state.dart';
+import '../../../../../features/dashboard_page/logic/get_provider_orders_sales_cubit/get_provider_orders_sales_cubit.dart';
+import '../../../../../features/dashboard_page/logic/get_provider_orders_sales_cubit/get_provider_orders_sales_state.dart';
+import '../../../../../features/internal_services/internal_orders/custom_widget/text_empty_view_data.dart';
 import '../../../../../core/theming/colors.dart';
 import '../../../../../core/theming/formate.dart';
 import 'functions_chart.dart';
@@ -29,6 +30,8 @@ class _CustomLineChartState extends State<CustomLineChart> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    bool isMobile = size.width <= 1320;
     return BlocBuilder<GetProviderOrdersSalesCubit,
         GetProviderOrdersSalesState>(
       builder: (context, state) {
@@ -52,13 +55,9 @@ class _CustomLineChartState extends State<CustomLineChart> {
           final data = state.data.dataPoints;
 
           if (data.isEmpty) {
-            return const SizedBox(
-              height: 300,
-              child: Center(child: Text("No Data")),
-            );
+            return const TextEmptyViewData();
           }
 
-          /// 🔥 تحويل نفس التصميم
           final spots = data
               .map((point) => FlSpot(
             point.date.millisecondsSinceEpoch.toDouble(),
@@ -80,7 +79,7 @@ class _CustomLineChartState extends State<CustomLineChart> {
 
           return SizedBox(
             key: _chartKey,
-            width: 500,
+            width: double.infinity,
             height: 300,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -99,7 +98,7 @@ class _CustomLineChartState extends State<CustomLineChart> {
                         sideTitles: SideTitles(
                           showTitles: true,
                           reservedSize: 60,
-                          interval: (maxX - minX) / 4,
+                          interval: (maxX - minX)<=0?1:  (maxX - minX) / 4,
                           getTitlesWidget: (value, meta) {
                             final date = DateTime
                                 .fromMillisecondsSinceEpoch(

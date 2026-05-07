@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fl_chart/fl_chart.dart';
+import '../../../../../../features/internal_services/internal_orders/custom_widget/text_empty_view_data.dart';
 import '../../../../../../features/internal_services/internal_services_statistics/Internal_services_page/widgets/build_legend_item.dart';
 import '../../../../../../../core/theming/colors.dart';
 import '../../../../cars_haraj_page/logic/provider_harage_monthly_sales_cubit/provider_harage_monthly_sales_state.dart';
@@ -23,7 +24,9 @@ class DonutChartAndLegend extends StatelessWidget {
           }
 
           final List<ChartDataModel> data = mapSoldCarsToChartData(state.soldCarsByType);
-
+          if (data.isEmpty) {
+            return const TextEmptyViewData();
+          }
           return Directionality(
             textDirection: TextDirection.rtl,
             child: Row(

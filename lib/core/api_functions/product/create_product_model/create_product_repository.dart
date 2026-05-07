@@ -1,25 +1,22 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import '../../../../core/language/language_constant.dart';
 import '../../../../core/api_functions/product/create_product_model/create_product_request.dart';
 import '../../../../core/api/dio_function/api_constants.dart';
-import '../../../../core/pages_widgets/general_widgets/snakbar.dart';
 import '../../../../core/api/dio_function/dio_controller.dart';
 import '../../../../core/api/dio_function/failures.dart';
 
-Future<void> createProductFunction({required CreateProductRequest createProductRequest}) async {
+Future<void> createProductApi({
+  required CreateProductRequest request,
+}) async {
   try {
-    String jsonString = json.encode(createProductRequest.toJson());
+    final jsonString = json.encode(request.toJson());
 
     await Network.postDataWithBody(
       jsonString,
-        ApiLink.createProduct
-    ).then((value) {
-      AppSnackBar.showSuccess(AppLanguageKeys.createProductSuccess);
-    });
-
+      ApiLink.createProduct,
+    );
   } catch (e) {
-    AppSnackBar.showError(
+    throw Exception(
       e is DioException
           ? responseOfStatusCode(e.response?.statusCode)
           : e.toString(),

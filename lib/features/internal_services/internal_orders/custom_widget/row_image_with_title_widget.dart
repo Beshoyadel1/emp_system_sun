@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
-import '../../../../core/theming/assets.dart';
+import '../../../../../core/theming/assets.dart';
 import '../../../../../../../core/theming/colors.dart';
 import '../../../../../../../core/theming/fonts.dart';
 import '../../../../../../../core/theming/text_styles.dart';
@@ -26,14 +26,20 @@ class RowImageWithTitleWidget extends StatelessWidget {
     return isWrap?
     Wrap(
       children: [
-        imagePath != null
-            ? Image.memory(
-          imagePath!,
-          width: 30,
-        )
-            :  Image.asset(
-          AppImageKeys.person22,
-          //width: 30,
+        ClipOval(
+          child: imagePath != null
+              ? Image.memory(
+            imagePath!,
+            width: 30,
+            height: 30,
+            fit: BoxFit.cover,
+          )
+              : Image.asset(
+            AppImageKeys.person22,
+            width: 30,
+            height: 30,
+            fit: BoxFit.cover,
+          ),
         ),
 
         const SizedBox(width: 5),
@@ -62,14 +68,20 @@ class RowImageWithTitleWidget extends StatelessWidget {
     :
     Row(
       children: [
-        imagePath != null
-            ? Image.memory(
-          imagePath!,
-          width: 30,
-        )
-            :  Image.asset(
-          AppImageKeys.person22,
-          //width: 30,
+        ClipOval(
+          child: imagePath != null
+              ? Image.memory(
+            imagePath!,
+            width: 30,
+            height: 30,
+            fit: BoxFit.cover,
+          )
+              : Image.asset(
+            AppImageKeys.person22,
+            width: 30,
+            height: 30,
+            fit: BoxFit.cover,
+          ),
         ),
 
         const SizedBox(width: 5),

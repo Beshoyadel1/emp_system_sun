@@ -68,11 +68,11 @@ class _CommunicationAndPoliciesPagesScreenState
   }
 }
 
-final List<Widget> widgetInsuranceOffers = const [
-  ContactUs(),
-  AboutSun(),
-  PrivacyPolicy(),
-  TermsAndConditions(),
+final List<Widget> widgetInsuranceOffers =  [
+  const ContactUs(),
+  const AboutSun(),
+  const PrivacyPolicy(),
+  const TermsAndConditions(),
 ];
 final List<String> eventsNameList = [
   AppLanguageKeys.contactUs,

@@ -14,19 +14,26 @@ class GetProviderServiceStatisticsCubit
       BlocProvider.of(context);
 
   Future<void> getProviderServiceStatistics() async {
+    if (isClosed) return;
+
     emit(GetProviderServiceStatisticsLoading());
 
     final user = await AuthLocalStorage.getUser();
+
+    if (isClosed) return;
 
     if (user == null) {
       emit(GetProviderServiceStatisticsError("User not found"));
       return;
     }
+
     final result = await getProviderServiceStatisticsFunction(
       request: GetProviderServiceStatisticsRequest(
         providerId: user.userid,
       ),
     );
+
+    if (isClosed) return;
 
     if (result != null) {
       emit(GetProviderServiceStatisticsSuccess(result));

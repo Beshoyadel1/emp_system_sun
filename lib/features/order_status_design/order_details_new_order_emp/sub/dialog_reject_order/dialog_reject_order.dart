@@ -1,9 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import '../../../../../../../core/language/language_constant.dart';
-import '../../../../../../../features/order_status_design/order_details_new_order_emp/sub/dialog_reject_order/screens/first_part_of_data_dialog_reject_order.dart';
-import '../../../../../../../features/order_status_design/order_details_new_order_emp/sub/dialog_reject_order/screens/last_two_button_in_dialog_reject_order.dart';
-import '../../../../../../../features/permissions/custom_widget/text_with_text_form_field_as_column_widget.dart';
+import '../../../../../../../../core/language/language_constant.dart';
+import '../../../../../../../../features/order_status_design/order_details_new_order_emp/sub/dialog_reject_order/screens/first_part_of_data_dialog_reject_order.dart';
+import '../../../../../../../../features/order_status_design/order_details_new_order_emp/sub/dialog_reject_order/screens/last_two_button_in_dialog_reject_order.dart';
+import '../../../../../../../../features/permissions/custom_widget/text_with_text_form_field_as_column_widget.dart';
 import '../../../../../../../core/theming/colors.dart';
 
 class DialogRejectOrder extends StatelessWidget {

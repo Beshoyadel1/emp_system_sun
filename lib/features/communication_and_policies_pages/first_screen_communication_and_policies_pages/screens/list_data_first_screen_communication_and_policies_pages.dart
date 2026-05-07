@@ -18,7 +18,7 @@ class _ScreenListDataFirstScreenCommunicationAndPoliciesPagesState
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => TabInsuranceNewOffersCubit(),
-      child: CommunicationAndPoliciesPagesScreen(),
+      child: const CommunicationAndPoliciesPagesScreen(),
     );
   }
 }

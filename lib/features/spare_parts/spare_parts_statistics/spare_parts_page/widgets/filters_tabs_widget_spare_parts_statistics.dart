@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../../../features/cars_haraj_page/model/internal_orders_filter/internal_orders_filter.dart';
-import '../../../../../../../features/spare_parts/spare_parts_statistics/spare_parts_page/widgets/filter_design_spare_parts_statistics.dart';
+import '../../../../../../../../features/cars_haraj_page/model/internal_orders_filter/internal_orders_filter.dart';
+import '../../../../../../../../features/spare_parts/spare_parts_statistics/spare_parts_page/widgets/filter_design_spare_parts_statistics.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/get_provider_internal_order/get_provider_internal_order_state.dart';
 import '../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/tabs_cubit/tabs_cubit.dart';

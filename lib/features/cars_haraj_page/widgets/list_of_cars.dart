@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/cubit/app_cubit/app_cubit.dart';
 import '../../../../../core/utilies/map_of_all_app.dart';
+import '../../../../../features/internal_services/internal_orders/first_screen_internal_orders/screens/big_container_of_new_orders/Container_view_all_in_first_row_in_data_container_in_list_data_first_screen_internal_orders.dart';
 import '../../../../../core/api_functions/harage/get_all_harage_model/get_all_harage_request.dart';
 import '../../../../../features/cars_haraj_page/logic/get_all_harage_cubit/get_all_harage_cubit.dart';
 import '../../../../../features/cars_haraj_page/widgets/available_list_cars.dart';
@@ -62,23 +63,12 @@ class _ListOfCarsState extends State<ListOfCars> {
                         ),
                       ],
                     ),
-                    CustomContainer(
-                      containerHeight: 38,
-                      containerWidth: 129,
-                      isSelected: true,
+                    ContainerViewAllInFirstRowInDataContainerInListDataFirstScreenInternalOrders(
                       onTap: () {
                         AppCubit.get(context).navigateToPage(
                           PagesOfAllApp.carHarajOrdersPageNumber,
                         );
                       },
-                      containerColor: AppColors.orangeColor,
-                      typeWidget: const Center(
-                        child: TextInAppWidget(
-                          text: AppLanguageKeys.viewAllKey,
-                          textSize: 16,
-                          textColor: AppColors.whiteColor,
-                        ),
-                      ),
                     ),
                   ],
                 ),

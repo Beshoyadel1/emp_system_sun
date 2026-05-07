@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../../../../core/theming/colors.dart';
+import '../../../../../../../../core/theming/text_styles.dart';
 import '../../../../../features/cars_haraj_page/model/internal_orders_filter/internal_orders_filter.dart';
 import '../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/order_funcations/order_functions.dart';
 import '../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/tabs_cubit/tabs_cubit.dart';
@@ -27,7 +29,15 @@ class FilterDesignMobileServicesStatistics extends StatelessWidget {
 
         if (state is GetProviderInternalOrderSuccess) {
           final orders = state.orders;
-
+          if (state.orders.isEmpty) {
+            return const Center(
+              child:  TextInAppWidget(
+                text: AppLanguageKeys.empty,
+                textSize: 15,
+                textColor: AppColors.greyColor,
+              ),
+            );
+          }
           return Column(
             children: [
               Expanded(

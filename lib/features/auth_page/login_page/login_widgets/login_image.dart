@@ -20,7 +20,7 @@ class LoginImage extends StatelessWidget {
             BlendMode.darken,
           ),
           child: Image.asset(
-            AppImageKeys.loginImage,
+            AppImageKeys.loginEmp,
             height: double.infinity,
             width: double.infinity,
             fit: BoxFit.fill,

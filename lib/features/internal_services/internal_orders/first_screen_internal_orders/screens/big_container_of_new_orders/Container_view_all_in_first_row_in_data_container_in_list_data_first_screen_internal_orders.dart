@@ -36,7 +36,7 @@ class ContainerViewAllInFirstRowInDataContainerInListDataFirstScreenInternalOrde
           ],
         ),
         child:  TextInAppWidget(
-          text: text??AppLanguageKeys.send,
+          text: text??AppLanguageKeys.viewAll,
           textSize: 13,
           fontWeightIndex: FontSelectionData.regularFontFamily,
           textColor: AppColors.whiteColor,

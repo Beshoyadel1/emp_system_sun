@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../../../core/api/dio_function/api_constants.dart';
-import '../../../../../../../core/language/language_constant.dart';
-import '../../../../../../../core/theming/assets.dart';
-import '../../../../../../../features/internal_services/internal_orders/custom_widget/Container_of_second_part_data_container_in_list_data_first_screen_internal_orders_widget.dart';
-import '../../../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/get_provider_internal_order/get_provider_internal_order_cubit.dart';
-import '../../../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/get_provider_internal_order/get_provider_internal_order_state.dart';
-import '../../../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/order_funcations/order_functions.dart';
-import '../../../../../../../features/order_status_design/cubit/order_status_cubit/order_status_cubit.dart';
-import '../../../../../../../features/order_status_design/cubit/order_status_cubit/order_status_state.dart';
+import '../../../../../../../../core/api/dio_function/api_constants.dart';
+import '../../../../../../../../core/language/language_constant.dart';
+import '../../../../../../../../core/theming/assets.dart';
+import '../../../../../../../../core/theming/colors.dart';
+import '../../../../../../../../core/theming/text_styles.dart';
+import '../../../../../../../../features/internal_services/internal_orders/custom_widget/Container_of_second_part_data_container_in_list_data_first_screen_internal_orders_widget.dart';
+import '../../../../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/get_provider_internal_order/get_provider_internal_order_cubit.dart';
+import '../../../../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/get_provider_internal_order/get_provider_internal_order_state.dart';
+import '../../../../../../../../features/internal_services/internal_orders/first_screen_internal_orders/logic/order_funcations/order_functions.dart';
+import '../../../../../../../../features/order_status_design/cubit/order_status_cubit/order_status_cubit.dart';
+import '../../../../../../../../features/order_status_design/cubit/order_status_cubit/order_status_state.dart';
 
 class SecondPartDataContainerInListDataFirstScreenMobileServicesOrders
     extends StatefulWidget {
@@ -60,7 +62,15 @@ class _SecondPartDataContainerInListDataFirstScreenMobileServicesOrdersState ext
 
               if (state is GetProviderInternalOrderSuccess) {
                 final orders = state.orders;
-
+                if (state.orders.isEmpty) {
+                  return const Center(
+                    child:  TextInAppWidget(
+                      text: AppLanguageKeys.empty,
+                      textSize: 15,
+                      textColor: AppColors.greyColor,
+                    ),
+                  );
+                }
                 return ListView.separated(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),

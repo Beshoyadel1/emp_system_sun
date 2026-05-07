@@ -7,6 +7,9 @@ class CreateProvServiceRequest {
   final int? taxid;
   final String? name;
   final String? latinname;
+  final double? uniformprice;
+  final double? cost;
+  final bool? isuniformprice;
   final List<BrandModelCreateProvServiceRequest>? brands;
   final List<CarModelCreateProvServiceRequest>? cars;
 
@@ -18,6 +21,9 @@ class CreateProvServiceRequest {
      this.latinname,
      this.brands,
      this.cars,
+    this.uniformprice,
+    this.cost,
+    this.isuniformprice
   });
 
   Map<String, dynamic> toJson() {
@@ -29,6 +35,9 @@ class CreateProvServiceRequest {
       "latinname": latinname,
       "brands": brands?.map((e) => e.toJson()).toList()??[],
       "cars": cars?.map((e) => e.toJson()).toList()??[],
+      "uniformprice": uniformprice,
+      "cost": cost,
+      "isuniformprice": isuniformprice,
     };
   }
 }

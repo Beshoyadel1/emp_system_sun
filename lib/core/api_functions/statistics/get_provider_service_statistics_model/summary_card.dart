@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import '../../../../core/language/language_cubit/language_cubit.dart';
 
 class SummaryCard {
   final String? serviceName;
@@ -28,12 +27,10 @@ class SummaryCard {
       isIncrease: json['isIncrease'],
     );
   }
-  String getName(BuildContext context) {
-    final isArabic =
-        LanguageCubit.get(context).isAllAppLanguageArabic;
 
+  String getName(bool isArabic) {
     return isArabic
-        ? (serviceName ?? "")
-        : (serviceLatinName ?? "");
+        ? (serviceName ?? '')
+        : (serviceLatinName ?? '');
   }
 }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import '../../../../features/dashboard_page/logic/get_provider_total_rate_and_employee_and_balance_cubit/get_provider_total_rate_and_employee_and_balance_cubit.dart';
-import '../../../../features/dashboard_page/logic/get_provider_total_rate_and_employee_and_balance_cubit/get_provider_total_rate_and_employee_and_balance_state.dart';
+import '../../../../../features/dashboard_page/logic/get_provider_total_rate_and_employee_and_balance_cubit/get_provider_total_rate_and_employee_and_balance_cubit.dart';
+import '../../../../../features/dashboard_page/logic/get_provider_total_rate_and_employee_and_balance_cubit/get_provider_total_rate_and_employee_and_balance_state.dart';
+import '../../../../../features/internal_services/internal_orders/custom_widget/text_empty_view_data.dart';
 import '../../../../../core/language/language_constant.dart';
 import '../../../../../core/theming/colors.dart';
 import '../../../../../core/pages_widgets/general_widgets/custom_container.dart';
 import '../../../../../core/theming/text_styles.dart';
 import 'data_account_balance.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AccountBalance extends StatelessWidget {
@@ -14,15 +14,19 @@ class AccountBalance extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    bool isMobile = size.width <= 1320;
     return BlocBuilder<GetProviderTotalRateAndEmployeeAndBalanceCubit,
         GetProviderTotalRateAndEmployeeAndBalanceState>(
       builder: (context, state) {
         final data = state is GetProviderTotalRateAndEmployeeAndBalanceSuccess
             ? state.data.accountsBalance
             : [];
-
+        if (data.isEmpty) {
+          return const SizedBox();
+        }
         return CustomContainer(
-          containerWidth: 375,
+          containerWidth: isMobile?double.infinity:520,
           containerHeight: 504,
           padding: const EdgeInsets.all(0),
           borderRadius: BorderRadius.circular(20),
@@ -98,7 +102,7 @@ class AccountBalance extends StatelessWidget {
 
                 Expanded(
                   child: data.isEmpty
-                      ? const Center(child: Text("No Data"))
+                      ? const TextEmptyViewData()
                       : ListView.separated(
                     itemCount: data.length,
                     separatorBuilder: (_, __) =>

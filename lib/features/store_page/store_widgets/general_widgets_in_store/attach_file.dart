@@ -1,77 +1,102 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../../core/api_functions/user/login_model/login_repository.dart';
+
 import '../../../../../../../features/store_page/model/facility_cubit/facility_tab_cubit/facility_tab_cubit.dart';
 import '../../../../../../../features/store_page/model/facility_cubit/facility_tab_cubit/facility_tab_state.dart';
 import '../../../../../../core/theming/colors.dart';
-import '../../../../../../core/theming/assets.dart';
 import '../../../../../../core/pages_widgets/general_widgets/custom_container.dart';
 import '../../../../../../core/theming/text_styles.dart';
 import '../../../../../../core/language/language_constant.dart';
 
-class AttachFile extends StatelessWidget {
-  const AttachFile({
+class AttachImage extends StatelessWidget {
+  const AttachImage({
     super.key,
-    required this.fileName,
-    required this.fileType,
+    required this.title,
+    required this.type,
+    required this.isEditMode,
   });
 
-  final String fileName;
-  final String fileType;
+  final String title;
+  final String type;
+  final bool isEditMode;
 
   @override
   Widget build(BuildContext context) {
+    final cubit = FacilityTabCubit.get(context);
+
     return BlocBuilder<FacilityTabCubit, FacilityTabState>(
       builder: (context, state) {
         final cubit = FacilityTabCubit.get(context);
-        final bool hasFile = cubit.uploadedFiles.containsKey(fileType);
-        final String? name = cubit.uploadedFileNames[fileType];
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextInAppWidget(
-              text: fileName,
-              textSize: 16,
-            ),
-            CustomContainer(
-              isSelected: hasFile,
-              onTap: () => cubit.uploadFile(fileType),
-              text: AppLanguageKeys.attachFileKey,
-              padding: const EdgeInsets.symmetric(horizontal: 90, vertical: 8),
-              containerColor: AppColors.darkGreyColor,
-              border: const Border(),
-            ),
-            const SizedBox(height: 8),
-            if (hasFile)
-              Row(
-                spacing: 8,
-                children: [
-                  const Icon(Icons.insert_drive_file,
-                      color: AppColors.darkGreyColor),
-                  Flexible(
-                    child: Text(
-                      name ?? 'Unknown file',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: AppColors.darkGreyColor,
+
+        return FutureBuilder(
+          future: AuthLocalStorage.getUser(),
+          builder: (context, snapshot) {
+            final user = snapshot.data;
+
+            Uint8List? image = cubit.images[type];
+
+            if (image == null &&
+                user != null &&
+                !cubit.deletedImages.contains(type)) {
+
+              if (type == 'image') {
+                image = user.image;
+              } else if (type == 'crimage') {
+                image = user.providerDetails?.crimage;
+              } else if (type == 'vatnoimage') {
+                image = user.providerDetails?.vatnoimage;
+              }
+            }
+
+            final isUploaded = image != null;
+
+            return Column(
+              spacing: 10,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextInAppWidget(text: title, textSize: 13),
+                isUploaded
+                    ? Wrap(
+                  spacing: 5,
+                  runSpacing: 5,
+                  children: [
+                    CircleAvatar(
+                      radius: 40,
+                      backgroundImage: MemoryImage(image),
+                    ),
+
+                    if (isEditMode)
+                      IconButton(
+                        onPressed: () => cubit.uploadImage(type),
+                        icon: const Icon(Icons.edit),
                       ),
-                      overflow: TextOverflow.ellipsis,
+                  ],
+                )
+                    : GestureDetector(
+                  onTap: isEditMode
+                      ? () => cubit.uploadImage(type)
+                      : null,
+                  child: Container(
+                    width: 250,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Center(
+                      child: TextInAppWidget(
+                        text: AppLanguageKeys.uploadImage,
+                        textSize: 13,
+                        textColor: AppColors.whiteColor,
+                      ),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () => cubit.deleteFile(fileType),
-                    child: CircleAvatar(
-                      radius: 12,
-                      backgroundColor: AppColors.redColor,
-                      child: Image.asset(
-                        AppImageKeys.deleteIcon,
-                        width: 15,
-                        height: 15,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-          ],
+                ),
+              ],
+            );
+          },
         );
       },
     );

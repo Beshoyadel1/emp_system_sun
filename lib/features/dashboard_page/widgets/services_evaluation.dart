@@ -14,9 +14,12 @@ class ServicesEvaluation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    bool isMobile = size.width <= 1280;
     return CustomContainer(
       padding: const EdgeInsets.all(10),
       containerHeight: 100,
+      containerWidth:isMobile?double.infinity: 500,
       borderRadius: BorderRadius.circular(20),
       isSelected: false,
       onTap: () {},

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../../features/internal_services/internal_orders/custom_widget/row_number_coin_widget.dart';
+import '../../../../features/internal_services/internal_orders/custom_widget/row_number_coin_widget.dart';
 import '../../../../../../../../core/theming/assets.dart';
 import '../../../../../../../../core/language/language_constant.dart';
 import '../../../../../../../../core/theming/colors.dart';

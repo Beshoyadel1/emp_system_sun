@@ -55,7 +55,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   children: [
                     SizedBox(
                       height: 40,
-                      child: AppBar(backgroundColor: AppColors.orangeColor),
+                      child: AppBar(backgroundColor: AppColors.seaBlueColor),
                     ),
                     Expanded(
                       child: Padding(
@@ -90,53 +90,44 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                     fontWeightIndex: FontSelectionData.semiBoldFontFamily,
                                   ),
                                   UserTextFieldWidget(type: UserFieldType.password, controller: confirmPasswordController,),
-                                  BlocBuilder<AuthCubit, AuthState>(
-                                    buildWhen: (previous, current) =>
-                                    current is AuthLoginLoading ||
-                                        current is AuthLoginSuccess ||
-                                        current is AuthLoginError ||
-                                        previous is AuthLoginLoading,
-
-                                    builder: (context, state) {
-                                      final bool isLoading = state is AuthLoginLoading;
-
-                                      if (state is AuthLoginSuccess) {
-                                        Future.microtask(() {
-                                          Navigator.of(context).pushReplacement(
-                                            NavigateToPageWidget(const LoginPage()),
-                                          );
-                                        });
+                                  BlocListener<AuthCubit, AuthState>(
+                                    listener: (context, state) {
+                                      if (state is AuthChangePasswordSuccess) {
+                                        Navigator.pop(context);
+                                        AppSnackBar.showSuccess(AppLanguageKeys.success);
                                       }
 
                                       if (state is AuthLoginError) {
-                                        Future.microtask(() {
-                                          AppSnackBar.showError(state.message);
-                                        });
+                                        AppSnackBar.showError(state.message);
                                       }
-
-                                      return LoginButtonWidget(
-                                        text: AppLanguageKeys.send,
-                                        isLoading: isLoading,
-                                        onPressed: isLoading
-                                            ? null
-                                            : () {
-                                          if (!formKey.currentState!.validate()) return;
-                                          final password = passwordController.text.trim();
-                                          final confirm = confirmPasswordController.text.trim();
-
-                                          if (password != confirm) {
-                                            AppSnackBar.showError(
-                                                AppLanguageKeys.passwordsDoNotMatch);
-                                            return;
-                                          }
-                                          final changePasswordRequest = ChangePasswordRequest(
-                                            user: widget.email,
-                                            password:passwordController.text.trim(),
-                                          );
-                                          context.read<AuthCubit>().changePassword(changePasswordRequest);
-                                        },
-                                      );
                                     },
+                                    child: BlocBuilder<AuthCubit, AuthState>(
+                                      builder: (context, state) {
+                                        final isLoading = state is AuthLoginLoading;
+                                        return LoginButtonWidget(
+                                          text: AppLanguageKeys.send,
+                                          isLoading: isLoading,
+                                          onPressed: isLoading
+                                              ? null
+                                              : () {
+                                            if (!formKey.currentState!.validate()) return;
+                                            final password = passwordController.text.trim();
+                                            final confirm = confirmPasswordController.text.trim();
+                                    
+                                            if (password != confirm) {
+                                              AppSnackBar.showError(
+                                                  AppLanguageKeys.passwordsDoNotMatch);
+                                              return;
+                                            }
+                                            final changePasswordRequest = ChangePasswordRequest(
+                                              user: widget.email,
+                                              password:passwordController.text.trim(),
+                                            );
+                                            context.read<AuthCubit>().changePassword(changePasswordRequest);
+                                          },
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ],
                               ),

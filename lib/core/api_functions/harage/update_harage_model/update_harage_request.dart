@@ -38,6 +38,30 @@ class UpdateHarageRequest {
     this.car,
   });
 
+  UpdateHarageRequest copyWith({
+    int? userId,
+    int? userType,
+  }) {
+    return UpdateHarageRequest(
+      id: id,
+      userId: userId ?? this.userId,
+      userType: userType ?? this.userType,
+      isNew: isNew,
+      releaseDate: releaseDate,
+      transmissionType: transmissionType,
+      fuelType: fuelType,
+      kilometers: kilometers,
+      description: description,
+      addressText: addressText,
+      price: price,
+      cost: cost,
+      isSold: isSold,
+      commentsNumber: commentsNumber,
+      sellDate: sellDate,
+      user: user,
+      car: car,
+    );
+  }
   factory UpdateHarageRequest.fromJson(Map<String, dynamic> json) {
     return UpdateHarageRequest(
       id: json['id'],

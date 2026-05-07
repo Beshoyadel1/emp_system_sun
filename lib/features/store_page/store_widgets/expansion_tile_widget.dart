@@ -25,7 +25,7 @@ class _ExpansionTileWidgetState extends State<ExpansionTileWidget> {
     Size size = MediaQuery.of(context).size;
     bool isMobile = size.width <= ValuesOfAllApp.mobileWidth;
     return Theme(
-      data: ThemeData(dividerColor: Colors.transparent),
+      data: ThemeData(dividerColor: AppColors.transparent),
       child: ExpansionTile(
         backgroundColor: AppColors.veryLightOrangeColor.withAlpha(100),
         iconColor: widget.pages.number == _appCubit.selectedPageIndex

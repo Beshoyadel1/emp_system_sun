@@ -87,7 +87,6 @@ class LocationCubit extends Cubit<LocationState> {
           final lat = double.parse(data[0]["lat"]);
           final lon = double.parse(data[0]["lon"]);
           final displayName = data[0]["display_name"];
-
           emit(LocationLoaded(LatLng(lat, lon), displayName));
         } else {
           emit(LocationError("Location not found"));

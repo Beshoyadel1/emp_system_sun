@@ -19,6 +19,46 @@ class AppLanguageKeys {
   //end//
 
   //others//
+  static const String check = 'check';
+  static const String addAtLeastOneBranch = 'addAtLeastOneBranch';
+  static const String addAtLeastOneWorkingHours = 'addAtLeastOneWorkingHours';
+  static const String noBranchesYet = 'noBranchesYet';
+  static const String isSold = 'isSold';
+  static const String releaseDate = 'releaseDate';
+  static const String transmissionType = 'transmissionType';
+  static const String fuelType = 'fuelType';
+  static const String facilityName = 'facilityName';
+  static const String facilityNameEn = 'facilityNameEn';
+  static const String commercialRegister = 'commercialRegister';
+  static const String shortAddress = 'shortAddress';
+  static const String selectGender = 'selectGender';
+  static const String allWorkingHours = 'allWorkingHours';
+  static const String editWorkingHours = 'editWorkingHours';
+  static const String addWorkingHours = 'addWorkingHours';
+  static const String branchName = 'branchName';
+  static const String branchLatinName = 'branchLatinName';
+  static const String addressText = 'addressText';
+  static const String addressLatinText = 'addressLatinText';
+  static const String allBrands = 'allBrands';
+  static const String allModels = 'allModels';
+  static const String areYouSure = 'areYouSure';
+  static const String remainingQuantity = 'remainingQuantity';
+  static const String selectCarBrand = 'selectCarBrand';
+  static const String selectCarModel = 'selectCarModel';
+  static const String outOfStock = 'outOfStock';
+  static const String mustImageUpload = 'mustImageUpload';
+  static const String attachImages = 'attachImages';
+  static const String productCategoryId = 'productCategoryId';
+  static const String latinDesc = 'latinDesc';
+  static const String inStock = 'inStock';
+  static const String instructions = 'instructions';
+  static const String isNew = 'isNew';
+  static const String isNotNew = 'isNotNew';
+  static const String sizes = 'sizes';
+  static const String selectConversation = 'selectConversation';
+  static const String male = 'male';
+  static const String female = 'female';
+  static const String servicePackage = 'servicePackage';
   static const String oldService = 'oldService';
   static const String createService = 'createService';
   static const String serviceNameAr = 'serviceNameAr';
@@ -407,6 +447,7 @@ class AppLanguageKeys {
   static const String facilityIdentityKey = 'facilityIdentityEN';
   static const String attachIdentityKey = 'attachIdentityEN';
   static const String imageRequirementsKey = 'imageRequirementsEN';
+
   static const String facilityNameKey = 'facilityNameEN';
   static const String facilityNameENKey = 'facilityNameENEN';
   static const String activityTypeKey = 'activityTypeEN';
@@ -420,6 +461,7 @@ class AppLanguageKeys {
   static const String buildingNumberAgainKey = 'buildingNumberAgainEN';
   static const String commercialRecordFileKey = 'commercialRecordFileEN';
   static const String attachFileKey = 'attachFileEN';
+
   static const String ownerIdKey = 'ownerIdEN';
   static const String bankNameKey = 'bankNameEN';
   static const String beneficiaryNameKey = 'beneficiaryNameEN';

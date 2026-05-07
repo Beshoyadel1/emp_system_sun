@@ -18,7 +18,7 @@ class CarHarajOrdersPage extends StatelessWidget {
           if (state is NewOrdersInitial) {
             return CarOrdersPage(cubit: cubit);
           } else {
-            return const CarOrderDetailsPage();
+            return const SizedBox();
           }
         }));
   }

@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
-import '../../../../core/api_functions/order/get_provider_orders_model/order_model.dart';
-import '../../../../features/internal_services/internal_orders/first_screen_internal_orders/screens/big_container_of_new_orders/part_container_big_container_of_new_orders/custom_tab_second_part_data_container_in_list_data_first_screen_internal_orders.dart';
-import '../../../../features/internal_services/internal_orders/first_screen_internal_orders/screens/big_container_of_new_orders/part_container_big_container_of_new_orders/mobile_second_part_data_container_in_list_data_first_screen_internal_orders.dart';
-import '../../../../features/internal_services/internal_orders/first_screen_internal_orders/screens/big_container_of_new_orders/part_container_big_container_of_new_orders/tab_second_part_data_container_in_list_data_first_screen_internal_orders.dart';
+import '../../../../../core/api_functions/order/get_provider_orders_model/order_model.dart';
+import '../../../../../features/internal_services/internal_orders/first_screen_internal_orders/screens/big_container_of_new_orders/part_container_big_container_of_new_orders/custom_tab_second_part_data_container_in_list_data_first_screen_internal_orders.dart';
+import '../../../../../features/internal_services/internal_orders/first_screen_internal_orders/screens/big_container_of_new_orders/part_container_big_container_of_new_orders/mobile_second_part_data_container_in_list_data_first_screen_internal_orders.dart';
+import '../../../../../features/internal_services/internal_orders/first_screen_internal_orders/screens/big_container_of_new_orders/part_container_big_container_of_new_orders/tab_second_part_data_container_in_list_data_first_screen_internal_orders.dart';
 import '../../../../../../../../core/utilies/map_of_all_app.dart';
 import '../../../../../../../../core/theming/colors.dart';
 

@@ -1,0 +1,222 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../../core/api_functions/user/login_model/login_repository.dart';
+import '../../../../../../core/api_functions/work_time/delete_provider_work_time_model/delete_provider_work_time_repository.dart';
+import '../../../../../../core/api_functions/work_time/delete_provider_work_time_model/delete_provider_work_time_request.dart';
+import '../../../../../../core/api_functions/work_time/get_provider_work_time_model/get_provider_work_time_repository.dart';
+import '../../../../../../core/api_functions/work_time/get_provider_work_time_model/get_provider_work_time_request.dart';
+import '../../../../../../core/api_functions/work_time/upload_provider_work_times_model/upload_provider_work_times_repository.dart';
+import '../../../../../../core/api_functions/work_time/upload_provider_work_times_model/upload_provider_work_times_request.dart';
+import '../../../../../../core/api_functions/work_time/upload_provider_work_times_model/work_time_model.dart';
+import '../../../../../../features/store_page/logic/work_time_cubit/work_time_state.dart';
+
+
+class UpdateWorkTimeCubit extends Cubit<WorkTimeState> {
+  UpdateWorkTimeCubit() : super(WorkTimeInitial());
+
+  static UpdateWorkTimeCubit get(context) => BlocProvider.of(context);
+
+  /// ================= DATA =================
+  Set<int> selectedDays = {};
+  String? fromTime;
+  String? toTime;
+  int? providerId;
+
+  /// ================= INIT USER =================
+  Future<void> _initUser() async {
+    if (providerId != null) return;
+
+    final user = await AuthLocalStorage.getUser();
+    providerId = user!.userid!;
+  }
+
+  /// ================= SELECT DAYS =================
+  void toggleDay(int index) {
+    if (selectedDays.contains(index)) {
+      selectedDays.remove(index);
+    } else {
+      selectedDays.add(index);
+    }
+
+    emit(WorkTimeDaysChanged(Set.from(selectedDays)));
+  }
+
+  /// ================= TIME =================
+  void setFromTime(String time) {
+    fromTime = time;
+    emit(WorkTimeTimeChanged());
+  }
+
+  void setToTime(String time) {
+    toTime = time;
+    emit(WorkTimeTimeChanged());
+  }
+
+  /// ================= BUILD MODEL =================
+  WorkTimeModel _buildModel(int worktimeId) {
+    return WorkTimeModel(
+      worktimeid: worktimeId,
+      provid: providerId!,
+
+      sat: selectedDays.contains(0),
+      sun: selectedDays.contains(1),
+      mon: selectedDays.contains(2),
+      tue: selectedDays.contains(3),
+      wed: selectedDays.contains(4),
+      thr: selectedDays.contains(5),
+      fri: selectedDays.contains(6),
+
+      fromTime: fromTime ?? "",
+      toTime: toTime ?? "",
+    );
+  }
+
+  /// ================= CREATE =================
+  Future<void> createWorkTime() async {
+    await _initUser();
+
+    if (selectedDays.isEmpty) {
+      emit(WorkTimeError("Select at least one day"));
+      return;
+    }
+
+    if (fromTime == null || toTime == null) {
+      emit(WorkTimeError("Select time"));
+      return;
+    }
+
+    try {
+      emit(WorkTimeLoading());
+
+      final request = UploadProviderWorkTimesRequest(
+        workTimes: [
+          _buildModel(0),
+        ],
+      );
+
+      await uploadProviderWorkTimesFunction(
+        uploadProviderWorkTimesRequest: request,
+      );
+      await getWorkTimes();
+      emit(WorkTimeSuccess());
+    } catch (e) {
+      emit(WorkTimeError(e.toString()));
+    }
+  }
+
+  Future<void> updateWorkTime(int worktimeId) async {
+    await _initUser();
+
+    if (selectedDays.isEmpty) {
+      emit(WorkTimeError("Select at least one day"));
+      return;
+    }
+
+    if (fromTime == null || toTime == null) {
+      emit(WorkTimeError("Select time"));
+      return;
+    }
+
+    try {
+      emit(WorkTimeLoading());
+
+      final request = UploadProviderWorkTimesRequest(
+        workTimes: [
+          _buildModel(worktimeId),
+        ],
+      );
+
+      await uploadProviderWorkTimesFunction(
+        uploadProviderWorkTimesRequest: request,
+      );
+      await getWorkTimes();
+      clearSelection();
+      emit(WorkTimeSuccess());
+    } catch (e) {
+      emit(WorkTimeError(e.toString()));
+    }
+  }
+
+
+  Future<void> deleteWorkTime(int workTimeId) async {
+    await _initUser();
+
+    try {
+      emit(WorkTimeLoading());
+
+      final request = DeleteProviderWorkTimeRequest(
+        providerId: providerId!,
+        workTimeId: workTimeId,
+      );
+
+      await deleteProviderWorkTimeFunction(
+        deleteProviderWorkTimeRequest: request,
+      );
+      await getWorkTimes();
+      emit(WorkTimeDeleteSuccess());
+    } catch (e) {
+      emit(WorkTimeError(e.toString()));
+    }
+  }
+  List<WorkTimeModel> workTimes = [];
+  Future<void> getWorkTimes() async {
+    await _initUser();
+
+    try {
+      emit(WorkTimeLoading());
+
+      final result = await getProviderWorkTimeFunction(
+        getProviderWorkTimeRequest: GetProviderWorkTimeRequest(
+          providerId: providerId!,
+        ),
+      );
+
+      workTimes = result;
+
+      emit(WorkTimeLoaded(result));
+    } catch (e) {
+      emit(WorkTimeError(e.toString()));
+    }
+  }
+  /// ================= RESET =================
+  void reset() {
+    selectedDays.clear();
+    fromTime = null;
+    toTime = null;
+    emit(WorkTimeInitial());
+  }
+  int? selectedWorkTimeId;
+  bool isEditMode = false;
+
+  /// fill data when selecting item
+  void selectWorkTime(WorkTimeModel item) {
+    selectedWorkTimeId = item.worktimeid;
+    isEditMode = true;
+
+    selectedDays.clear();
+
+    if (item.sat == true) selectedDays.add(0);
+    if (item.sun == true) selectedDays.add(1);
+    if (item.mon == true) selectedDays.add(2);
+    if (item.tue == true) selectedDays.add(3);
+    if (item.wed == true) selectedDays.add(4);
+    if (item.thr == true) selectedDays.add(5);
+    if (item.fri == true) selectedDays.add(6);
+
+    fromTime = item.fromTime;
+    toTime = item.toTime;
+
+    emit(WorkTimeLoaded(workTimes));
+  }
+
+  /// clear form (back to create)
+  void clearSelection() {
+    selectedWorkTimeId = null;
+    isEditMode = false;
+
+    selectedDays.clear();
+    fromTime = null;
+    toTime = null;
+
+    emit(WorkTimeInitial());
+  }
+}
