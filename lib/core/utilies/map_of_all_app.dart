@@ -1,20 +1,18 @@
-import '../../../features/internal_services/internal_services_statistics/Internal_services_page/ui/internal_orders_page.dart';
-import '../../../features/mobile_services/mobile_services_orders/first_screen_mobile_services_orders/first_screen_mobile_services_orders.dart';
-import '../../../features/mobile_services/mobile_services_statistics/spare_parts_page/ui/mobile_services_statistics_page.dart';
-import '../../../features/spare_parts/spare_parts_orders/first_screen_spare_parts_orders/first_screen_spare_parts_orders.dart';
-import '../../../features/spare_parts/spare_parts_statistics/spare_parts_page/ui/spare_parts_statistics_page.dart';
-import '../../../features/store_page/store_widgets/facility_account/facility_account.dart';
-import '../../../features/technical_support/technical_support_emp/technical_support_admin_sun.dart';
+import 'package:emp_system_sun/features/communication_and_policies_pages/presentation/pages/first_screen_communication_and_policies_pages/first_screen_communication_and_policies_pages.dart';
+import 'package:emp_system_sun/features/dashboard_page/presentation/dashboard_page.dart';
+import 'package:emp_system_sun/features/internal_services/presentation/pages/internal_orders/first_screen_internal_orders/first_screen_internal_orders.dart';
+import 'package:emp_system_sun/features/internal_services/presentation/pages/internal_services_statistics/Internal_services_page/ui/internal_orders_page.dart';
+import 'package:emp_system_sun/features/logout_dashboard/presentation/first_screen_logout_dashboard/logout_dashboard.dart';
+import 'package:emp_system_sun/features/mobile_services/presentation/pages/mobile_services_orders/first_screen_mobile_services_orders/first_screen_mobile_services_orders.dart';
+import 'package:emp_system_sun/features/mobile_services/presentation/pages/mobile_services_statistics/mobile_services_page/ui/mobile_services_statistics_page.dart';
+import 'package:emp_system_sun/features/permissions/presentation/pages/first_screen_permissions/first_screen_permissions.dart';
+import 'package:emp_system_sun/features/spare_parts/presentation/pages/spare_parts_orders/first_screen_spare_parts_orders/first_screen_spare_parts_orders.dart';
+import 'package:emp_system_sun/features/spare_parts/presentation/pages/spare_parts_statistics/spare_parts_page/ui/spare_parts_statistics_page.dart';
+import 'package:emp_system_sun/features/store_page/presentation/pages/store_widgets/facility_account/facility_account.dart';
+import 'package:emp_system_sun/features/technical_support/presentation/pages/technical_support_emp/technical_support_admin_sun.dart';
 import '../../../core/general_models/pages_model.dart';
-import '../../../features/cars_haraj_page/ui/car_haraj_orders_page.dart';
-import '../../../features/cars_haraj_page/ui/cars_haraj_statistics_page.dart';
-import '../../../features/communication_and_policies_pages/first_screen_communication_and_policies_pages/first_screen_communication_and_policies_pages.dart';
-import '../../../features/dashboard_page/dashboard_page.dart';
-import '../../../features/internal_services/internal_orders/first_screen_internal_orders/first_screen_internal_orders.dart';
-import '../../../features/logout_dashboard/first_screen_logout_dashboard/logout_dashboard.dart';
 import '../../../core/language/language_constant.dart';
 import '../../../core/theming/assets.dart';
-import '../../../features/permissions/first_screen_permissions/first_screen_permissions.dart';
 
 class AppStatesApi {
   static const String phoneExist = 'PhoneExist';
@@ -209,29 +207,7 @@ class PagesOfAllApp {
   static const int oilChangeServicePageNumber = 531;
   static const int oilChangeServiceOrdersPageNumber = 532;
   static const int oilChangeServiceStaticsPageNumber = 533;
-/*
-  * PageNodeModel(
-            name: AppLanguageKeys.carModelsTitleKey,
-            number: PagesOfAllApp.usersPermissionsPageNumber1,
-            children: [
-              PageNodeModel(
-                name: AppLanguageKeys.firstScreenCarModelSettings,
-                number: PagesOfAllApp.usersPermissionsPageNumber,
-                page: FirstScreenCarModelSettings(),
-              ),
-              PageNodeModel(
-                name: AppLanguageKeys.serviceSettingsCarModel,
-                number: PagesOfAllApp.usersPermissionsPageNumber,
-                page: ServiceSettingsCarModel(),
-              ),
-              PageNodeModel(
-                name: AppLanguageKeys.carAddScreenInCarModelSettings,
-                number: PagesOfAllApp.usersPermissionsPageNumber,
-                page: CarAddScreenInCarModelSettings(),
-              ),
-            ],
-            //page: FirstScreenCarModelSettings(),
-          ),*/
+
 }
 
 List<PageNodeModel> appPages = [];

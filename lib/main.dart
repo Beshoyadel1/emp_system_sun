@@ -1,10 +1,9 @@
 import 'dart:ui';
-import 'package:emp_system_sun/features/auth_page/auth_cubit/auth_cubit.dart';
-import 'package:emp_system_sun/features/auth_page/auth_gate.dart';
+import 'package:emp_system_sun/features/auth_page/presentation/auth_gate.dart';
+import 'package:emp_system_sun/features/auth_page/presentation/bloc/auth_cubit/auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import '../../../features/auth_page/login_page/login_page.dart';
 import '../../../core/cubit/app_cubit/app_cubit.dart';
 import '../../../core/language/language_cubit/language_cubit.dart';
 import '../../../core/language/language_cubit/language_states.dart';

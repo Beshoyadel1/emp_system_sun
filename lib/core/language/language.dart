@@ -31,6 +31,7 @@ class AppLocalizations {
       //END//
 
       //others//
+      AppLanguageKeys.enterSystem: 'دخول النظام',
       AppLanguageKeys.check: 'تحقق',
       AppLanguageKeys.addAtLeastOneBranch: 'أضف فرع واحد على الأقل',
       AppLanguageKeys.addAtLeastOneWorkingHours: 'أضف مواعيد عمل واحدة على الأقل',
@@ -1313,6 +1314,7 @@ class AppLocalizations {
       AppLanguageKeys.cancelledByUser: 'Cancelled by User',
       //END//
       //others//
+      AppLanguageKeys.enterSystem: 'Enter System',
       AppLanguageKeys.check: 'Check',
       AppLanguageKeys.addAtLeastOneBranch: 'Add at least one branch',
       AppLanguageKeys.addAtLeastOneWorkingHours: 'Add at least one working hour',

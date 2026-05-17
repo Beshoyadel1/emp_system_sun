@@ -19,6 +19,7 @@ class AppLanguageKeys {
   //end//
 
   //others//
+  static const String enterSystem = 'enterSystem';
   static const String check = 'check';
   static const String addAtLeastOneBranch = 'addAtLeastOneBranch';
   static const String addAtLeastOneWorkingHours = 'addAtLeastOneWorkingHours';

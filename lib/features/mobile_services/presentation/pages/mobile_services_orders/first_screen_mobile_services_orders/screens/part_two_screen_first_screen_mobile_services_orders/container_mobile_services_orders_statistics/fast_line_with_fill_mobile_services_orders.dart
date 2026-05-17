@@ -1,0 +1,63 @@
+import 'package:emp_system_sun/core/theming/colors.dart';
+import 'package:emp_system_sun/features/internal_services/data/model/get_provider_main_service_statistics_model/data_points_request.dart';
+import 'package:emp_system_sun/features/internal_services/presentation/cubit/loading_dashboard/loading_dashboard_cubit.dart';
+import 'package:emp_system_sun/features/internal_services/presentation/cubit/loading_dashboard/loading_dashboard_state.dart';
+import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class FastLineWithFillMobileServicesOrders extends StatelessWidget {
+  FastLineWithFillMobileServicesOrders({super.key});
+
+  final ZoomPanBehavior _zoomPanBehavior = ZoomPanBehavior(
+    enablePinching: true,
+    enablePanning: true,
+    zoomMode: ZoomMode.x,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<InternalOrdersCubit, InternalOrdersState>(
+      builder: (context, state) {
+        return SizedBox(
+          height: 150,
+          child: SfCartesianChart(
+            zoomPanBehavior: _zoomPanBehavior,
+            primaryXAxis: const CategoryAxis(),
+
+            primaryYAxis:const NumericAxis(),
+
+            series: <CartesianSeries>[
+              AreaSeries<DataPointsRequest, String>(
+                dataSource: state.chartPoints,
+
+                xValueMapper: (e, _) => e.label ?? '',
+                yValueMapper: (e, _) => e.value ?? 0,
+
+                color: Colors.pink.withOpacity(0.3),
+                borderColor: Colors.transparent,
+              ),
+
+              FastLineSeries<DataPointsRequest, String>(
+                dataSource: state.chartPoints,
+
+                xValueMapper: (e, _) => e.label ?? '',
+                yValueMapper: (e, _) => e.value ?? 0,
+
+                color: AppColors.orangeColor,
+                width: 2,
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class ChartData {
+  ChartData(this.x, this.y);
+
+  final DateTime x;
+  final double y;
+}
