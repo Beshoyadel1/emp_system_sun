@@ -1,19 +1,19 @@
 import 'package:emp_system_sun/core/theming/colors.dart';
-import 'package:emp_system_sun/features/internal_services/data/model/get_provider_main_service_statistics_model/sub_service_summaries_request.dart';
+import 'package:emp_system_sun/features/internal_services/data/model/get_provider_main_service_statistics_model/sub_service_summaries_model.dart';
 import 'package:emp_system_sun/features/internal_services/presentation/pages/internal_orders/custom_widget/row_circle_color_text_percentage_widget.dart';
 import 'package:flutter/material.dart';
 
 class ServicesLegendListMobileServicesOrders extends StatelessWidget {
 
-  final List<SubServiceSummariesRequest> services;
+  final List<SubServiceSummariesModel> services;
 
   const ServicesLegendListMobileServicesOrders({
     super.key,
     required this.services,
   });
 
-  List<SubServiceSummariesRequest> get _sortedServices {
-    final sorted = List<SubServiceSummariesRequest>.from(services);
+  List<SubServiceSummariesModel> get _sortedServices {
+    final sorted = List<SubServiceSummariesModel>.from(services);
 
     sorted.sort(
           (a, b) => (b.orderCount ?? 0).compareTo(a.orderCount ?? 0),

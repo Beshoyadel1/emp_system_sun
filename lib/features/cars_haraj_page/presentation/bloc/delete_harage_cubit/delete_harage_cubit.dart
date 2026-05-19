@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
-import '../../../data/model/delete_harage_model/delete_harage_request.dart';
+import '../../../data/request/delete_harage_request/delete_harage_request.dart';
 import '../../../data/datasource/delete_harage_datasource/delete_harage_repository.dart';
 import '../../../../../../core/api/dio_function/failures.dart';
 

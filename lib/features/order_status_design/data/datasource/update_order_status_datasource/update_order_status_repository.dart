@@ -1,4 +1,4 @@
-import '../../model/update_order_status_model/update_order_status_request.dart';
+import '../../request/update_order_status_request/update_order_status_request.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';
 

@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:emp_system_sun/features/internal_services/data/model/get_provider_main_service_statistics_model/statistics_response.dart';
-import '../../model/get_provider_main_service_statistics_model/data_points_request.dart';
+import 'package:emp_system_sun/features/internal_services/data/response/get_provider_main_service_statistics_response/statistics_response.dart';
+import '../../model/get_provider_main_service_statistics_model/data_points_model.dart';
 import '../../../../../core/api/dio_function/failures.dart';
 import '../../../../../core/pages_widgets/general_widgets/snakbar.dart';
-import '../../model/get_provider_main_service_statistics_model/sub_service_summaries_request.dart';
-import '../../model/get_provider_main_service_statistics_model/get_provider_main_service_statistics_request.dart';
+import '../../model/get_provider_main_service_statistics_model/sub_service_summaries_model.dart';
+import '../../request/get_provider_main_service_statistics_request/get_provider_main_service_statistics_request.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';
 
@@ -22,14 +22,14 @@ Future<StatisticsResponse> getProviderMainServiceStatisticsFunction({
 
     final List servicesJson = data["subServiceSummaries"];
 
-    final services = servicesJson.map((e) => SubServiceSummariesRequest.fromJson(e))
+    final services = servicesJson.map((e) => SubServiceSummariesModel.fromJson(e))
         .toList();
     final averageRate = (data["averageRate"] ?? 0).toDouble();
 
     final chartJson = data["salesChart"]?["dataPoints"] ?? [];
 
     final chartPoints =
-        (chartJson as List).map((e) => DataPointsRequest.fromJson(e)).toList();
+        (chartJson as List).map((e) => DataPointsModel.fromJson(e)).toList();
 
     // AppSnackBar.showSuccess(
     //   AppLanguageKeys.getProviderMainServiceStatisticsSuccessfully,

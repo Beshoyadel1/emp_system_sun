@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../../../../../../features/internal_services/data/model/get_provider_main_service_statistics_model/data_points_request.dart';
+import '../../../../../../../../../features/internal_services/data/model/get_provider_main_service_statistics_model/data_points_model.dart';
 import '../../../../../../../../../features/internal_services/presentation/cubit/loading_dashboard/loading_dashboard_cubit.dart';
 import '../../../../../../../../../features/internal_services/presentation/cubit/loading_dashboard/loading_dashboard_state.dart';
 import '../../../../../../../../../core/theming/colors.dart';
@@ -29,7 +29,7 @@ class FastLineWithFill extends StatelessWidget {
             primaryYAxis:const NumericAxis(),
 
             series: <CartesianSeries>[
-              AreaSeries<DataPointsRequest, String>(
+              AreaSeries<DataPointsModel, String>(
                 dataSource: state.chartPoints,
 
                 xValueMapper: (e, _) => e.label ?? '',
@@ -39,7 +39,7 @@ class FastLineWithFill extends StatelessWidget {
                 borderColor: Colors.transparent,
               ),
 
-              FastLineSeries<DataPointsRequest, String>(
+              FastLineSeries<DataPointsModel, String>(
                 dataSource: state.chartPoints,
 
                 xValueMapper: (e, _) => e.label ?? '',

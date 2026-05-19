@@ -1,5 +1,5 @@
-import 'package:emp_system_sun/features/internal_services/data/model/get_provider_main_service_statistics_model/sales_chart_request.dart';
-import 'sub_service_summaries_request.dart';
+import 'package:emp_system_sun/features/internal_services/data/model/get_provider_main_service_statistics_model/sales_chart_model.dart';
+import '../../model/get_provider_main_service_statistics_model/sub_service_summaries_model.dart';
 
 class GetProviderMainServiceStatisticsRequest {
   final int? providerId;
@@ -8,8 +8,8 @@ class GetProviderMainServiceStatisticsRequest {
   final String? endDate;
   final int? branchId;
   final double? averageRate;
-  final SubServiceSummariesRequest? subServiceSummaries;
-  final SalesChartRequest? salesChart;
+  final SubServiceSummariesModel? subServiceSummaries;
+  final SalesChartModel? salesChart;
 
   GetProviderMainServiceStatisticsRequest(
       {
@@ -34,10 +34,10 @@ class GetProviderMainServiceStatisticsRequest {
       branchId: json["branchId"],
       averageRate: json["averageRate"],
       subServiceSummaries: json["subServiceSummaries"] != null
-          ? SubServiceSummariesRequest.fromJson(json["subServiceSummaries"])
+          ? SubServiceSummariesModel.fromJson(json["subServiceSummaries"])
           : null,
       salesChart: json["salesChart"] != null
-          ? SalesChartRequest.fromJson(json["salesChart"])
+          ? SalesChartModel.fromJson(json["salesChart"])
           : null,
     );
   }

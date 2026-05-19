@@ -11,11 +11,11 @@ import 'package:emp_system_sun/features/auth_page/data/datasource/check_if_user_
 import 'package:emp_system_sun/features/auth_page/data/datasource/create_user_datasource/create_user_repository.dart';
 import 'package:emp_system_sun/features/auth_page/data/datasource/login_datasource/login_repository.dart';
 import 'package:emp_system_sun/features/auth_page/data/datasource/update_user_datasource/update_user_repository.dart';
-import 'package:emp_system_sun/features/auth_page/data/model/change_password_model/change_password_request.dart';
-import 'package:emp_system_sun/features/auth_page/data/model/check_if_user_exist_model/check_if_user_exist_request.dart';
-import 'package:emp_system_sun/features/auth_page/data/model/check_if_user_exist_or_not_model/check_if_user_exist_or_not_request.dart';
+import 'package:emp_system_sun/features/auth_page/data/request/change_password_request/change_password_request.dart';
+import 'package:emp_system_sun/features/auth_page/data/request/check_if_user_exist_request/check_if_user_exist_request.dart';
+import 'package:emp_system_sun/features/auth_page/data/request/check_if_user_exist_or_not_request/check_if_user_exist_or_not_request.dart';
 import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/create_user_request.dart';
-import 'package:emp_system_sun/features/auth_page/data/model/login_model/login_request.dart';
+import 'package:emp_system_sun/features/auth_page/data/request/login_request/login_request.dart';
 import 'package:emp_system_sun/features/auth_page/presentation/bloc/auth_cubit/FacilityValidator.dart';
 import 'package:emp_system_sun/features/auth_page/presentation/pages/change_password/change_password_page.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/branch_cubit/branch_cubit.dart';

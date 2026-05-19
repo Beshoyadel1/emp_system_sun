@@ -1,9 +1,9 @@
-import 'package:emp_system_sun/features/store_page/data/model/add_branch_model/add_branch_request.dart';
+import 'package:emp_system_sun/features/store_page/data/request/add_branch_request/add_branch_request.dart';
 import 'package:emp_system_sun/features/store_page/data/model/get_provider_branches_model/provider_branch_model.dart';
-import 'package:emp_system_sun/features/store_page/data/model/location_cubit/location_cubit.dart';
-import 'package:emp_system_sun/features/store_page/data/model/location_cubit/location_state.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/branch_cubit/branch_cubit.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/branch_cubit/branch_state.dart';
+import 'package:emp_system_sun/features/store_page/presentation/bloc/location_cubit/location_cubit.dart';
+import 'package:emp_system_sun/features/store_page/presentation/bloc/location_cubit/location_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/pages_widgets/general_widgets/snakbar.dart';

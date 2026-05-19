@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../../../core/api/dio_function/api_constants.dart';
-import '../../../../../../../../features/order_status_design/data/model/update_order_status_model/update_order_status_request.dart';
+import '../../../../data/request/update_order_status_request/update_order_status_request.dart';
 import '../../../../../../../../core/pages_widgets/general_widgets/snakbar.dart';
 import '../../../../../../../../features/order_status_design/presentation/cubit/order_status_cubit/order_status_cubit.dart';
 import '../../../../../../../../features/order_status_design/presentation/cubit/order_status_cubit/order_status_state.dart';

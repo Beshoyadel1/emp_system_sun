@@ -1,6 +1,6 @@
-import 'package:emp_system_sun/features/store_page/data/model/location_cubit/location_cubit.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/branch_cubit/branch_cubit.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/branch_cubit/branch_state.dart';
+import 'package:emp_system_sun/features/store_page/presentation/bloc/location_cubit/location_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../add_branch_ui.dart';

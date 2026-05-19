@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import '../../model/get_provider_service_statistics_model/provider_statistics_model.dart';
-import '../../model/get_provider_service_statistics_model/get_provider_service_statistics_request.dart';
+import '../../request/get_provider_service_statistics_request/get_provider_service_statistics_request.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/pages_widgets/general_widgets/snakbar.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';

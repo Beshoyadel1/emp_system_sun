@@ -4,7 +4,7 @@ import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/c
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../core/language/language_constant.dart';
 import '../../../../../core/api/dio_function/failures.dart';
-import '../../model/login_model/login_request.dart';
+import '../../request/login_request/login_request.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/pages_widgets/general_widgets/snakbar.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';

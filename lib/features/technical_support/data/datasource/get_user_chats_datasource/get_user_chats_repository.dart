@@ -1,5 +1,5 @@
 import '../../model/get_user_chats_model/message_model.dart';
-import '../../model/get_user_chats_model/get_user_chats_request.dart';
+import '../../request/get_user_chats_request/get_user_chats_request.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';
 

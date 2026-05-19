@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:emp_system_sun/core/api/dio_function/api_constants.dart';
-import 'package:emp_system_sun/features/internal_services/data/model/get_provider_main_service_statistics_model/sub_service_summaries_request.dart';
+import 'package:emp_system_sun/features/internal_services/data/model/get_provider_main_service_statistics_model/sub_service_summaries_model.dart';
 import 'package:emp_system_sun/core/language/language_constant.dart';
 import 'package:emp_system_sun/core/theming/fonts.dart';
 import 'package:emp_system_sun/core/theming/text_styles.dart';
@@ -8,15 +8,15 @@ import '../../../../../../../../../core/theming/colors.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class FourPartCircleSparePartsOrders extends StatelessWidget {
-  final List<SubServiceSummariesRequest> services;
+  final List<SubServiceSummariesModel> services;
 
   const FourPartCircleSparePartsOrders({
     super.key,
     required this.services,
   });
 
-  List<SubServiceSummariesRequest> get _sortedServices {
-    final sorted = List<SubServiceSummariesRequest>.from(services);
+  List<SubServiceSummariesModel> get _sortedServices {
+    final sorted = List<SubServiceSummariesModel>.from(services);
 
     sorted.sort(
       (a, b) => (b.orderCount ?? 0).compareTo(a.orderCount ?? 0),

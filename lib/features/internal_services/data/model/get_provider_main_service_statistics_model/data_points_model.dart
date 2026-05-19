@@ -1,13 +1,13 @@
-class DataPointsRequest {
+class DataPointsModel {
   final String? label;
   final int? value;
 
-  DataPointsRequest({
+  DataPointsModel({
     this.label,
     this.value,
   });
-  factory DataPointsRequest.fromJson(Map<String, dynamic> json) {
-    return DataPointsRequest(
+  factory DataPointsModel.fromJson(Map<String, dynamic> json) {
+    return DataPointsModel(
       label: json["label"],
       value: json["value"],
     );

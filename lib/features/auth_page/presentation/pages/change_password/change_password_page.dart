@@ -1,4 +1,4 @@
-import 'package:emp_system_sun/features/auth_page/data/model/change_password_model/change_password_request.dart';
+import 'package:emp_system_sun/features/auth_page/data/request/change_password_request/change_password_request.dart';
 import 'package:emp_system_sun/features/auth_page/presentation/bloc/auth_cubit/auth_cubit.dart';
 import 'package:emp_system_sun/features/auth_page/presentation/bloc/auth_cubit/auth_state.dart';
 import 'package:emp_system_sun/features/auth_page/presentation/pages/login_page/login_widgets/login_button_widget.dart';

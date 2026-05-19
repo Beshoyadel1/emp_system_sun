@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:emp_system_sun/features/store_page/data/model/upload_provider_work_times_model/upload_provider_work_times_request.dart';
+import 'package:emp_system_sun/features/store_page/data/request/upload_provider_work_times_request/upload_provider_work_times_request.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/pages_widgets/general_widgets/snakbar.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';

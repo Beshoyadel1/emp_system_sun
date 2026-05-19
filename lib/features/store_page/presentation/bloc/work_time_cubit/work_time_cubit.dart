@@ -1,11 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:emp_system_sun/features/auth_page/data/datasource/login_datasource/login_repository.dart';
 import 'package:emp_system_sun/features/store_page/data/datasource/delete_provider_work_time_datasource/delete_provider_work_time_repository.dart';
-import 'package:emp_system_sun/features/store_page/data/model/delete_provider_work_time_model/delete_provider_work_time_request.dart';
+import 'package:emp_system_sun/features/store_page/data/request/delete_provider_work_time_request/delete_provider_work_time_request.dart';
 import 'package:emp_system_sun/features/store_page/data/datasource/get_provider_work_time_datasource/get_provider_work_time_repository.dart';
-import 'package:emp_system_sun/features/store_page/data/model/get_provider_work_time_model/get_provider_work_time_request.dart';
+import 'package:emp_system_sun/features/store_page/data/request/get_provider_work_time_request/get_provider_work_time_request.dart';
 import 'package:emp_system_sun/features/store_page/data/datasource/upload_provider_work_times_datasource/upload_provider_work_times_repository.dart';
-import 'package:emp_system_sun/features/store_page/data/model/upload_provider_work_times_model/upload_provider_work_times_request.dart';
+import 'package:emp_system_sun/features/store_page/data/request/upload_provider_work_times_request/upload_provider_work_times_request.dart';
 import 'package:emp_system_sun/features/store_page/data/model/upload_provider_work_times_model/work_time_model.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/work_time_cubit/work_time_state.dart';
 

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:emp_system_sun/features/technical_support/data/model/get_work_team_chat_repository/work_team_user_model.dart';
-import '../../model/get_work_team_chat_repository/get_work_team_chat_request.dart';
+import 'package:emp_system_sun/features/technical_support/data/model/get_work_team_chat_model/work_team_user_model.dart';
+import '../../request/get_work_team_chat_request/get_work_team_chat_request.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/pages_widgets/general_widgets/snakbar.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';

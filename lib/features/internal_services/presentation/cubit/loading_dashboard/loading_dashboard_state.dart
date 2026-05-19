@@ -1,11 +1,11 @@
-import '../../../../../../../../../features/internal_services/data/model/get_provider_main_service_statistics_model/data_points_request.dart';
-import '../../../../../../../../../features/internal_services/data/model/get_provider_main_service_statistics_model/sub_service_summaries_request.dart';
+import '../../../../../../../../../features/internal_services/data/model/get_provider_main_service_statistics_model/data_points_model.dart';
+import '../../../../../../../../../features/internal_services/data/model/get_provider_main_service_statistics_model/sub_service_summaries_model.dart';
 
 class InternalOrdersState {
 
-  final List<SubServiceSummariesRequest> services;
+  final List<SubServiceSummariesModel> services;
   final double averageRate;
-  final List<DataPointsRequest> chartPoints;
+  final List<DataPointsModel> chartPoints;
 
   const InternalOrdersState({
     this.services = const [],
@@ -16,8 +16,8 @@ class InternalOrdersState {
   InternalOrdersState copyWith({
     bool? isLoading,
     bool? isLoaded,
-    List<SubServiceSummariesRequest>? services,
-    List<DataPointsRequest>? chartPoints,
+    List<SubServiceSummariesModel>? services,
+    List<DataPointsModel>? chartPoints,
     double? averageRate,
   }) {
     return InternalOrdersState(

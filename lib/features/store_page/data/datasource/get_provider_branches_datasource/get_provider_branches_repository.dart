@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:emp_system_sun/features/store_page/data/model/get_provider_branches_model/get_provider_branches_request.dart';
+import 'package:emp_system_sun/features/store_page/data/request/get_provider_branches_request/get_provider_branches_request.dart';
 import 'package:emp_system_sun/features/store_page/data/model/get_provider_branches_model/provider_branch_model.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';

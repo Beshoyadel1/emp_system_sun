@@ -1,5 +1,5 @@
-import 'package:emp_system_sun/features/store_page/data/model/location_cubit/location_cubit.dart';
-import 'package:emp_system_sun/features/store_page/data/model/location_cubit/location_state.dart';
+import 'package:emp_system_sun/features/store_page/presentation/bloc/location_cubit/location_cubit.dart';
+import 'package:emp_system_sun/features/store_page/presentation/bloc/location_cubit/location_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';

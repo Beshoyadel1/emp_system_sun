@@ -4,7 +4,7 @@ import '../../../../../core/api/dio_function/dio_controller.dart';
 import '../../../../../core/api/dio_function/failures.dart';
 import '../../../../../core/pages_widgets/general_widgets/snakbar.dart';
 import '../../../../../features/dashboard_page/data/model/get_provider_orders_sales_model/get_provider_orders_sales_model.dart';
-import '../../../../../features/dashboard_page/data/model/get_provider_orders_sales_model/get_provider_orders_sales_request.dart';
+import '../../request/get_provider_orders_sales_request/get_provider_orders_sales_request.dart';
 
 
 Future<GetProviderOrdersSalesModel?> getProviderOrdersSalesFunction({

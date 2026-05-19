@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:emp_system_sun/features/auth_page/data/model/check_if_user_exist_or_not_model/check_if_user_exist_or_not_model.dart';
-import '../../model/check_if_user_exist_or_not_model/check_if_user_exist_or_not_request.dart';
+import '../../request/check_if_user_exist_or_not_request/check_if_user_exist_or_not_request.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/pages_widgets/general_widgets/snakbar.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';

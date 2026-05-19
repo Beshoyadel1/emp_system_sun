@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:emp_system_sun/features/store_page/data/model/delete_provider_work_time_model/delete_provider_work_time_request.dart';
+import 'package:emp_system_sun/features/store_page/data/request/delete_provider_work_time_request/delete_provider_work_time_request.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/pages_widgets/general_widgets/snakbar.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';

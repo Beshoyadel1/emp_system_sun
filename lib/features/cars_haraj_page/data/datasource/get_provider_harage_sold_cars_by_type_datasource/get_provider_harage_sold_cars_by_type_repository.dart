@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:emp_system_sun/features/cars_haraj_page/data/model/get_provider_harage_sold_cars_by_type_model/get_provider_harage_sold_cars_by_type_model.dart';
-import '../../model/get_provider_harage_sold_cars_by_type_model/get_provider_harage_sold_cars_by_type_request.dart';
+import '../../request/get_provider_harage_sold_cars_by_type_request/get_provider_harage_sold_cars_by_type_request.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/pages_widgets/general_widgets/snakbar.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';

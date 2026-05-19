@@ -11,7 +11,7 @@ import 'package:emp_system_sun/core/theming/colors.dart';
 import 'package:emp_system_sun/core/theming/fonts.dart';
 import 'package:emp_system_sun/core/theming/text_styles.dart';
 import 'package:emp_system_sun/features/auth_page/presentation/auth_gate.dart';
-import 'package:emp_system_sun/features/auth_page/data/model/login_model/login_request.dart';
+import 'package:emp_system_sun/features/auth_page/data/request/login_request/login_request.dart';
 import 'package:emp_system_sun/features/auth_page/presentation/pages/check_email_exist/check_email_exist_page.dart';
 import 'package:flutter/material.dart';
 import 'package:emp_system_sun/core/pages_widgets/general_widgets/navigate_to_page_widget.dart';

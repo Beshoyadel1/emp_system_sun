@@ -4,7 +4,7 @@ import 'package:emp_system_sun/features/cars_haraj_page/data/datasource/update_h
 import 'package:emp_system_sun/features/cars_haraj_page/presentation/bloc/update_harage_cubit/update_harage_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
-import '../../../data/model/update_harage_model/update_harage_request.dart';
+import '../../../data/request/update_harage_request/update_harage_request.dart';
 import '../../../../../../core/api/dio_function/failures.dart';
 
 

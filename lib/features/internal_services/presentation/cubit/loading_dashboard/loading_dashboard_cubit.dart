@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../../../../../features/internal_services/data/model/get_provider_main_service_statistics_model/get_provider_main_service_statistics_request.dart';
+import '../../../data/request/get_provider_main_service_statistics_request/get_provider_main_service_statistics_request.dart';
 import '../../../data/datasource/get_provider_main_service_statistics_datasource/get_provider_main_service_statistics_repository.dart';
 import 'loading_dashboard_state.dart';
 import '../../../../auth_page/data/datasource/login_datasource/login_repository.dart';
