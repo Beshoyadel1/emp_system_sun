@@ -14,136 +14,174 @@ class BranchCubit extends Cubit<BranchState> {
   BranchCubit() : super(BranchInitial());
 
   List<ProviderBranchModel> branches = [];
+
   int? myUserId;
 
   Future<void> _initUser() async {
     if (myUserId != null) return;
+
     final user = await AuthLocalStorage.getUser();
+
     myUserId = user!.userid!;
   }
 
   Future<void> getProviderBranches() async {
+
     emit(BranchLoading());
 
     try {
+
       await _initUser();
 
-      branches = await getProviderBranchesFunction(
+      branches =
+      await getProviderBranchesFunction(
+
         getProviderBranchesRequest:
-        GetProviderBranchesRequest(providerId: myUserId!),
+        GetProviderBranchesRequest(
+          providerId: myUserId!,
+        ),
       );
 
-      emit(BranchSuccess(branches: branches));
-    } catch (e) {
-      if (e is DioException) {
+      emit(
 
-        emit(BranchError(
-          e.response?.data.toString() ?? e.message ?? "Server error",
-        ));
-      } else {
-        emit(BranchError(e.toString()));
+        BranchSuccess(
+          branches: branches,
+        ),
+      );
+
+    } catch (e) {
+
+      final error =
+      e.toString().replaceAll(
+        "Exception: ",
+        "",
+      );
+
+      /// 👇 لو مفيش فروع
+      if (error.contains("غير موجود")) {
+
+        emit(
+
+          BranchSuccess(
+            branches: [],
+          ),
+        );
+
+        return;
       }
+
+      emit(
+
+        BranchError(
+          error,
+        ),
+      );
     }
   }
 
   void goToAdd() {
     final current = state as BranchSuccess;
-    emit(current.copyWith(
-      isAdding: true,
-      editingBranchId: null,
-      fromSubmit: false,
-    ));
+
+    emit(
+      current.copyWith(
+        isAdding: true,
+        editingBranchId: null,
+        fromSubmit: false,
+      ),
+    );
   }
 
-  void edit(int index) {
+  void edit(int branchId) {
     final current = state as BranchSuccess;
-    emit(current.copyWith(
-      isAdding: true,
-      editingBranchId: index,
-      fromSubmit: false,
-    ));
+
+    emit(
+      current.copyWith(
+        isAdding: true,
+        editingBranchId: branchId,
+        fromSubmit: false,
+      ),
+    );
   }
 
   void back() {
     final current = state as BranchSuccess;
-    emit(current.copyWith(
-      isAdding: false,
-      editingBranchId: null,
-      fromSubmit: false,
-    ));
+
+    emit(
+      current.copyWith(
+        isAdding: false,
+        editingBranchId: null,
+        fromSubmit: false,
+      ),
+    );
   }
 
-  Future<void> addBranch(AddBranchRequest request) async {
+  Future<void> addBranch(
+    AddBranchRequest request,
+  ) async {
     try {
       await _initUser();
 
       final body = request.toJson(myUserId!);
-      final response = await addBranchFunction(body: body);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        if (response.data is Map<String, dynamic>) {
-          final newBranch = ProviderBranchModel.fromJson(response.data);
-          branches.add(newBranch);
-        }
+      final response = await addBranchFunction(
+        body: body,
+      );
 
-        emit(BranchSuccess(
-          branches: List.from(branches),
-          fromSubmit: true,
-        ));
+      final responseData = response.data;
+
+      final bool success = responseData["success"] ?? false;
+
+      if (!success) {
+        throw Exception(
+          responseData["message"] ?? "Something went wrong",
+        );
       }
+
+      await getProviderBranches();
     } catch (e) {
-      emit(BranchError(e.toString()));
+      emit(
+        BranchError(
+          e.toString(),
+        ),
+      );
     }
   }
 
-  Future<void> updateBranch(AddBranchRequest request) async {
+  Future<void> updateBranch(
+    AddBranchRequest request,
+  ) async {
     try {
       await _initUser();
 
       final body = request.toJson(myUserId!);
-      final response = await updateBranchFunction(body: body);
 
-      if (response.statusCode == 200) {
+      final response = await updateBranchFunction(
+        body: body,
+      );
 
-        if (response.data is Map<String, dynamic>) {
-          final updated =
-          ProviderBranchModel.fromJson(response.data);
+      final responseData = response.data;
 
-          final index = branches.indexWhere(
-                  (e) => e.branchId == updated.branchId);
+      final bool success = responseData["success"] ?? false;
 
-          if (index != -1) {
-            branches[index] = updated;
-          }
-        }
-        else {
-          final index = branches.indexWhere(
-                  (e) => e.branchId == request.branchId);
-
-          if (index != -1) {
-            branches[index] = ProviderBranchModel(
-              branchId: request.branchId,
-              branchName: request.branchName,
-              branchLatinName: request.branchLatinName,
-              address: request.address,
-              addressText: request.addressText,
-              addressLatinText: request.addressLatinText,
-              providerId: myUserId,
-              isActive: request.isActive,
-            );
-          }
-        }
-
-        emit(BranchSuccess(
-          branches: List.from(branches),
-          fromSubmit: true,
-        ));
+      if (!success) {
+        throw Exception(
+          responseData["message"] ?? "Something went wrong",
+        );
       }
+
+      await getProviderBranches();
     } catch (e) {
-      emit(BranchError(e.toString()));
+      emit(
+        BranchError(
+          e.toString(),
+        ),
+      );
     }
   }
-  Future<void> deleteBranch(int branchId) async {
+
+  Future<void> deleteBranch(
+    int branchId,
+  ) async {
     try {
       await _initUser();
 
@@ -156,17 +194,23 @@ class BranchCubit extends Cubit<BranchState> {
         body: request.toJson(myUserId!),
       );
 
-      if (response.statusCode == 200) {
-        /// 👇 حدّث الليست محليًا (remove من UI)
-        branches.removeWhere((b) => b.branchId == branchId);
+      final responseData = response.data;
 
-        emit(BranchSuccess(
-          branches: List.from(branches),
-          fromSubmit: true,
-        ));
+      final bool success = responseData["success"] ?? false;
+
+      if (!success) {
+        throw Exception(
+          responseData["message"] ?? "Delete failed",
+        );
       }
+
+      await getProviderBranches();
     } catch (e) {
-      emit(BranchError(e.toString()));
+      emit(
+        BranchError(
+          e.toString(),
+        ),
+      );
     }
   }
 }

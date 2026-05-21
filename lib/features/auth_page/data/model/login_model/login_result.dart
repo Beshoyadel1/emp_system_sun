@@ -2,10 +2,12 @@ import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/c
 
 class LoginResult {
   final bool success;
+  final String message;
   final CreateUserRequest? user;
 
   LoginResult({
     required this.success,
+    required this.message,
     this.user,
   });
 }

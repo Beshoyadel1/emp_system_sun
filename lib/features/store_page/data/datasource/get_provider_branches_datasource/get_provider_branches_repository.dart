@@ -6,35 +6,83 @@ import '../../../../../core/api/dio_function/dio_controller.dart';
 import '../../../../../core/api/dio_function/failures.dart';
 
 
-Future<List<ProviderBranchModel>> getProviderBranchesFunction({
-  required GetProviderBranchesRequest getProviderBranchesRequest,
+Future<List<ProviderBranchModel>>
+getProviderBranchesFunction({
+  required GetProviderBranchesRequest
+  getProviderBranchesRequest,
 }) async {
+
   try {
-    final response = await Network.getDataWithBodyAndParams(
+
+    final response =
+    await Network.getDataWithBodyAndParams(
+
       {},
+
       getProviderBranchesRequest.toJson(),
+
       ApiLink.getProviderBranches,
     );
 
-    final data = response.data;
+    final responseData =
+        response.data;
 
-    if (data is List) {
-      return data
-          .map((e) => ProviderBranchModel.fromJson(e))
-          .toList();
-    }
+    final bool success =
+        responseData["success"] ?? false;
 
-    return [];
-  } catch (e) {
-    if (e is DioException) {
+    if (!success) {
 
       throw Exception(
-        e.response?.data.toString() ??
-            responseOfStatusCode(e.response?.statusCode),
+
+        responseData["message"] ??
+
+            "Something went wrong",
       );
+    }
+
+    final List<dynamic> data =
+        responseData["data"] ?? [];
+
+    return data
+        .map(
+          (e) =>
+          ProviderBranchModel
+              .fromJson(e),
+    )
+        .toList();
+
+  } catch (e) {
+
+    if (e is DioException) {
+
+      final data =
+          e.response?.data;
+
+      if (data
+      is Map<String, dynamic>) {
+
+        throw Exception(
+
+          data["message"] ??
+
+              responseOfStatusCode(
+                e.response?.statusCode,
+              ),
+        );
+      }
+
+      throw Exception(
+
+        responseOfStatusCode(
+          e.response?.statusCode,
+        ),
+      );
+
     } else {
 
-      throw Exception(e.toString());
+      throw Exception(
+        e.toString(),
+      );
     }
   }
 }

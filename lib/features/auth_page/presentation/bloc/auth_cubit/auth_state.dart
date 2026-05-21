@@ -21,9 +21,14 @@ class AuthShowRestPassword extends AuthState {}
 class AuthLoginLoading extends AuthState {}
 
 class AuthLoginSuccess extends AuthState {
-  final CreateUserRequest? user;
 
-  AuthLoginSuccess([this.user]);
+  final CreateUserRequest? user;
+  final String? message;
+
+  AuthLoginSuccess({
+    this.user,
+     this.message,
+  });
 }
 
 class AuthLoginError extends AuthState {
@@ -33,10 +38,17 @@ class AuthLoginError extends AuthState {
 
 class AuthSignupLoading extends AuthState {}
 
-class AuthSignupSuccess extends AuthState {}
+class AuthSignupSuccess extends AuthState {
+
+  final String message;
+
+  AuthSignupSuccess(this.message);
+}
 
 class AuthSignupError extends AuthState {
+
   final String message;
+
   AuthSignupError(this.message);
 }
 
@@ -64,8 +76,12 @@ class AuthOtpReset extends AuthState {}
 
 class AuthUpdateLoading extends AuthState {}
 
-class AuthUpdateSuccess extends AuthState {}
+class AuthUpdateSuccess extends AuthState {
 
+  final String message;
+
+  AuthUpdateSuccess(this.message);
+}
 class AuthUpdateError extends AuthState {
   final String error;
   AuthUpdateError(this.error);

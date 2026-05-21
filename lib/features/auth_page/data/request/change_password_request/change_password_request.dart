@@ -13,7 +13,7 @@ class ChangePasswordRequest {
     return {
       "USER": user??"",
       "PASSWORD": password??"",
-      "TYPE": type??4,
+      "TYPE": type??5,
     };
   }
 }

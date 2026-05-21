@@ -20,7 +20,7 @@ class FacilityValidator {
     required BranchCubit branchCubit,
     required UpdateWorkTimeCubit workTimeCubit,
   }) {
-    final p = user.providerDetails;
+    final p = user.employeeDetails?.employeeDetails;
 
     List<String> missing = [];
 
@@ -31,22 +31,28 @@ class FacilityValidator {
     }
 
     /// 🔴 Basic data
-    if (!isValid(p?.name)) missing.add(AppLanguageKeys.facilityName);
-    if (!isValid(p?.latinname)) missing.add(AppLanguageKeys.facilityNameEn);
-    if (!isValid(p?.cr)) missing.add(AppLanguageKeys.commercialRecordKey);
-    if (!isValid(p?.vatno)) missing.add(AppLanguageKeys.taxNumber);
-    if (!isValid(p?.nationaladdress)) missing.add(AppLanguageKeys.nationality);
+    if (!isValid(p?.jobname)) missing.add(AppLanguageKeys.facilityName);
+    if (!isValid(p?.joblatinname)) missing.add(AppLanguageKeys.facilityNameEn);
+    // if (!isValid(p?.cr)) missing.add(AppLanguageKeys.commercialRecordKey);
+    // if (!isValid(p?.vatno)) missing.add(AppLanguageKeys.taxNumber);
+    // if (!isValid(p?.nationaladdress)) missing.add(AppLanguageKeys.nationality);
     if (!isValid(user.phone)) missing.add(AppLanguageKeys.phoneNumber);
     if (!isValid(user.email)) missing.add(AppLanguageKeys.email);
 
     if (!isValid(user.image?.toString())) missing.add(AppLanguageKeys.ownerIdKey);
 
     /// 🔴 Branch
+    print("BRANCHES TYPE => ${branchCubit.branches.runtimeType}");
+    print("BRANCHES => ${branchCubit.branches}");
+
     if (branchCubit.branches.isEmpty) {
       missing.add(AppLanguageKeys.addAtLeastOneBranch);
     }
 
     /// 🔴 Work Time
+    print("WORK TIMES TYPE => ${workTimeCubit.workTimes.runtimeType}");
+    print("WORK TIMES => ${workTimeCubit.workTimes}");
+
     if (workTimeCubit.workTimes.isEmpty) {
       missing.add(AppLanguageKeys.addAtLeastOneWorkingHours);
     }

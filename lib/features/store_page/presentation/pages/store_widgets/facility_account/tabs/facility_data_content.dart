@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:emp_system_sun/features/auth_page/data/datasource/login_datasource/login_repository.dart';
 import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/create_user_request.dart';
 import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/employee_details_request.dart';
+import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/employee_wrapper_request.dart';
 import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/provider_details_request.dart';
 import 'package:emp_system_sun/features/auth_page/presentation/bloc/auth_cubit/auth_cubit.dart';
 import 'package:emp_system_sun/features/auth_page/presentation/bloc/auth_cubit/auth_state.dart';
@@ -27,9 +28,9 @@ class FacilityDataContent extends StatefulWidget {
 class _FacilityDataContentState extends State<FacilityDataContent> {
   final facilityNameController = TextEditingController();
   final facilityNameEnController = TextEditingController();
-  final vatNoController = TextEditingController();
-  final crController = TextEditingController();
-  final nationalAddressController = TextEditingController();
+  // final vatNoController = TextEditingController();
+  // final crController = TextEditingController();
+  // final nationalAddressController = TextEditingController();
   final phoneController = TextEditingController();
   final emailController = TextEditingController();
   final genderController = TextEditingController();
@@ -58,14 +59,11 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
     final user = await AuthLocalStorage.getUser();
 
     if (user != null) {
-      facilityNameController.text = user.providerDetails?.name ?? "";
-      facilityNameEnController.text = user.providerDetails?.latinname ?? "";
+      facilityNameController.text = user.employeeDetails?.employeeDetails?.jobname ?? "";
+      facilityNameEnController.text = user.employeeDetails?.employeeDetails?.joblatinname ?? "";
 
-      crController.text = user.providerDetails?.cr ?? "";
-      vatNoController.text = user.providerDetails?.vatno ?? "";
-
-      nationalAddressController.text =
-          user.providerDetails?.nationaladdress ?? "";
+      // nationalAddressController.text =
+      //     user.providerDetails?.nationaladdress ?? "";
       phoneController.text = user.phone ?? "";
       emailController.text = user.email ?? "";
       ageController.text = user.age?.toString() ?? "";
@@ -80,11 +78,11 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
 
     final user = await AuthLocalStorage.getUser();
 
-    final facilityCubit = context.read<FacilityTabCubit>();
+    final facilityCubit =
+    context.read<FacilityTabCubit>();
 
-    final oldProvider = user?.providerDetails;
-
-    final oldEmployee = user?.employeeDetails;
+    final oldEmployee =
+        user?.employeeDetails?.employeeDetails;
 
     final request = CreateUserRequest(
 
@@ -110,46 +108,40 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
       facilityCubit.images['image'] ??
           user?.image,
 
-      providerDetails: ProviderDetailsRequest(
+      employeeDetails: EmployeeWrapperRequest(
 
-        id: oldProvider?.id,
+        employeeDetails:
+        EmployeeDetailsRequest(
 
-        provid: oldProvider?.provid,
+          id: oldEmployee?.id,
 
-        name:
-        safe(facilityNameController.text),
+          provid: oldEmployee?.provid,
 
-        latinname:
-        safe(facilityNameEnController.text),
+          jobname: safe(facilityNameController.text),
 
-        cr:
-        safe(crController.text),
+          joblatinname:
+          safe(facilityNameEnController.text),
 
-        vatno:
-        safe(vatNoController.text),
+          branchid:
+          oldEmployee?.branchid,
+        ),
 
-        nationaladdress:
-        safe(nationalAddressController.text),
-
-        crimage:
-        facilityCubit.images['crimage'] ??
-            oldProvider?.crimage,
-
-        vatnoimage:
-        facilityCubit.images['vatnoimage'] ??
-            oldProvider?.vatnoimage,
-      ),
-
-      employeeDetails: EmployeeDetailsRequest(
-        id: oldEmployee?.id,
-        provid: oldEmployee?.provid,
+        provServiceIds:
+        user?.employeeDetails
+            ?.provServiceIds ??
+            [],
       ),
     );
 
-    debugPrint("========== REQUEST ==========");
-    debugPrint(jsonEncode(request.toJson()));
+    debugPrint(
+        "========== REQUEST ==========");
 
-    context.read<AuthCubit>().updateUser(request);
+    debugPrint(
+        jsonEncode(request.toJson()));
+
+    context
+        .read<AuthCubit>()
+        .updateUser(request);
   }
 
   @override
@@ -177,24 +169,24 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
               readOnly: !isEditMode,
               width: 250,
             ),
-            UserTextFieldWidget(
-              controller: crController,
-              text: AppLanguageKeys.commercialRecordKey,
-              readOnly: !isEditMode,
-              width: 250,
-            ),
-            UserTextFieldWidget(
-              controller: vatNoController,
-              text: AppLanguageKeys.taxNumber,
-              readOnly: !isEditMode,
-              width: 250,
-            ),
-            UserTextFieldWidget(
-              controller: nationalAddressController,
-              text: AppLanguageKeys.shortAddress,
-              readOnly: !isEditMode,
-              width: 250,
-            ),
+            // UserTextFieldWidget(
+            //   controller: crController,
+            //   text: AppLanguageKeys.commercialRecordKey,
+            //   readOnly: !isEditMode,
+            //   width: 250,
+            // ),
+            // UserTextFieldWidget(
+            //   controller: vatNoController,
+            //   text: AppLanguageKeys.taxNumber,
+            //   readOnly: !isEditMode,
+            //   width: 250,
+            // ),
+            // UserTextFieldWidget(
+            //   controller: nationalAddressController,
+            //   text: AppLanguageKeys.shortAddress,
+            //   readOnly: !isEditMode,
+            //   width: 250,
+            // ),
             UserTextFieldWidget(
               controller: phoneController,
               text: AppLanguageKeys.phoneNumber,
@@ -259,17 +251,28 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
 
         BlocConsumer<AuthCubit, AuthState>(
           listener: (context, state) {
+
             if (state is AuthUpdateSuccess) {
+
+              print("✅ UPDATE SUCCESS");
+
               setState(() => isEditMode = false);
 
               _loadUser();
 
-              AppSnackBar.showSuccess(AppLanguageKeys.success);
+              AppSnackBar.showSuccess(
+                AppLanguageKeys.success,
+              );
             }
 
             if (state is AuthUpdateError) {
+
+              print("❌ UPDATE ERROR => ${state.error}");
+
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error)),
+                SnackBar(
+                  content: Text(state.error),
+                ),
               );
             }
           },

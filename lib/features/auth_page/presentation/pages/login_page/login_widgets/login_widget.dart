@@ -55,15 +55,27 @@ class LoginWidget extends StatelessWidget {
           BlocListener<AuthCubit, AuthState>(
             listener: (context, state) {
 
-              if (state is AuthAuthenticated) {
+              if (state is AuthLoginSuccess) {
+
+                AppSnackBar.showSuccess(
+                  AppLanguageKeys.success,
+                );
+
                 Navigator.pushReplacement(
+
                   context,
-                  NavigateToPageWidget(const AuthGate()),
+
+                  NavigateToPageWidget(
+                    const AuthGate(),
+                  ),
                 );
               }
 
               if (state is AuthLoginError) {
-                AppSnackBar.showError(state.message);
+
+                AppSnackBar.showError(
+                  state.message,
+                );
               }
             },
             child: BlocBuilder<AuthCubit, AuthState>(

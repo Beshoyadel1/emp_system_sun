@@ -1,6 +1,7 @@
 import 'package:emp_system_sun/core/theming/assets.dart';
 import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/create_user_request.dart';
 import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/employee_details_request.dart';
+import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/employee_wrapper_request.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -114,17 +115,8 @@ class _SignUpMobileWidgetState extends State<SignUpMobileWidget> {
 
                         if (state is AuthSignupSuccess) {
 
-
                           AppSnackBar.showSuccess(
-                            "Account created successfully",
-                          );
-
-                          await context.read<AuthCubit>().login(
-                            LoginRequest(
-                              user: emailController.text.trim(),
-                              password: passwordController.text.trim(),
-                              type: UserType.employeeUser,
-                            ),
+                            AppLanguageKeys.success,
                           );
 
                           if (context.mounted) {
@@ -134,13 +126,11 @@ class _SignUpMobileWidgetState extends State<SignUpMobileWidget> {
 
                         if (state is AuthSignupError) {
 
-                          AppSnackBar.showError(state.message);
+                          AppSnackBar.showError(
+                            state.message,
+                          );
                         }
 
-                        if (state is AuthLoginError) {
-
-                          AppSnackBar.showError(state.message);
-                        }
                       },
                       child: BlocBuilder<AuthCubit, AuthState>(
                         buildWhen: (previous, current) =>
@@ -178,7 +168,7 @@ class _SignUpMobileWidgetState extends State<SignUpMobileWidget> {
                                             email: emailController.text.trim(),
                                             password: password,
                                             type: UserType.employeeUser,
-                                            employeeDetails: const EmployeeDetailsRequest(),
+                                            employeeDetails: const EmployeeWrapperRequest(),
                                           ),
                                         );
                                   },

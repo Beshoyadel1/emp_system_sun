@@ -6,28 +6,59 @@ import '../../../../../core/pages_widgets/general_widgets/snakbar.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';
 import '../../../../../core/api/dio_function/failures.dart';
 
-Future<List<CheckIfUserExistOrNotModel>?> checkIfUserExistOrNotFunction({
-  required CheckIfUserExistOrNotRequest request,
+Future<List<CheckIfUserExistOrNotModel>?>
+checkIfUserExistOrNotFunction({
+  required CheckIfUserExistOrNotRequest
+  request,
 }) async {
+
   try {
-    final response = await Network.postDataWithBodyAndParams(
+
+    final response =
+    await Network.postDataWithBodyAndParams(
+
       {},
+
       request.toJson(),
+
       ApiLink.checkIfUserExistOrNot,
     );
 
-    final data = response.data as List;
+    final responseData =
+        response.data;
+
+    final bool success =
+        responseData["success"] ?? false;
+
+    if (!success) {
+
+      return [];
+    }
+
+    final List<dynamic> data =
+        (responseData["data"] as List?) ?? [];
 
     return data
-        .map((e) => CheckIfUserExistOrNotModel.fromJson(e))
+        .map(
+          (e) =>
+          CheckIfUserExistOrNotModel
+              .fromJson(e),
+    )
         .toList();
 
   } catch (e) {
+
     AppSnackBar.showError(
+
       e is DioException
-          ? responseOfStatusCode(e.response?.statusCode)
+
+          ? responseOfStatusCode(
+        e.response?.statusCode,
+      )
+
           : e.toString(),
     );
-    return null;
+
+    return [];
   }
 }

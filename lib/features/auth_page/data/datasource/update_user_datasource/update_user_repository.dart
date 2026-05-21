@@ -7,68 +7,72 @@ import '../../../../../core/pages_widgets/general_widgets/snakbar.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';
 import '../../../../../core/api/dio_function/failures.dart';
 import '../../../../../core/language/language_constant.dart';
+class UpdateUserResult {
+  final bool success;
 
-Future<bool> updateUserFunction({
+  final String message;
+
+  const UpdateUserResult({
+    required this.success,
+    required this.message,
+  });
+}
+Future<UpdateUserResult> updateUserFunction({
   required CreateUserRequest createUserRequest,
 }) async {
+
   try {
-    print("URL => ${ApiLink.updateUser}");
-    print("BODY => ${createUserRequest.toJson()}");
 
     final response = await Network.postDataWithBody(
       createUserRequest.toJson(),
       ApiLink.updateUser,
     );
+    final Map<String, dynamic> body =
+        response.data;
 
-    print("STATUS => ${response.statusCode}");
-    print("URI => ${response.realUri}");
-    print("HEADERS => ${response.headers.map}");
-    print("DATA => ${response.data}");
+    final bool success =
+        body["success"] ?? false;
 
-    final body = response.data.toString().trim();
+    final String message =
+        body["message"] ??
+            AppLanguageKeys.somethingWentWrong;
 
-    if (body == "Done") {
-      return true;
-    }
-
-    if (body == "EmailExist") {
-      AppSnackBar.showError(AppLanguageKeys.emailExist);
-      return false;
-    }
-
-    if (body == "PhoneExist") {
-      AppSnackBar.showError(AppLanguageKeys.phoneExist);
-      return false;
-    }
-
-    debugPrint("❌ Unknown response: $body");
-
-    AppSnackBar.showError(AppLanguageKeys.somethingWentWrong);
-
-    return false;
-
-  } on DioException catch (e, stackTrace) {
-
-    print("❌ DIO ERROR");
-    print("MESSAGE => ${e.message}");
-    print("STATUS => ${e.response?.statusCode}");
-    print("REAL URI => ${e.response?.realUri}");
-    print("HEADERS => ${e.response?.headers.map}");
-    print("DATA => ${e.response?.data}");
-
-    debugPrint(stackTrace.toString());
-
-    AppSnackBar.showError(
-      responseOfStatusCode(e.response?.statusCode),
+    return UpdateUserResult(
+      success: success,
+      message: message,
     );
 
-    return false;
-  } catch (e, stackTrace) {
+  } on DioException catch (e) {
 
-    debugPrint(stackTrace.toString());
+    String errorMessage =
+        AppLanguageKeys.somethingWentWrong;
 
-    AppSnackBar.showError(e.toString());
+    if (e.response?.data != null) {
 
-    return false;
+      final data = e.response?.data;
+
+      if (data is Map<String, dynamic>) {
+
+        errorMessage =
+            data["message"] ??
+                responseOfStatusCode(
+                  e.response?.statusCode,
+                );
+      }
+    }
+
+    return UpdateUserResult(
+      success: false,
+      message: errorMessage,
+    );
+
+  } catch (e) {
+
+    print("🔥 ERROR => $e");
+
+    return UpdateUserResult(
+      success: false,
+      message: e.toString(),
+    );
   }
 }

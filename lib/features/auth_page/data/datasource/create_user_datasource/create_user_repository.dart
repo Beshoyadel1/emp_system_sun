@@ -1,55 +1,72 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import '../../../../../core/language/language_constant.dart';
 import '../../model/create_user_model/create_user_request.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
-import '../../../../../core/pages_widgets/general_widgets/snakbar.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';
 import '../../../../../core/api/dio_function/failures.dart';
 
-Future<bool> createUserFunction({
+
+class CreateUserResult {
+
+  final bool success;
+  final String message;
+
+  CreateUserResult({
+    required this.success,
+    required this.message,
+  });
+}
+
+Future<CreateUserResult> createUserFunction({
   required CreateUserRequest createUserRequest,
 }) async {
-  try {
-    String jsonString = json.encode(createUserRequest.toJson());
 
-    final value = await Network.postDataWithBody(
+  try {
+
+    String jsonString = json.encode(
+      createUserRequest.toJson(),
+    );
+
+    final response = await Network.postDataWithBody(
       jsonString,
       ApiLink.createUser,
     );
 
-    final body = value.data.toString().trim();
+    final Map<String, dynamic> body = response.data;
 
-    if (body == "Done") {
-      AppSnackBar.showSuccess(
-        AppLanguageKeys.accountCreatedSuccessfully,
-      );
-      return true;
-    }
-
-    if (body == "EmailExist") {
-      AppSnackBar.showError(
-        AppLanguageKeys.emailExist,
-      );
-      return false;
-    }
-    if (body == "PhoneExist") {
-      AppSnackBar.showError(
-        AppLanguageKeys.phoneExist,
-      );
-      return false;
-    }
-    AppSnackBar.showError(
-      AppLanguageKeys.somethingWentWrong,
+    return CreateUserResult(
+      success: body["success"] ?? false,
+      message: body["message"] ?? "",
     );
-    return false;
+
+  } on DioException catch (e) {
+
+    String errorMessage = "حدث خطأ ما";
+
+    if (e.response?.data != null) {
+
+      final data = e.response?.data;
+
+      if (data is Map<String, dynamic>) {
+
+        errorMessage =
+            data["message"] ??
+                responseOfStatusCode(
+                  e.response?.statusCode,
+                );
+      }
+    }
+
+    return CreateUserResult(
+      success: false,
+      message: errorMessage,
+    );
 
   } catch (e) {
-    AppSnackBar.showError(
-      e is DioException
-          ? responseOfStatusCode(e.response?.statusCode)
-          : e.toString(),
+
+    return CreateUserResult(
+      success: false,
+      message: e.toString(),
     );
-    return false;
   }
 }

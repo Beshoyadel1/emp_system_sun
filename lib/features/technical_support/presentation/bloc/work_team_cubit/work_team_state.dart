@@ -17,4 +17,3 @@ class WorkTeamError extends WorkTeamState {
 
   WorkTeamError(this.message);
 }
-

@@ -1461,7 +1461,7 @@ class AppLocalizations {
       AppLanguageKeys.requestNotFound:
           'Your request was not found, please try later!',
       AppLanguageKeys.badResponseError: 'Bad response, something went wrong.',
-      AppLanguageKeys.success: 'Success',
+      AppLanguageKeys.success: 'The operation was successful.',
       AppLanguageKeys.badRequestError: 'Bad request',
       AppLanguageKeys.unauthorizedError: 'Unauthorized access',
       AppLanguageKeys.forbiddenError: 'Access forbidden',

@@ -7,39 +7,107 @@ import '../../../../../core/api/dio_function/dio_controller.dart';
 import '../../../../../core/api/dio_function/failures.dart';
 import '../../../../../core/language/language_constant.dart';
 
-Future<List<WorkTimeModel>> getProviderWorkTimeFunction({
-  required GetProviderWorkTimeRequest getProviderWorkTimeRequest,
+Future<List<WorkTimeModel>>
+getProviderWorkTimeFunction({
+  required GetProviderWorkTimeRequest
+  getProviderWorkTimeRequest,
 }) async {
+
   try {
-    final response = await Network.postDataWithBodyAndParams(
+
+    final response =
+    await Network.postDataWithBodyAndParams(
+
       {},
+
       getProviderWorkTimeRequest.toJson(),
+
       ApiLink.getProviderWorkTime,
     );
 
-    final List data = response.data;
+    final responseData =
+        response.data;
 
-    return data.map((e) => WorkTimeModel(
-      worktimeid: e["worktimeid"],
-      provid: e["provid"],
-      sat: e["sat"],
-      sun: e["sun"],
-      mon: e["mon"],
-      tue: e["tue"],
-      wed: e["wed"],
-      thr: e["thr"],
-      fri: e["fri"],
-      fromTime: e["fromtime"],
-      toTime: e["totime"],
-    )).toList();
+    final bool success =
+        responseData["success"] ?? false;
+
+    /// 👇 لو مفيش بيانات
+    if (!success) {
+
+      return [];
+    }
+
+    final List<dynamic> data =
+        (responseData["data"] as List?) ?? [];
+
+    return data.map((e) {
+
+      return WorkTimeModel(
+
+        worktimeid:
+        e["worktimeid"],
+
+        provid:
+        e["provid"],
+
+        sat:
+        e["sat"],
+
+        sun:
+        e["sun"],
+
+        mon:
+        e["mon"],
+
+        tue:
+        e["tue"],
+
+        wed:
+        e["wed"],
+
+        thr:
+        e["thr"],
+
+        fri:
+        e["fri"],
+
+        fromTime:
+        e["fromtime"],
+
+        toTime:
+        e["totime"],
+      );
+
+    }).toList();
 
   } catch (e) {
-    AppSnackBar.showError(
-      e is DioException
-          ? responseOfStatusCode(e.response?.statusCode)
-          : e.toString(),
-    );
 
-    return [];
+    if (e is DioException) {
+
+      final data =
+          e.response?.data;
+
+      if (data is Map<String, dynamic>) {
+
+        throw Exception(
+
+          data["message"] ??
+              responseOfStatusCode(
+                e.response?.statusCode,
+              ),
+        );
+      }
+
+      throw Exception(
+
+        responseOfStatusCode(
+          e.response?.statusCode,
+        ),
+      );
+    }
+
+    throw Exception(
+      e.toString(),
+    );
   }
 }

@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/employee_wrapper_request.dart';
+
 import 'company_details_request.dart';
 import 'driver_details_request.dart';
 import 'employee_details_request.dart';
@@ -25,7 +27,7 @@ class CreateUserRequest {
 
   final AdminDetailsRequest? adminDetails;
   final ProviderDetailsRequest? providerDetails;
-  final EmployeeDetailsRequest? employeeDetails;
+  final EmployeeWrapperRequest? employeeDetails;
   final CompanyDetailsRequest? companyDetails;
   final DriverDetailsRequest? driverDetails;
 
@@ -52,46 +54,94 @@ class CreateUserRequest {
     this.driverDetails,
   });
 
-  factory CreateUserRequest.fromJson(Map<String, dynamic> json) {
+  factory CreateUserRequest.fromJson(
+      Map<String, dynamic> json,
+      ) {
+
     return CreateUserRequest(
+
       userid: json["userid"],
+
       username: json["username"],
+
       phone: json["phone"],
+
       email: json["email"],
+
       password: json["password"],
-      gander: json["gander"],
+
+      gander:
+      json["gender"] ??
+          json["gander"],
+
       age: json["age"],
+
       type: json["type"],
-      nationality: json["nationality"],
-      isActive: json["isactive"],
-      referralCode: json["referralcode"],
-      fcmToken: json["fcmtoken"],
-      currentCarId: json["currentcarid"],
+
+      nationality:
+      json["nationality"],
+
+      isActive:
+      json["isactive"],
+
+      referralCode:
+      json["referralcode"],
+
+      fcmToken:
+      json["fcmtoken"],
+
+      currentCarId:
+      json["defaultcarid"] ??
+          json["currentcarid"],
+
       joinDate:
-      json["joindate"] != null ? DateTime.parse(json["joindate"]) : null,
-      image: json["image"] != null ? base64Decode(json["image"]) : null,
-
-      adminDetails: json["adminDetails"] != null
-          ? AdminDetailsRequest.fromJson(json["adminDetails"])
-          : null,
-      providerDetails: json["providerDetails"] != null
-          ? ProviderDetailsRequest.fromJson(json["providerDetails"])
+      json["joindate"] != null
+          ? DateTime.parse(
+        json["joindate"],
+      )
           : null,
 
-      employeeDetails: json["employeeDetails"] != null
-          ? EmployeeDetailsRequest.fromJson(json["employeeDetails"])
+      image:
+      json["image"] != null
+          ? base64Decode(
+        json["image"],
+      )
           : null,
 
-      companyDetails: json["companyDetails"] != null
-          ? CompanyDetailsRequest.fromJson(json["companyDetails"])
+      adminDetails:
+      json["adminDetails"] != null
+          ? AdminDetailsRequest.fromJson(
+        json["adminDetails"],
+      )
           : null,
 
-      driverDetails: json["driverDetails"] != null
-          ? DriverDetailsRequest.fromJson(json["driverDetails"])
+      providerDetails:
+      json["providerDetails"] != null
+          ? ProviderDetailsRequest.fromJson(
+        json["providerDetails"],
+      )
+          : null,
+
+      employeeDetails:
+      EmployeeWrapperRequest.fromJson(
+        json["employeeDetails"],
+      ),
+
+      companyDetails:
+      json["companyDetails"] != null
+          ? CompanyDetailsRequest.fromJson(
+        json["companyDetails"],
+      )
+          : null,
+
+      driverDetails:
+      json["driverDetails"] != null
+          ? DriverDetailsRequest.fromJson(
+        json["driverDetails"],
+      )
           : null,
     );
   }
-
   Map<String, dynamic> toJson() {
     return {
       "userid": userid ?? 0,

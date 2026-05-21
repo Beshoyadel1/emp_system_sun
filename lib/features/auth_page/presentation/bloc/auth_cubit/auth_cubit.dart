@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-
 import 'package:emp_system_sun/core/api/dio_function/api_constants.dart';
 import 'package:emp_system_sun/core/language/language_constant.dart';
 import 'package:emp_system_sun/core/pages_widgets/general_widgets/navigate_to_page_widget.dart';
@@ -163,26 +162,47 @@ class AuthCubit extends Cubit<AuthState> {
 
 
   Future<void> login(LoginRequest request) async {
+
     emit(AuthLoginLoading());
 
-    final user = await loginFunction(loginRequest: request);
+    final result = await loginFunction(
+      loginRequest: request,
+    );
 
-    if (user != null) {
-      await AuthLocalStorage.saveUser(user);
+    if (result.success && result.user != null) {
 
-      await _checkFacilityCompletion(user);
+      await AuthLocalStorage.saveUser(
+        result.user!,
+      );
+
+      emit(
+        AuthLoginSuccess(
+          message: result.message,
+        ),
+      );
+
+      await _checkFacilityCompletion(
+        result.user!,
+      );
+
     } else {
-      emit(AuthLoginError(AppLanguageKeys.loginFailed));
+
+      emit(
+        AuthLoginError(
+          result.message,
+        ),
+      );
     }
   }
-  Future<void> _checkFacilityCompletion(CreateUserRequest user) async {
+  Future<void> _checkFacilityCompletion(
+      CreateUserRequest user,
+      ) async {
+
     final branchCubit = BranchCubit();
     final workTimeCubit = UpdateWorkTimeCubit();
+    await branchCubit.getProviderBranches();
+    await workTimeCubit.getWorkTimes();
 
-    await Future.wait([
-      branchCubit.getProviderBranches(),
-      workTimeCubit.getWorkTimes(),
-    ]);
 
     if (isClosed) return;
 
@@ -191,13 +211,17 @@ class AuthCubit extends Cubit<AuthState> {
       branchCubit: branchCubit,
       workTimeCubit: workTimeCubit,
     );
-
-    if (isClosed) return;
-
     if (result.isValid) {
+
       emit(AuthAuthenticated());
+
     } else {
-      emit(AuthIncompleteProfile(result.missingFields));
+
+      emit(
+        AuthIncompleteProfile(
+          result.missingFields,
+        ),
+      );
     }
   }
 
@@ -249,7 +273,9 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthIncompleteProfile(result.missingFields));
     }
   }
-  Future<void> updateUser(CreateUserRequest request) async {
+  Future<void> updateUser(
+      CreateUserRequest request,
+      ) async {
 
     if (isClosed) return;
 
@@ -261,18 +287,26 @@ class AuthCubit extends Cubit<AuthState> {
       await AuthLocalStorage.getUser();
 
       print("========== REQUEST ==========");
+
       print(jsonEncode(request.toJson()));
 
-      final bool isSuccess =
+      final result =
       await updateUserFunction(
         createUserRequest: request,
       );
 
       if (isClosed) return;
 
-      if (isSuccess) {
+      print("========== UPDATE RESULT ==========");
 
-        final updatedUser = CreateUserRequest(
+      print("SUCCESS => ${result.success}");
+
+      print("MESSAGE => ${result.message}");
+
+      if (result.success) {
+
+        final updatedUser =
+        CreateUserRequest(
 
           userid:
           oldUser?.userid,
@@ -310,43 +344,68 @@ class AuthCubit extends Cubit<AuthState> {
           joinDate:
           oldUser?.joinDate,
 
-          /// ✅ احفظ الجديد
+          nationality:
+          request.nationality ??
+              oldUser?.nationality,
+
+          referralCode:
+          oldUser?.referralCode,
+
+          fcmToken:
+          oldUser?.fcmToken,
+
+          currentCarId:
+          oldUser?.currentCarId,
+
           providerDetails:
           request.providerDetails ??
               oldUser?.providerDetails,
 
-          /// ✅ احفظ القديم لو الجديد null
           employeeDetails:
           request.employeeDetails ??
               oldUser?.employeeDetails,
         );
 
         print("========== SAVED USER ==========");
+
         print(jsonEncode(updatedUser.toJson()));
 
         await AuthLocalStorage.saveUser(
           updatedUser,
         );
 
-        emit(AuthUpdateSuccess());
+        emit(
+          AuthUpdateSuccess(
+            result.message,
+          ),
+        );
 
       } else {
 
         emit(
-          AuthUpdateError("Update failed"),
+          AuthUpdateError(
+            result.message,
+          ),
         );
       }
 
-    } catch (e) {
+    } catch (e, stackTrace) {
 
-      print("🔥 ERROR: $e");
+      print("🔥 ERROR => $e");
+
+      print("🔥 STACKTRACE =>");
+
+      print(stackTrace);
 
       if (isClosed) return;
 
-      emit(AuthUpdateError(e.toString()));
+      emit(
+        AuthUpdateError(
+          e.toString(),
+        ),
+      );
     }
-  }
-  Future<void> logout() async {
+  }  Future<void> logout() async {
     emit(AuthLoading()); // optional loading
 
     await AuthLocalStorage.clearUser();
@@ -366,18 +425,33 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthInitial());
     }
   }
-  Future<void> changePassword(ChangePasswordRequest request) async {
+  Future<void> changePassword(
+      ChangePasswordRequest request,
+      ) async {
+
     emit(AuthLoginLoading());
 
-    final bool isSuccess =
-    await changePasswordFunction(changePasswordRequest: request);
+    final result =
+    await changePasswordFunction(
+      changePasswordRequest: request,
+    );
 
-    if (isSuccess) {
+    if (result.success) {
+
       await AuthLocalStorage.clearUser();
 
-      emit(AuthChangePasswordSuccess()); // ✅ مهم
+      emit(
+        AuthChangePasswordSuccess(),
+      );
+
     } else {
-      emit(AuthLoginError("Change password failed"));
+
+      emit(
+
+        AuthLoginError(
+          result.message,
+        ),
+      );
     }
   }
 
@@ -387,39 +461,25 @@ class AuthCubit extends Cubit<AuthState> {
 
     emit(AuthSignupLoading());
 
-    try {
+    final result = await createUserFunction(
+      createUserRequest: request,
+    );
 
+    if (isClosed) return;
 
-      final bool isSuccess =
-      await createUserFunction(
-        createUserRequest: request,
+    if (result.success) {
+
+      emit(
+        AuthSignupSuccess(
+          result.message,
+        ),
       );
 
-
-      if (isClosed) return;
-
-      if (isSuccess) {
-
-        emit(AuthSignupSuccess());
-
-      } else {
-
-
-        emit(
-          AuthSignupError(
-            AppLanguageKeys.somethingWentWrong,
-          ),
-        );
-      }
-
-    } catch (e, stackTrace) {
-
-
-      if (isClosed) return;
+    } else {
 
       emit(
         AuthSignupError(
-          e.toString(),
+          result.message,
         ),
       );
     }

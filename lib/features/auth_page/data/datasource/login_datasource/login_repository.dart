@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/create_user_request.dart';
+import 'package:emp_system_sun/features/auth_page/data/model/login_model/login_result.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../core/language/language_constant.dart';
 import '../../../../../core/api/dio_function/failures.dart';
@@ -48,51 +49,97 @@ class AuthLocalStorage {
   }
 }
 
-Future<CreateUserRequest?> loginFunction({
+
+Future<LoginResult> loginFunction({
   required LoginRequest loginRequest,
 }) async {
+
   try {
+
     final response = await Network.postDataWithBody(
-      json.encode(loginRequest.toJson()),
+      json.encode(
+        loginRequest.toJson(),
+      ),
       ApiLink.loginUser,
     );
 
-    final data = response.data;
+    final Map<String, dynamic> body =
+        response.data;
 
-    if (data is String) {
-      if (data == "Wrong Password") {
-        AppSnackBar.showError(AppLanguageKeys.wrongPasswordKey);
-        return null;
-      }
+    final bool success =
+        body["success"] ?? false;
 
-      if (data == "No User") {
-        AppSnackBar.showError(AppLanguageKeys.wrongUsername);
-        return null;
+    final String message =
+        body["message"] ??
+            (
+                success
+                    ? AppLanguageKeys.accountLoginSuccessfully
+                    : AppLanguageKeys.loginFailed
+            );
+
+    if (!success) {
+
+      return LoginResult(
+        success: false,
+        message: message,
+      );
+    }
+
+    final List data =
+        body["data"] ?? [];
+
+    if (data.isEmpty) {
+
+      return LoginResult(
+        success: false,
+        message: "لا يوجد بيانات مستخدم",
+      );
+    }
+
+    final user =
+    CreateUserRequest.fromJson(
+      data.first,
+    );
+
+    await AuthLocalStorage.saveUser(
+      user,
+    );
+
+    return LoginResult(
+      success: true,
+      message: message,
+      user: user,
+    );
+
+  } on DioException catch (e) {
+
+    String errorMessage =
+        AppLanguageKeys.somethingWentWrong;
+
+    if (e.response?.data != null) {
+
+      final data = e.response?.data;
+
+      if (data is Map<String, dynamic>) {
+
+        errorMessage =
+            data["message"] ??
+                responseOfStatusCode(
+                  e.response?.statusCode,
+                );
       }
     }
 
-    if (data is List && data.isNotEmpty) {
-      final user = CreateUserRequest.fromJson(data.first);
-
-      await AuthLocalStorage.saveUser(user);
-      //print("USER SAVED ✅");
-
-      // AppSnackBar.showSuccess(
-      //   AppLanguageKeys.accountLoginSuccessfully,
-      // );
-
-      return user;
-    }
-
-    AppSnackBar.showError("Unexpected response");
-    return null;
+    return LoginResult(
+      success: false,
+      message: errorMessage,
+    );
 
   } catch (e) {
-    AppSnackBar.showError(
-      e is DioException
-          ? responseOfStatusCode(e.response?.statusCode)
-          : e.toString(),
+
+    return LoginResult(
+      success: false,
+      message: e.toString(),
     );
-    return null;
   }
 }
