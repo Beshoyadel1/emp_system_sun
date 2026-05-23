@@ -7,7 +7,7 @@ import '../../../../../core/api/dio_function/dio_controller.dart';
 import '../../../../../core/api/dio_function/failures.dart';
 
 Future<GetProviderTotalRateAndEmployeeAndBalanceModel?>
-getProviderTotalRateAndEmployeeAndBalanceFunction({
+    getProviderTotalRateAndEmployeeAndBalanceFunction({
   required GetProviderTotalRateAndEmployeeAndBalanceRequest request,
 }) async {
   try {
@@ -19,7 +19,6 @@ getProviderTotalRateAndEmployeeAndBalanceFunction({
 
     return GetProviderTotalRateAndEmployeeAndBalanceModel.fromJson(
         response.data);
-
   } catch (e) {
     AppSnackBar.showError(
       e is DioException

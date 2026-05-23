@@ -1,6 +1,6 @@
 class DataPointsModel {
   final String? label;
-  final int? value;
+  final num? value;
 
   DataPointsModel({
     this.label,

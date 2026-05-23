@@ -15,7 +15,7 @@ import 'package:emp_system_sun/features/auth_page/data/request/check_if_user_exi
 import 'package:emp_system_sun/features/auth_page/data/request/check_if_user_exist_or_not_request/check_if_user_exist_or_not_request.dart';
 import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/create_user_request.dart';
 import 'package:emp_system_sun/features/auth_page/data/request/login_request/login_request.dart';
-import 'package:emp_system_sun/features/auth_page/presentation/bloc/auth_cubit/FacilityValidator.dart';
+import 'package:emp_system_sun/features/auth_page/domain/validate/facility_validator.dart';
 import 'package:emp_system_sun/features/auth_page/presentation/pages/change_password/change_password_page.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/branch_cubit/branch_cubit.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/work_time_cubit/work_time_cubit.dart';

@@ -13,9 +13,12 @@ Future<List<MessageModel>> getUserMessagesFunction({
       ApiLink.getUserChats,
     );
 
-    final List data = response.data;
+    final List data =
+        response.data['data'] ?? [];
 
-    return data.map((e) => MessageModel.fromJson(e)).toList();
+    return data
+        .map((e) => MessageModel.fromJson(e))
+        .toList();
 
   } catch (e) {
     throw Exception(e.toString());

@@ -1,11 +1,17 @@
 class GetProviderOrdersSalesModel {
   final List<DataPoint> dataPoints;
 
-  GetProviderOrdersSalesModel({required this.dataPoints});
+  GetProviderOrdersSalesModel({
+    required this.dataPoints,
+  });
 
-  factory GetProviderOrdersSalesModel.fromJson(Map<String, dynamic> json) {
+  factory GetProviderOrdersSalesModel.fromJson(
+      Map<String, dynamic> json) {
+
+    final data = json['data'];
+
     return GetProviderOrdersSalesModel(
-      dataPoints: (json['dataPoints'] as List)
+      dataPoints: (data['dataPoints'] as List<dynamic>)
           .map((e) => DataPoint.fromJson(e))
           .toList(),
     );
@@ -13,21 +19,25 @@ class GetProviderOrdersSalesModel {
 }
 
 class DataPoint {
-  final String? label;
-  final double? value;
+  final String label;
+  final double value;
 
-  DataPoint({this.label, this.value});
+  DataPoint({
+    required this.label,
+    required this.value,
+  });
 
   factory DataPoint.fromJson(Map<String, dynamic> json) {
     return DataPoint(
-      label: json['label'],
+      label: json['label'] ?? '',
       value: (json['value'] ?? 0).toDouble(),
     );
   }
 
   DateTime get date {
     try {
-      final parts = label!.split(" ");
+      final parts = label.split(" ");
+
       final day = int.parse(parts[0]);
       final month = _getMonth(parts[1]);
 

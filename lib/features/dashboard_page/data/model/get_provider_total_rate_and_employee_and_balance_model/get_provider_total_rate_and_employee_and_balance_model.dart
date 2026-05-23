@@ -2,27 +2,34 @@ import 'package:flutter/material.dart';
 import '../../../../../core/language/language_cubit/language_cubit.dart';
 
 class GetProviderTotalRateAndEmployeeAndBalanceModel {
-  final double? averageRate;
-  final double? totalBalance;
+  final double averageRate;
+  final double totalBalance;
   final List<TopEmployee> topEmployees;
   final List<AccountBalance> accountsBalance;
 
   GetProviderTotalRateAndEmployeeAndBalanceModel({
-    this.averageRate,
-    this.totalBalance,
+    required this.averageRate,
+    required this.totalBalance,
     required this.topEmployees,
     required this.accountsBalance,
   });
 
   factory GetProviderTotalRateAndEmployeeAndBalanceModel.fromJson(
       Map<String, dynamic> json) {
+
+    final data = json['data'] ?? {};
+
     return GetProviderTotalRateAndEmployeeAndBalanceModel(
-      averageRate: (json['averageRate'] ?? 0).toDouble(),
-      totalBalance: (json['totalBalance'] ?? 0).toDouble(),
-      topEmployees: (json['topEmployees'] as List)
+      averageRate: (data['averageRate'] ?? 0).toDouble(),
+
+      totalBalance: (data['totalBalance'] ?? 0).toDouble(),
+
+      topEmployees: (data['topEmployees'] as List<dynamic>? ?? [])
           .map((e) => TopEmployee.fromJson(e))
           .toList(),
-      accountsBalance: (json['accountsBalance'] as List)
+
+      accountsBalance:
+      (data['accountsBalance'] as List<dynamic>? ?? [])
           .map((e) => AccountBalance.fromJson(e))
           .toList(),
     );

@@ -16,20 +16,21 @@ class ChatDetailsModel {
     this.image,
     this.messages,
   });
-
-  factory ChatDetailsModel.fromJson(Map<String, dynamic> json) {
+  factory ChatDetailsModel.fromJson(
+      Map<String, dynamic> json) {
     return ChatDetailsModel(
       toUser: json['touser'],
       toUserType: json['tousertype'],
       userName: json['userName'] ?? "",
+
       image: json['image'] != null
           ? base64Decode(json['image'])
           : null,
-      messages: json['messages'] != null
-          ? List.from(json['messages'])
+
+      messages: (json['messages']
+      as List<dynamic>? ?? [])
           .map((e) => MessageItemModel.fromJson(e))
-          .toList()
-          : [],
+          .toList(),
     );
   }
 }

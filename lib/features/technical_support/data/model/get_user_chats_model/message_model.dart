@@ -26,7 +26,9 @@ class MessageModel {
       userName: json['userName'] ?? "",
       unViewedMessagesCount: json['unViewedMessagesCount'] ?? 0,
       lastMessage: json['lastMessage'] != null
-          ? LastMessageModel.fromJson(json['lastMessage'])
+          ? LastMessageModel.fromJson(
+        json['lastMessage'] as Map<String, dynamic>,
+      )
           : null,
       userImage: json['userImage'] != null
           ? base64Decode(json["userImage"])

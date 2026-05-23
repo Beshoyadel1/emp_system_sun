@@ -19,11 +19,15 @@ Future<List<WorkTeamUserModel>> getWorkTeamChatFunction({
 
     final responseData = response.data;
 
-    final List data = responseData is List
+    final List<dynamic> data = responseData is List
         ? responseData
         : responseData['data'] ?? [];
 
-    return data.map((e) => WorkTeamUserModel.fromJson(e)).toList();
+    return data
+        .map((e) => WorkTeamUserModel.fromJson(
+      e as Map<String, dynamic>,
+    ))
+        .toList();
 
   } catch (e) {
     AppSnackBar.showError(
@@ -31,6 +35,7 @@ Future<List<WorkTeamUserModel>> getWorkTeamChatFunction({
           ? responseOfStatusCode(e.response?.statusCode)
           : e.toString(),
     );
+
     return [];
   }
 }
