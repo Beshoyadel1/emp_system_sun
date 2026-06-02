@@ -6,16 +6,17 @@ Future<bool> updateOrderStatusFunction({
   required UpdateOrderStatusRequest updateOrderStatusRequest,
 }) async {
   try {
-    final value = await Network.postDataWithBodyAndParams(
-        null,
+    final response = await Network.postDataWithBodyAndParams(
+      null,
       updateOrderStatusRequest.toJson(),
       ApiLink.updateOrderStatus,
     );
 
+    if (response.statusCode == 200) {
+      return response.data["success"] == true;
+    }
 
-    return value.statusCode == 200 &&
-        value.data.toString().trim() == "Done";
-
+    return false;
   } catch (e) {
     return false;
   }

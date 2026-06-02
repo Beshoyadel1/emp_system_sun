@@ -27,6 +27,7 @@ import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
+
   static AuthCubit get(context) => BlocProvider.of(context);
 
   String phoneNumber = "";
@@ -91,7 +92,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   bool isOtpError = false;
 
-  void validateOtp(String code, BuildContext context,String email) {
+  void validateOtp(String code, BuildContext context, String email) {
     if (code == otpCode) {
       isOtpError = false;
       emit(AuthOtpSuccess());
@@ -113,6 +114,7 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthOtpReset());
     }
   }
+
   void resendOtp() {
     generateOtp();
     isOtpError = false;
@@ -123,7 +125,6 @@ class AuthCubit extends Cubit<AuthState> {
     phoneNumber = phone;
     emit(AuthInitial());
   }
-
 
   Future<void> checkIfUserExistOrNot({
     required String email,
@@ -141,28 +142,23 @@ class AuthCubit extends Cubit<AuthState> {
     if (result != null && result.isNotEmpty) {
       final user = result.first;
 
-      if (user.value == true &&
-          user.phone == phone) {
-
+      if (user.value == true && user.phone == phone) {
         emit(AuthLoginSuccess());
-
       } else {
         emit(AuthLoginError(AppLanguageKeys.emailOrPhoneInvalid));
       }
-
     } else {
       emit(AuthLoginError(AppLanguageKeys.userNotFound));
     }
   }
 
   void showLogin() => emit(AuthShowLogin());
+
   void showSignup() => emit(AuthShowSignup());
+
   void showRestPassword() => emit(AuthShowRestPassword());
 
-
-
   Future<void> login(LoginRequest request) async {
-
     emit(AuthLoginLoading());
 
     final result = await loginFunction(
@@ -170,7 +166,6 @@ class AuthCubit extends Cubit<AuthState> {
     );
 
     if (result.success && result.user != null) {
-
       await AuthLocalStorage.saveUser(
         result.user!,
       );
@@ -184,9 +179,7 @@ class AuthCubit extends Cubit<AuthState> {
       await _checkFacilityCompletion(
         result.user!,
       );
-
     } else {
-
       emit(
         AuthLoginError(
           result.message,
@@ -194,15 +187,14 @@ class AuthCubit extends Cubit<AuthState> {
       );
     }
   }
-  Future<void> _checkFacilityCompletion(
-      CreateUserRequest user,
-      ) async {
 
+  Future<void> _checkFacilityCompletion(
+    CreateUserRequest user,
+  ) async {
     final branchCubit = BranchCubit();
     final workTimeCubit = UpdateWorkTimeCubit();
     await branchCubit.getProviderBranches();
     await workTimeCubit.getWorkTimes();
-
 
     if (isClosed) return;
 
@@ -212,11 +204,8 @@ class AuthCubit extends Cubit<AuthState> {
       workTimeCubit: workTimeCubit,
     );
     if (result.isValid) {
-
       emit(AuthAuthenticated());
-
     } else {
-
       emit(
         AuthIncompleteProfile(
           result.missingFields,
@@ -245,6 +234,7 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthUnauthenticated());
     }
   }
+
   Future<void> reCheckFacility() async {
     final user = await AuthLocalStorage.getUser();
 
@@ -273,25 +263,22 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthIncompleteProfile(result.missingFields));
     }
   }
-  Future<void> updateUser(
-      CreateUserRequest request,
-      ) async {
 
+  Future<void> updateUser(
+    CreateUserRequest request,
+  ) async {
     if (isClosed) return;
 
     emit(AuthUpdateLoading());
 
     try {
-
-      final oldUser =
-      await AuthLocalStorage.getUser();
+      final oldUser = await AuthLocalStorage.getUser();
 
       print("========== REQUEST ==========");
 
       print(jsonEncode(request.toJson()));
 
-      final result =
-      await updateUserFunction(
+      final result = await updateUserFunction(
         createUserRequest: request,
       );
 
@@ -304,66 +291,23 @@ class AuthCubit extends Cubit<AuthState> {
       print("MESSAGE => ${result.message}");
 
       if (result.success) {
-
-        final updatedUser =
-        CreateUserRequest(
-
-          userid:
-          oldUser?.userid,
-
-          username:
-          request.username ??
-              oldUser?.username,
-
-          phone:
-          request.phone ??
-              oldUser?.phone,
-
-          email:
-          request.email ??
-              oldUser?.email,
-
-          age:
-          request.age ??
-              oldUser?.age,
-
-          gander:
-          request.gander ??
-              oldUser?.gander,
-
-          image:
-          request.image ??
-              oldUser?.image,
-
-          type:
-          oldUser?.type,
-
-          isActive:
-          oldUser?.isActive,
-
-          joinDate:
-          oldUser?.joinDate,
-
-          nationality:
-          request.nationality ??
-              oldUser?.nationality,
-
-          referralCode:
-          oldUser?.referralCode,
-
-          fcmToken:
-          oldUser?.fcmToken,
-
-          currentCarId:
-          oldUser?.currentCarId,
-
-          providerDetails:
-          request.providerDetails ??
-              oldUser?.providerDetails,
-
-          employeeDetails:
-          request.employeeDetails ??
-              oldUser?.employeeDetails,
+        final updatedUser = CreateUserRequest(
+          userid: oldUser?.userid,
+          username: request.username ?? oldUser?.username,
+          phone: request.phone ?? oldUser?.phone,
+          email: request.email ?? oldUser?.email,
+          age: request.age ?? oldUser?.age,
+          gander: request.gander ?? oldUser?.gander,
+          image: request.image ?? oldUser?.image,
+          type: oldUser?.type,
+          isActive: oldUser?.isActive,
+          joinDate: oldUser?.joinDate,
+          nationality: request.nationality ?? oldUser?.nationality,
+          referralCode: oldUser?.referralCode,
+          fcmToken: oldUser?.fcmToken,
+          currentCarId: oldUser?.currentCarId,
+          providerDetails: request.providerDetails ?? oldUser?.providerDetails,
+          employeeDetails: request.employeeDetails ?? oldUser?.employeeDetails,
         );
 
         print("========== SAVED USER ==========");
@@ -379,18 +323,14 @@ class AuthCubit extends Cubit<AuthState> {
             result.message,
           ),
         );
-
       } else {
-
         emit(
           AuthUpdateError(
             result.message,
           ),
         );
       }
-
     } catch (e, stackTrace) {
-
       print("🔥 ERROR => $e");
 
       print("🔥 STACKTRACE =>");
@@ -405,7 +345,9 @@ class AuthCubit extends Cubit<AuthState> {
         ),
       );
     }
-  }  Future<void> logout() async {
+  }
+
+  Future<void> logout() async {
     emit(AuthLoading()); // optional loading
 
     await AuthLocalStorage.clearUser();
@@ -413,11 +355,12 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthUnauthenticated());
   }
 
-  Future<void> checkEmailExist(CheckIfUserExistRequest checkIfUserExistRequest) async {
+  Future<void> checkEmailExist(
+      CheckIfUserExistRequest checkIfUserExistRequest) async {
     emit(AuthLoginLoading());
 
-    final bool isSuccess =
-    await checkIfUserExistFunction(checkIfUserExistRequest: checkIfUserExistRequest);
+    final bool isSuccess = await checkIfUserExistFunction(
+        checkIfUserExistRequest: checkIfUserExistRequest);
 
     if (isSuccess) {
       emit(AuthLoginSuccess());
@@ -425,29 +368,24 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthInitial());
     }
   }
-  Future<void> changePassword(
-      ChangePasswordRequest request,
-      ) async {
 
+  Future<void> changePassword(
+    ChangePasswordRequest request,
+  ) async {
     emit(AuthLoginLoading());
 
-    final result =
-    await changePasswordFunction(
+    final result = await changePasswordFunction(
       changePasswordRequest: request,
     );
 
     if (result.success) {
-
       await AuthLocalStorage.clearUser();
 
       emit(
         AuthChangePasswordSuccess(),
       );
-
     } else {
-
       emit(
-
         AuthLoginError(
           result.message,
         ),
@@ -456,7 +394,6 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> signup(CreateUserRequest request) async {
-
     if (isClosed) return;
 
     emit(AuthSignupLoading());
@@ -468,22 +405,19 @@ class AuthCubit extends Cubit<AuthState> {
     if (isClosed) return;
 
     if (result.success) {
-
       emit(
         AuthSignupSuccess(
           result.message,
         ),
       );
-
     } else {
-
       emit(
         AuthSignupError(
           result.message,
         ),
       );
     }
-  }  // ================= Validators =================
+  } // ================= Validators =================
 
   String? nameValidator(String? value) {
     if (value == null || value.trim().isEmpty) {
@@ -515,8 +449,7 @@ class AuthCubit extends Cubit<AuthState> {
       return AppLanguageKeys.authPhoneNumberRequired;
     }
 
-    final cleanNumber =
-    value.replaceAll(RegExp(r'[^0-9]'), '');
+    final cleanNumber = value.replaceAll(RegExp(r'[^0-9]'), '');
 
     if (cleanNumber.length < 8 || cleanNumber.length > 15) {
       return AppLanguageKeys.authEnterCorrectPhoneNumber;
