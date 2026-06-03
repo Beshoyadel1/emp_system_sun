@@ -67,7 +67,7 @@ class MyApp extends StatelessWidget {
                 PointerDeviceKind.unknown
               },
             ),
-            title: 'SUN SYSTEM',
+            title: 'San Employee System',
             theme: ThemeData(
               scaffoldBackgroundColor: AppColors.lightWhiteColor,
               useMaterial3: true,
