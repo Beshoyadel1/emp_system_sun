@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/utilies/map_of_all_app.dart';
 import 'package:flutter/material.dart';
 import '../../../../../../core/theming/assets.dart';
 import '../../../../../../core/theming/colors.dart';
@@ -49,7 +50,7 @@ class LoginWebWidget extends StatelessWidget {
                                         fit: BoxFit.fill,
                                       ),
                                       const SizedBox(height: 30),
-                                       LoginWidget(),
+                                      const LoginWidget(),
                                     ],
                                   ),
                                 ),
@@ -67,7 +68,7 @@ class LoginWebWidget extends StatelessWidget {
             ],
           ),
         ),
-        const LoginImage(),
+        if(MediaQuery.of(context).size.width > ValuesOfAllApp.mobileWidth) const LoginImage(),
       ],
     );
   }

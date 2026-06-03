@@ -22,9 +22,7 @@ class SignUpPage extends StatelessWidget {
           decoration: const BoxDecoration(
             color: AppColors.scaffoldColor,
           ),
-          child: isMobile
-              ?  const SignUpMobileWidget()
-              : const SignUpWebWidget(),
+          child: const SignUpWebWidget(),
         ),
       ),
     );

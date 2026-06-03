@@ -18,9 +18,7 @@ class LoginPage extends StatelessWidget {
         decoration: const BoxDecoration(
           color: AppColors.scaffoldColor,
         ),
-        child: isMobile
-            ? const LoginMobileWidget()
-            : const LoginWebWidget(),
+        child: const LoginWebWidget(),
       ),
     );
   }

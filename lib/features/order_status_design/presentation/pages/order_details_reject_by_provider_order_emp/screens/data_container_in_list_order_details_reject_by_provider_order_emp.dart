@@ -22,13 +22,13 @@ class DataContainerInListOrderDetailsRejectByProviderOrderEmp extends StatelessW
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 30,
         children: [
-          if(isMobile)
-            ContainerReturnToPageSetting(
-              text: AppLanguageKeys.back,
-              onTap: (){
-                Navigator.pop(context);
-              },
-            ),
+          // if(isMobile)
+          //   ContainerReturnToPageSetting(
+          //     text: AppLanguageKeys.back,
+          //     onTap: (){
+          //       Navigator.pop(context);
+          //     },
+          //   ),
           const TitleWithSubTitleInOrderDetailsEmp(),
           CustomContainerOrder(
           order: order,

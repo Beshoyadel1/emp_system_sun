@@ -42,7 +42,6 @@ class _SignUpMobileWidgetState extends State<SignUpMobileWidget> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
-
   @override
   void dispose() {
     usernameController.dispose();

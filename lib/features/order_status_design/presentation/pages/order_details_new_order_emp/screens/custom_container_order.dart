@@ -28,6 +28,7 @@ class CustomContainerOrder extends StatelessWidget {
 
     return CustomContainer(
       isSelected: false,
+      containerWidth: double.infinity,
       onTap: () {},
       borderRadius: BorderRadius.circular(12),
       typeWidget: Wrap(

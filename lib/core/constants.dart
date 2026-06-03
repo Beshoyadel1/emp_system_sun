@@ -12,7 +12,3 @@ Map<String, String> myHeaders = {
   'Access-Control-Allow-Headers': 'X-Requested-With',
 };
 
-// Links
-
-String apiBaseUrl = "https://api.smat.sa";
-// String apiBaseUrl = "https://sumou-edu.com";

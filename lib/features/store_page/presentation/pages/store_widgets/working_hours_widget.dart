@@ -19,7 +19,11 @@ class WorkingHoursWidget extends StatelessWidget {
     );
 
     if (time != null) {
-      final formatted = time.format(context);
+      final formatted =
+          "${time.hour.toString().padLeft(2, '0')}:"
+          "${time.minute.toString().padLeft(2, '0')}:00";
+
+      print("SELECTED TIME => $formatted");
 
       if (isFrom) {
         cubit.setFromTime(formatted);

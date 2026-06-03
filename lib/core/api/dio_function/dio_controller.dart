@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:emp_system_sun/core/api/dio_function/api_constants.dart';
 import '../../constants.dart';
 
 class Network {
   static Dio dio = Dio(
     BaseOptions(
-      baseUrl: apiBaseUrl,
+      baseUrl: ApiConfig.baseUrlApi,
       receiveDataWhenStatusError: true,
       connectTimeout: const Duration(seconds: 20),
       receiveTimeout: const Duration(seconds: 20),

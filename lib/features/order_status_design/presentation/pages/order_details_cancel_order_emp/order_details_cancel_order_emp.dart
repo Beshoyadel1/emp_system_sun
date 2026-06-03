@@ -17,6 +17,7 @@ class OrderDetailsCancelOrderEmp extends StatelessWidget {
 
     return Scaffold(
         backgroundColor: AppColors.scaffoldColor,
+        appBar: AppBar(),
         body: SafeArea(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,

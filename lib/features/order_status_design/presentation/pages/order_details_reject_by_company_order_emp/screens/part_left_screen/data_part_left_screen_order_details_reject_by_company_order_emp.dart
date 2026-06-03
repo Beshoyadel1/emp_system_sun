@@ -13,12 +13,12 @@ class DataPartLeftScreenOrderDetailsRejectByCompanyOrderEmp extends StatelessWid
     return Column(
       spacing: 20,
       children: [
-        ContainerReturnToPageSetting(
-          text: AppLanguageKeys.back,
-          onTap: (){
-              Navigator.pop(context);
-          },
-        ),
+        // ContainerReturnToPageSetting(
+        //   text: AppLanguageKeys.back,
+        //   onTap: (){
+        //       Navigator.pop(context);
+        //   },
+        // ),
         const ContainerContactWithCustomerOrderDetailsRejectByCompanyOrderEmp(),
         const DataTimeLineTileOrderDetailsRejectByCompanyOrderEmp()
     ],

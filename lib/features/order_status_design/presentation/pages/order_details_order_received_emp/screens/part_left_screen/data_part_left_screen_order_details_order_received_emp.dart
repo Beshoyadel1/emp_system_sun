@@ -13,12 +13,12 @@ class DataPartLeftScreenOrderDetailsOrderReceivedEmp extends StatelessWidget {
     return Column(
       spacing: 20,
       children: [
-        ContainerReturnToPageSetting(
-          text: AppLanguageKeys.back,
-          onTap: (){
-              Navigator.pop(context);
-          },
-        ),
+        // ContainerReturnToPageSetting(
+        //   text: AppLanguageKeys.back,
+        //   onTap: (){
+        //       Navigator.pop(context);
+        //   },
+        // ),
         const ContainerContactWithCustomerOrderDetailsOrderReceivedEmp(),
         const DataTimeLineTileOrderDetailsOrderReceivedEmp()
     ],

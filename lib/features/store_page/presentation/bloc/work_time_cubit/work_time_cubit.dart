@@ -93,12 +93,22 @@ class UpdateWorkTimeCubit extends Cubit<WorkTimeState> {
         ],
       );
 
+      print("========== CREATE REQUEST ==========");
+      print(request.toJson());
+
       await uploadProviderWorkTimesFunction(
         uploadProviderWorkTimesRequest: request,
       );
+
       await getWorkTimes();
+
+      print("========== WORK TIMES AFTER CREATE ==========");
+      print(workTimes.length);
+
       emit(WorkTimeSuccess());
-    } catch (e) {
+    } catch (e, s) {
+      print("CREATE ERROR => $e");
+      print(s);
       emit(WorkTimeError(e.toString()));
     }
   }

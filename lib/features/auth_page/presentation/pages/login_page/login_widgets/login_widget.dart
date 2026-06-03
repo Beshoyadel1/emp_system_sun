@@ -1,34 +1,53 @@
-import 'package:emp_system_sun/core/api/dio_function/api_constants.dart';
-import 'package:emp_system_sun/core/language/language_constant.dart';
-import 'package:emp_system_sun/core/pages_widgets/general_widgets/snakbar.dart';
-import 'package:emp_system_sun/core/theming/colors.dart';
-import 'package:emp_system_sun/core/theming/fonts.dart';
-import 'package:emp_system_sun/core/theming/text_styles.dart';
-import 'package:emp_system_sun/features/auth_page/presentation/auth_gate.dart';
-import 'package:emp_system_sun/features/auth_page/data/request/login_request/login_request.dart';
-import 'package:emp_system_sun/features/auth_page/presentation/pages/check_email_exist/check_email_exist_page.dart';
+import '../../../../../../core/api/dio_function/api_constants.dart';
+import '../../../../../../core/language/language_constant.dart';
+import '../../../../../../core/pages_widgets/general_widgets/navigate_to_page_widget.dart';
+import '../../../../../../core/pages_widgets/general_widgets/snakbar.dart';
+import '../../../../../../core/theming/colors.dart';
+import '../../../../../../core/theming/fonts.dart';
+import '../../../../../../core/theming/text_styles.dart';
+import '../../../../../../features/auth_page/data/request/login_request/login_request.dart';
+import '../../../../../../features/auth_page/presentation/auth_gate.dart';
+import '../../../../../../features/auth_page/presentation/bloc/auth_cubit/auth_cubit.dart';
+import '../../../../../../features/auth_page/presentation/bloc/auth_cubit/auth_state.dart';
+import '../../../../../../features/auth_page/presentation/pages/check_email_exist/check_email_exist_page.dart';
+import '../../../../../../features/auth_page/presentation/pages/login_page/login_widgets/login_button_widget.dart';
+import '../../../../../../features/auth_page/presentation/pages/login_page/login_widgets/user_text_field_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:emp_system_sun/core/pages_widgets/general_widgets/navigate_to_page_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:emp_system_sun/features/auth_page/presentation/bloc/auth_cubit/auth_cubit.dart';
-import 'package:emp_system_sun/features/auth_page/presentation/bloc/auth_cubit/auth_state.dart';
-import 'package:emp_system_sun/features/auth_page/presentation/pages/login_page/login_widgets/login_button_widget.dart';
-import 'package:emp_system_sun/features/auth_page/presentation/pages/login_page/login_widgets/user_text_field_widget.dart';
-import 'package:flutter/cupertino.dart';
 
-class LoginWidget extends StatelessWidget {
-   LoginWidget({super.key});
+class LoginWidget extends StatefulWidget {
+  const LoginWidget({super.key});
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  @override
+  State<LoginWidget> createState() => _LoginWidgetState();
+}
 
-  final TextEditingController userNameController = TextEditingController();
+class _LoginWidgetState extends State<LoginWidget> {
+  late TextEditingController userNameController;
+  late TextEditingController passwordController;
+  late GlobalKey<FormState> formKey;
 
-  final TextEditingController passwordController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+
+    userNameController = TextEditingController();
+    passwordController = TextEditingController();
+    formKey = GlobalKey<FormState>();
+  }
+
+  @override
+  void dispose() {
+    userNameController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+
     return Form(
-      key: _formKey,
+      key: formKey,
       autovalidateMode: AutovalidateMode.disabled,
       child: Column(
         spacing: 15,
@@ -52,19 +71,19 @@ class LoginWidget extends StatelessWidget {
             text: AppLanguageKeys.password,
           ),
 
-          BlocListener<AuthCubit, AuthState>(
+          BlocConsumer<AuthCubit, AuthState>(
+            listenWhen: (previous, current) =>
+            current is AuthLoginSuccess ||
+                current is AuthLoginError,
+
             listener: (context, state) {
-
               if (state is AuthLoginSuccess) {
-
                 AppSnackBar.showSuccess(
                   AppLanguageKeys.success,
                 );
 
                 Navigator.pushReplacement(
-
                   context,
-
                   NavigateToPageWidget(
                     const AuthGate(),
                   ),
@@ -72,45 +91,49 @@ class LoginWidget extends StatelessWidget {
               }
 
               if (state is AuthLoginError) {
-
                 AppSnackBar.showError(
                   state.message,
                 );
               }
             },
-            child: BlocBuilder<AuthCubit, AuthState>(
-              builder: (context, state) {
-                final isLoading = state is AuthLoginLoading;
 
-                return LoginButtonWidget(
-                  text: AppLanguageKeys.login,
-                  isLoading: isLoading,
-                  onPressed: isLoading
-                      ? null
-                      : () {
+            buildWhen: (previous, current) =>
+            current is AuthLoginLoading ||
+                previous is AuthLoginLoading,
 
-                    if (!_formKey.currentState!.validate()) return;
+            builder: (context, state) {
+              final isLoading = state is AuthLoginLoading;
 
-                    final loginRequest = LoginRequest(
-                      user: userNameController.text.trim(),
-                      password: passwordController.text.trim(),
-                      type: UserType.employeeUser,
-                    );
+              return LoginButtonWidget(
+                text: AppLanguageKeys.login,
+                isLoading: isLoading,
+                onPressed: isLoading
+                    ? null
+                    : () {
+                  if (!formKey.currentState!.validate()) {
+                    return;
+                  }
 
-                    context.read<AuthCubit>().login(loginRequest);
+                  final loginRequest = LoginRequest(
+                    user: userNameController.text.trim(),
+                    password: passwordController.text.trim(),
+                    type: UserType.employeeUser,
+                  );
 
-                  },
-                );
-              },
-            ),
+                  context
+                      .read<AuthCubit>()
+                      .login(loginRequest);
+                },
+              );
+            },
           ),
+
           InkWell(
             onTap: () {
-              context.read<AuthCubit>().showRestPassword();
               Navigator.push(
                 context,
                 NavigateToPageWidget(
-                     const CheckEmailExistPage()
+                  const CheckEmailExistPage(),
                 ),
               );
             },

@@ -7,17 +7,14 @@ import '../../../../../core/api/dio_function/dio_controller.dart';
 import '../../../../../core/api/dio_function/failures.dart';
 import '../../../../../core/language/language_constant.dart';
 
-Future<void> uploadProviderWorkTimesFunction({required UploadProviderWorkTimesRequest uploadProviderWorkTimesRequest}) async {
+Future<void> uploadProviderWorkTimesFunction({
+  required UploadProviderWorkTimesRequest uploadProviderWorkTimesRequest,
+}) async {
   try {
-    String jsonString = json.encode(uploadProviderWorkTimesRequest.toJson());
-
     await Network.postDataWithBody(
-      jsonString,
+      uploadProviderWorkTimesRequest.toJson(),
       ApiLink.uploadProviderWorkTimes,
-    ).then((value) {
-      
-    });
-
+    );
   } catch (e) {
     AppSnackBar.showError(
       e is DioException

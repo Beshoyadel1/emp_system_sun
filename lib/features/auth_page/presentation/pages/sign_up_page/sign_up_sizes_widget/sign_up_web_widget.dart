@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/utilies/map_of_all_app.dart';
 import 'package:flutter/material.dart';
 
 import '../../login_page/login_widgets/login_image.dart';
@@ -8,11 +9,11 @@ class SignUpWebWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Expanded(child: SignUpMobileWidget()),
-         LoginImage(),
+        const Expanded(child: SignUpMobileWidget()),
+        if(MediaQuery.of(context).size.width > ValuesOfAllApp.mobileWidth) const LoginImage(),
       ],
     );
   }
