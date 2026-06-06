@@ -36,12 +36,12 @@ class DetailsOrder extends StatelessWidget {
                   crossAxisAlignment: WrapCrossAlignment.start,
                   alignment: WrapAlignment.start,
                   children: [
-                    Image.asset(
-                      AppImageKeys.maintenance,
-                      width: 30,
-                      height: 30,
-                      fit: BoxFit.contain,
-                    ),
+                    // Image.asset(
+                    //   AppImageKeys.maintenance,
+                    //   width: 30,
+                    //   height: 30,
+                    //   fit: BoxFit.contain,
+                    // ),
                     const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,

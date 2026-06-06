@@ -30,12 +30,12 @@ class NewOrderWidget extends StatelessWidget {
           alignment: WrapAlignment.center,
           children: [
             const TextInAppWidget(text: '1#', textSize: 16, textColor: AppColors.darkColor),
-            Image.asset(
-              AppImageKeys.maintenance,
-              width: 30,
-              height: 30,
-              fit: BoxFit.contain,
-            ),
+            // Image.asset(
+            //   AppImageKeys.maintenance,
+            //   width: 30,
+            //   height: 30,
+            //   fit: BoxFit.contain,
+            // ),
             const Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,

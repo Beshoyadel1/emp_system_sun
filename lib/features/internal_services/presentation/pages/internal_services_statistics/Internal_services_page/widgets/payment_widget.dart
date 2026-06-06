@@ -43,12 +43,12 @@ class PaymentWidget extends StatelessWidget {
                 textSize: 16,
                 textColor: AppColors.darkColor,
               ),
-              Image.asset(
-                AppImageKeys.payIcon,
-                width: 53,
-                height: 21,
-                fit: BoxFit.fill,
-              ),
+              // Image.asset(
+              //   AppImageKeys.payIcon,
+              //   width: 53,
+              //   height: 21,
+              //   fit: BoxFit.fill,
+              // ),
             ],
           ),
         ],

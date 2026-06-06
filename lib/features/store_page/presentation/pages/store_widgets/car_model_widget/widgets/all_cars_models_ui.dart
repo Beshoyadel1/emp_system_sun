@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../../../../core/pages_widgets/general_widgets/custom_container.dart';
 import '../../../../../../../core/theming/colors.dart';
-import 'choose_car_model.dart';
-import 'choose_category.dart';
 import 'select_model_years.dart';
 
 class AllCarsModelsUi extends StatelessWidget {
@@ -21,9 +19,9 @@ class AllCarsModelsUi extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ChooseCarModel(),
+        //      ChooseCarModel(),
               SizedBox(height: 30),
-              ChooseCategory(),
+          //    ChooseCategory(),
               SizedBox(height: 32),
               SelectModelYears(),
             ],

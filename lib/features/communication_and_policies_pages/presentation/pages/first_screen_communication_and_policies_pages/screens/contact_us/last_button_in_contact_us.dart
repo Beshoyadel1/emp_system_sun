@@ -16,7 +16,7 @@ class LastButtonInContactUs extends StatelessWidget {
     return ButtonWidget(
       text: AppLanguageKeys.send,
       isFirstImageText: true,
-      image: AppImageKeys.iconSend,
+      //image: AppImageKeys.iconSend,
       textColor: AppColors.whiteColor,
       buttonColor: AppColors.orangeColor,
       textSize: 12,

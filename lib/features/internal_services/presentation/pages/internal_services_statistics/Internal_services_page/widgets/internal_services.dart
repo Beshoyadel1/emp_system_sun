@@ -19,21 +19,21 @@ class InternalServices extends StatelessWidget {
         child: Row(
           spacing: 10,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: ColoredBox(
-                color: AppColors.orangeColor.withAlpha(50),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Image.asset(
-                    AppImageKeys.maintenance,
-                    width: 40,
-                    height: 40,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-            ),
+            // ClipRRect(
+            //   borderRadius: BorderRadius.circular(8),
+            //   child: ColoredBox(
+            //     color: AppColors.orangeColor.withAlpha(50),
+            //     child: Padding(
+            //       padding: const EdgeInsets.all(8.0),
+            //       child: Image.asset(
+            //         AppImageKeys.maintenance,
+            //         width: 40,
+            //         height: 40,
+            //         fit: BoxFit.contain,
+            //       ),
+            //     ),
+            //   ),
+            // ),
             const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,

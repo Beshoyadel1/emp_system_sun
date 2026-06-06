@@ -58,11 +58,11 @@ class ContainerContactWithCustomerOrderDetailsCancelOrderEmp extends StatelessWi
                 spacing: 15,
                 children: [
                   ContainerCallInDataCallingDesign(
-                    imagePath: AppImageKeys.call_contact,
+                    icon: Icons.call,
                     width: 40,
                   ),
                   ContainerCallInDataCallingDesign(
-                    imagePath: AppImageKeys.message_contact,
+                    icon: Icons.message_outlined,
                     width: 40,
                   )
                 ],

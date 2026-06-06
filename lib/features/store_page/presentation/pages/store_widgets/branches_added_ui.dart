@@ -66,10 +66,20 @@ class BranchesAddedUi extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Image.asset(
-                              AppImageKeys.locationBoxOrange,
+                            Container(
                               height: 41,
                               width: 41,
+                              decoration: BoxDecoration(
+                                color: AppColors.orangeColor,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.add_location,
+                                  color: AppColors.whiteColor,
+                                  size: 22,
+                                ),
+                              ),
                             ),
                             const SizedBox(width: 10),
                             Column(
@@ -121,10 +131,20 @@ class BranchesAddedUi extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Image.asset(
-                            AppImageKeys.locationBoxOrange,
+                          Container(
                             height: 41,
                             width: 41,
+                            decoration: BoxDecoration(
+                              color: AppColors.orangeColor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.add_location,
+                                color: AppColors.whiteColor,
+                                size: 22,
+                              ),
+                            ),
                           ),
                           const SizedBox(width: 10),
                           Column(
@@ -183,12 +203,16 @@ Widget _deleteButton(BuildContext context, List branches, branch,
     containerColor: AppColors.redColor,
     containerWidth: isSmall ? double.infinity : 162,
     containerHeight: 42,
-    typeWidget: Row(
+    typeWidget: const Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.asset(AppImageKeys.deleteIcon, height: 24, width: 24),
-        const SizedBox(width: 6),
-        const Flexible(
+        Icon(
+          Icons.delete_outline,
+          color: AppColors.whiteColor,
+          size: 24,
+        ),
+        SizedBox(width: 6),
+        Flexible(
           child:  TextInAppWidget(
             text: AppLanguageKeys.delete,
             textSize: 16,
@@ -211,12 +235,16 @@ Widget _editButton(BuildContext context, List branches, branch,
     containerColor: AppColors.darkGreyColor,
     containerWidth: isSmall ? double.infinity : 162,
     containerHeight: 42,
-    typeWidget: Row(
+    typeWidget: const Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.asset(AppImageKeys.boxEditIcon, height: 24, width: 24),
-        const SizedBox(width: 6),
-        const Flexible(
+        Icon(
+          Icons.edit,
+          color: AppColors.whiteColor,
+          size: 24,
+        ),
+        SizedBox(width: 6),
+        Flexible(
           child:TextInAppWidget(
             text: AppLanguageKeys.editKey,
             textSize: 16,

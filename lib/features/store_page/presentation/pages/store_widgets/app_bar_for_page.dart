@@ -54,10 +54,9 @@ class _AppBarForPageState extends State<AppBarForPage> {
                 ),
               ),
             ),
-            Image.asset(
-              AppImageKeys.notification,
-              width: 40,
-              height: 40,
+            const Icon(
+              Icons.notifications_none,
+              size: 40,
             ),
             Image.asset(
               AppImageKeys.profileImage,

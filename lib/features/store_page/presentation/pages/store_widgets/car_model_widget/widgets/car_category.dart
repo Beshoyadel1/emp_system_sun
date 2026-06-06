@@ -25,7 +25,7 @@ class CarCategory extends StatelessWidget {
           hintText: AppLanguageKeys.searchCarModelKey,
           hintTextSize: 12,
           hintTextColor: AppColors.greyColor,
-          prefixIcon: AppImageKeys.searchIcon,
+          //prefixIcon: AppImageKeys.searchIcon,
           prefixIconWidth: 19,
           prefixIconHeight: 19,
           textSize: 14,

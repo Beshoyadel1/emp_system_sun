@@ -53,11 +53,11 @@ class SearchWidget extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    AppImageKeys.filter,
-                    height: 24,
-                    width: 24,
-                  ),
+                  // Image.asset(
+                  //   AppImageKeys.filter,
+                  //   height: 24,
+                  //   width: 24,
+                  // ),
                   const TextInAppWidget(
                     text: AppLanguageKeys.filterKey,
                     textSize: 16,

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../../core/language/language_constant.dart';
 
-import 'cars_added.dart';
 import '../../custom_add_button.dart';
 
 class AddCarModelUi extends StatelessWidget {
@@ -15,7 +14,7 @@ class AddCarModelUi extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 20,
       children: [
-        const CarsAdded(),
+     //   const CarsAdded(),
         CustomAddButton(
           width: 178,
           text: AppLanguageKeys.addCarModelKey,

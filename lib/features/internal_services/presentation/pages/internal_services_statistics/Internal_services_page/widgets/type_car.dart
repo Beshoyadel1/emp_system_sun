@@ -12,12 +12,12 @@ class TypeCar extends StatelessWidget {
       children: [
         Column(
           children: [
-            Image.asset(
-              AppImageKeys.cr_v_car,
-              width: 40,
-              height: 20,
-              fit: BoxFit.contain,
-            ),
+            // Image.asset(
+            //   AppImageKeys.cr_v_car,
+            //   width: 40,
+            //   height: 20,
+            //   fit: BoxFit.contain,
+            // ),
             const TextInAppWidget(
                 text: 'Ariya', textSize: 14, textColor: AppColors.darkColor),
           ],

@@ -29,11 +29,11 @@ class DataAccountBalance extends StatelessWidget {
       onTap: () {},
       borderRadius: BorderRadius.circular(10),
       typeWidget: ListTile(
-        leading: Image.asset(
-          AppImageKeys.maintenance,
-          height: 34,
-          width: 34,
-        ),
+        // leading: Image.asset(
+        //   AppImageKeys.maintenance,
+        //   height: 34,
+        //   width: 34,
+        // ),
 
         title: TextInAppWidget(
           text: item.getName(context),

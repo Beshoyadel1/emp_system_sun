@@ -1,21 +1,22 @@
-import 'package:flutter/cupertino.dart';
-import '../../../../../../../core/theming/assets.dart';
+import 'package:flutter/material.dart';
 import '../../../../../../../core/theming/colors.dart';
 
 class ContainerCallInDataCallingDesign extends StatelessWidget {
-  final String? imagePath;
+  final IconData? icon;
   final double? width;
+
   const ContainerCallInDataCallingDesign({
     super.key,
     this.width,
-    this.imagePath,
+    this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsetsGeometry.all(10),
-      width:width?? 60,
+      padding: const EdgeInsets.all(10),
+      width: width ?? 60,
+      height: width ?? 60,
       decoration: BoxDecoration(
         color: AppColors.orangeColor,
         shape: BoxShape.circle,
@@ -24,11 +25,15 @@ class ContainerCallInDataCallingDesign extends StatelessWidget {
             color: AppColors.redColor.withOpacity(0.3),
             blurRadius: 8,
             spreadRadius: 2,
-            offset: Offset(0, 4),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
-      child: Image.asset(imagePath??AppImageKeys.call2),
+      child: Icon(
+        icon ?? Icons.call,
+        color: Colors.white,
+        size: 19,
+      ),
     );
   }
 }

@@ -28,9 +28,6 @@ class FacilityDataContent extends StatefulWidget {
 class _FacilityDataContentState extends State<FacilityDataContent> {
   final facilityNameController = TextEditingController();
   final facilityNameEnController = TextEditingController();
-  // final vatNoController = TextEditingController();
-  // final crController = TextEditingController();
-  // final nationalAddressController = TextEditingController();
   final phoneController = TextEditingController();
   final emailController = TextEditingController();
   final genderController = TextEditingController();
@@ -61,15 +58,11 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
     if (user != null) {
       facilityNameController.text = user.employeeDetails?.employeeDetails?.jobname ?? "";
       facilityNameEnController.text = user.employeeDetails?.employeeDetails?.joblatinname ?? "";
-
-      // nationalAddressController.text =
-      //     user.providerDetails?.nationaladdress ?? "";
       phoneController.text = user.phone ?? "";
       emailController.text = user.email ?? "";
       ageController.text = user.age?.toString() ?? "";
       genderController.text = user.gander?.toString() ?? "";
-      dateController.text =
-          OrderFunctions.formatDateFromDateTime(user.joinDate);
+      dateController.text = OrderFunctions.formatDateFromDateTime(user.joinDate);
 
       setState(() {});
     }
@@ -77,7 +70,6 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
   void _onUpdate() async {
 
     final user = await AuthLocalStorage.getUser();
-
     final facilityCubit =
     context.read<FacilityTabCubit>();
 
@@ -169,24 +161,6 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
               readOnly: !isEditMode,
               width: 250,
             ),
-            // UserTextFieldWidget(
-            //   controller: crController,
-            //   text: AppLanguageKeys.commercialRecordKey,
-            //   readOnly: !isEditMode,
-            //   width: 250,
-            // ),
-            // UserTextFieldWidget(
-            //   controller: vatNoController,
-            //   text: AppLanguageKeys.taxNumber,
-            //   readOnly: !isEditMode,
-            //   width: 250,
-            // ),
-            // UserTextFieldWidget(
-            //   controller: nationalAddressController,
-            //   text: AppLanguageKeys.shortAddress,
-            //   readOnly: !isEditMode,
-            //   width: 250,
-            // ),
             UserTextFieldWidget(
               controller: phoneController,
               text: AppLanguageKeys.phoneNumber,
@@ -229,16 +203,6 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
           spacing: 20,
           runSpacing: 20,
           children: [
-            // AttachImage(
-            //   title: AppLanguageKeys.commercialRecordKey,
-            //   type: 'crimage',
-            //   isEditMode: isEditMode,
-            // ),
-            // AttachImage(
-            //   title: AppLanguageKeys.taxNumber,
-            //   type: 'vatnoimage',
-            //   isEditMode: isEditMode,
-            // ),
             AttachImage(
               title: AppLanguageKeys.ownerIdKey,
               type: 'image',

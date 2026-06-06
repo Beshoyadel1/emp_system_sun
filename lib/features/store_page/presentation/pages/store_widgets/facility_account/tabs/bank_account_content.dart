@@ -12,8 +12,6 @@ import 'package:emp_system_sun/core/language/language_constant.dart';
 import 'package:emp_system_sun/core/theming/colors.dart';
 import 'package:emp_system_sun/core/theming/text_styles.dart';
 
-
-
 class BankAccountContent extends StatefulWidget {
   const BankAccountContent({super.key});
 
@@ -37,7 +35,6 @@ class _BankAccountContentState extends State<BankAccountContent> {
     }
   }
 
-  /// ================= LOAD DATA =================
   Future<void> _loadData() async {
     final user = await AuthLocalStorage.getUser();
 
