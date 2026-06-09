@@ -110,9 +110,27 @@ class _LoginWidgetState extends State<LoginWidget> {
                 onPressed: isLoading
                     ? null
                     : () {
-                  if (!formKey.currentState!.validate()) {
+                  final email = userNameController.text.trim();
+                  final password = passwordController.text.trim();
+                  if (email.isEmpty||password.isEmpty) {
+                    AppSnackBar.showError(
+                      AppLanguageKeys.enterYourData,
+                    );
                     return;
                   }
+
+                  final emailRegex = RegExp(
+                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                  );
+
+                  if (!emailRegex.hasMatch(email)) {
+                    AppSnackBar.showError(
+                      AppLanguageKeys.pleaseEnterValidEmail,
+                    );
+                    return;
+                  }
+
+                  if (!formKey.currentState!.validate()) return;
 
                   final loginRequest = LoginRequest(
                     user: userNameController.text.trim(),

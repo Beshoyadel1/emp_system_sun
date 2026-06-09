@@ -31,6 +31,7 @@ class AppLocalizations {
       //END//
 
       //others//
+      AppLanguageKeys.pleaseEnterValidEmail: 'يرجى إدخال بريد إلكتروني صحيح',
       AppLanguageKeys.enterSystem: 'دخول النظام',
       AppLanguageKeys.check: 'تحقق',
       AppLanguageKeys.addAtLeastOneBranch: 'أضف فرع واحد على الأقل',
@@ -1314,6 +1315,7 @@ class AppLocalizations {
       AppLanguageKeys.cancelledByUser: 'Cancelled by User',
       //END//
       //others//
+      AppLanguageKeys.pleaseEnterValidEmail: 'Please enter a valid email',
       AppLanguageKeys.enterSystem: 'Enter System',
       AppLanguageKeys.check: 'Check',
       AppLanguageKeys.addAtLeastOneBranch: 'Add at least one branch',
