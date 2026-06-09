@@ -49,11 +49,14 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> init() async {
+    print("INIT CALLED");
+
     emit(AuthLoading());
 
     final user = await AuthLocalStorage.getUser();
 
     if (user == null) {
+      print("INIT => AuthUnauthenticated");
       emit(AuthUnauthenticated());
       return;
     }
@@ -165,10 +168,12 @@ class AuthCubit extends Cubit<AuthState> {
       loginRequest: request,
     );
 
+    print("LOGIN SUCCESS => ${result.success}");
+    print("LOGIN MESSAGE => ${result.message}");
+
     if (result.success && result.user != null) {
-      await AuthLocalStorage.saveUser(
-        result.user!,
-      );
+
+      await AuthLocalStorage.saveUser(result.user!);
 
       emit(
         AuthLoginSuccess(
@@ -176,10 +181,10 @@ class AuthCubit extends Cubit<AuthState> {
         ),
       );
 
-      await _checkFacilityCompletion(
-        result.user!,
-      );
+      await _checkFacilityCompletion(result.user!);
+
     } else {
+
       emit(
         AuthLoginError(
           result.message,
@@ -188,32 +193,33 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> _checkFacilityCompletion(
-    CreateUserRequest user,
-  ) async {
+  Future<void> _checkFacilityCompletion(CreateUserRequest user) async {
     final branchCubit = BranchCubit();
     final workTimeCubit = UpdateWorkTimeCubit();
-    await branchCubit.getProviderBranches();
-    await workTimeCubit.getWorkTimes();
 
-    if (isClosed) return;
+    await Future.wait([
+      branchCubit.getProviderBranches(),
+      workTimeCubit.getWorkTimes(),
+    ]);
+
+    print("BRANCHES => ${branchCubit.branches.length}");
+    print("WORK TIMES => ${workTimeCubit.workTimes.length}");
 
     final result = FacilityValidator.validate(
       user: user,
       branchCubit: branchCubit,
       workTimeCubit: workTimeCubit,
     );
+
+    print("IS VALID => ${result.isValid}");
+    print("MISSING FIELDS => ${result.missingFields}");
+
     if (result.isValid) {
       emit(AuthAuthenticated());
     } else {
-      emit(
-        AuthIncompleteProfile(
-          result.missingFields,
-        ),
-      );
+      emit(AuthIncompleteProfile(result.missingFields));
     }
   }
-
   static Future<void> saveUserFromRequest(CreateUserRequest request) async {
     await AuthLocalStorage.saveUser(request);
   }
@@ -239,10 +245,10 @@ class AuthCubit extends Cubit<AuthState> {
     final user = await AuthLocalStorage.getUser();
 
     if (user == null) {
+      print("RECHECK => AuthUnauthenticated");
       emit(AuthUnauthenticated());
       return;
     }
-
     final branchCubit = BranchCubit();
     final workTimeCubit = UpdateWorkTimeCubit();
 
@@ -314,15 +320,17 @@ class AuthCubit extends Cubit<AuthState> {
 
         print(jsonEncode(updatedUser.toJson()));
 
-        await AuthLocalStorage.saveUser(
-          updatedUser,
-        );
+        if (result.success) {
+          await AuthLocalStorage.saveUser(updatedUser);
 
-        emit(
-          AuthUpdateSuccess(
-            result.message,
-          ),
-        );
+          emit(
+            AuthUpdateSuccess(
+              result.message,
+            ),
+          );
+
+          return;
+        }
       } else {
         emit(
           AuthUpdateError(
@@ -348,9 +356,13 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> logout() async {
-    emit(AuthLoading()); // optional loading
+    print("LOGOUT CALLED");
+
+    emit(AuthLoading());
 
     await AuthLocalStorage.clearUser();
+
+    print("LOGOUT => AuthUnauthenticated");
 
     emit(AuthUnauthenticated());
   }

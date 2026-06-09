@@ -20,7 +20,8 @@ class TechnicalSupportAdminSun extends StatelessWidget {
         BlocProvider(create: (_) => MessageCubit()..getMessages()),
         BlocProvider(create: (_) => ChatDetailsCubit()),
       ],
-      child: Scaffold(
+      child:
+      Scaffold(
           backgroundColor: AppColors.scaffoldColor,
           body: SafeArea(
             child: SingleChildScrollView(

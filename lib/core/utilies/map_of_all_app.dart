@@ -270,12 +270,12 @@ void getPages() {
             page: MobileServicesStatisticsPage(),
           ),
         ]),
-    const PageNodeModel(
-      name: AppLanguageKeys.permissionsKey,
-      image: AppImageKeys.userPermissions,
-      number: PagesOfAllApp.permissionsPageNumber,
-      page: FirstScreenPermissions(),
-    ),
+    // const PageNodeModel(
+    //   name: AppLanguageKeys.permissionsKey,
+    //   image: AppImageKeys.userPermissions,
+    //   number: PagesOfAllApp.permissionsPageNumber,
+    //   page: FirstScreenPermissions(),
+    // ),
 
     const PageNodeModel(
         name: AppLanguageKeys.facilityManagementKey,
