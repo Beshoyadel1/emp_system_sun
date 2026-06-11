@@ -29,6 +29,9 @@ class AppCubit extends Cubit<AppStates> {
     emit(HideMenuState());
   }
 
+  void dropDown() {
+    emit(DropDownState());
+  }
   int selectedPageIndex = 1;
   int selectedPageFromOpenedPagesIndex = -1;
 
