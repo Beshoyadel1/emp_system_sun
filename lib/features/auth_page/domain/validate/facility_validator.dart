@@ -42,20 +42,20 @@ class FacilityValidator {
     if (!isValid(user.image?.toString())) missing.add(AppLanguageKeys.ownerIdKey);
 
     /// 🔴 Branch
-    print("BRANCHES TYPE => ${branchCubit.branches.runtimeType}");
-    print("BRANCHES => ${branchCubit.branches}");
-
-    if (branchCubit.branches.isEmpty) {
-      missing.add(AppLanguageKeys.addAtLeastOneBranch);
-    }
-
-    /// 🔴 Work Time
-    print("WORK TIMES TYPE => ${workTimeCubit.workTimes.runtimeType}");
-    print("WORK TIMES => ${workTimeCubit.workTimes}");
-
-    if (workTimeCubit.workTimes.isEmpty) {
-      missing.add(AppLanguageKeys.addAtLeastOneWorkingHours);
-    }
+    // print("BRANCHES TYPE => ${branchCubit.branches.runtimeType}");
+    // print("BRANCHES => ${branchCubit.branches}");
+    //
+    // if (branchCubit.branches.isEmpty) {
+    //   missing.add(AppLanguageKeys.addAtLeastOneBranch);
+    // }
+    //
+    // /// 🔴 Work Time
+    // print("WORK TIMES TYPE => ${workTimeCubit.workTimes.runtimeType}");
+    // print("WORK TIMES => ${workTimeCubit.workTimes}");
+    //
+    // if (workTimeCubit.workTimes.isEmpty) {
+    //   missing.add(AppLanguageKeys.addAtLeastOneWorkingHours);
+    // }
 
     return FacilityValidationResult(
       isValid: missing.isEmpty,

@@ -4,11 +4,11 @@ class EmployeeWrapperRequest {
 
   final EmployeeDetailsRequest? employeeDetails;
 
-  final List<int> provServiceIds;
+  final List<int> serviceIds;
 
   const EmployeeWrapperRequest({
     this.employeeDetails,
-    this.provServiceIds = const [],
+    this.serviceIds = const [],
   });
 
   factory EmployeeWrapperRequest.fromJson(
@@ -42,20 +42,20 @@ class EmployeeWrapperRequest {
 
     }
 
-    /// provServiceIds
+    /// serviceIds
     List<int> services = [];
 
-    if (json["provServiceIds"] == null) {
+    if (json["serviceIds"] == null) {
 
 
       services = [];
 
-    } else if (json["provServiceIds"] is List) {
+    } else if (json["serviceIds"] is List) {
 
 
 
       services = List<int>.from(
-        json["provServiceIds"],
+        json["serviceIds"],
       );
 
     } else {
@@ -68,7 +68,7 @@ class EmployeeWrapperRequest {
 
       employeeDetails: employee,
 
-      provServiceIds: services,
+      serviceIds: services,
     );
   }
 
@@ -80,8 +80,8 @@ class EmployeeWrapperRequest {
     //   "employeeDetails":
     //   employeeDetails?.toJson(),
     //
-    //   "provServiceIds":
-    //   provServiceIds,
+    //   "serviceIds":
+    //   serviceIds,
     // });
 
     return {
@@ -89,8 +89,8 @@ class EmployeeWrapperRequest {
       "employeeDetails":
       employeeDetails?.toJson(),
 
-      "provServiceIds":
-      provServiceIds,
+      "serviceIds":
+      serviceIds,
     };
   }
 }

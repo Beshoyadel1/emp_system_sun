@@ -118,9 +118,9 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
           oldEmployee?.branchid,
         ),
 
-        provServiceIds:
+        serviceIds:
         user?.employeeDetails
-            ?.provServiceIds ??
+            ?.serviceIds ??
             [],
       ),
     );

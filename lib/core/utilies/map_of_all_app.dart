@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/setup_git_it.dart';
 import 'package:emp_system_sun/features/communication_and_policies_pages/presentation/pages/first_screen_communication_and_policies_pages/first_screen_communication_and_policies_pages.dart';
 import 'package:emp_system_sun/features/dashboard_page/presentation/dashboard_page.dart';
 import 'package:emp_system_sun/features/internal_services/presentation/pages/internal_orders/first_screen_internal_orders/first_screen_internal_orders.dart';
@@ -6,6 +7,9 @@ import 'package:emp_system_sun/features/logout_dashboard/presentation/first_scre
 import 'package:emp_system_sun/features/mobile_services/presentation/pages/mobile_services_orders/first_screen_mobile_services_orders/first_screen_mobile_services_orders.dart';
 import 'package:emp_system_sun/features/mobile_services/presentation/pages/mobile_services_statistics/mobile_services_page/ui/mobile_services_statistics_page.dart';
 import 'package:emp_system_sun/features/permissions/presentation/pages/first_screen_permissions/first_screen_permissions.dart';
+import 'package:emp_system_sun/features/service_emp_view/data/model/get_employee_services_model/employee_service_model.dart';
+import 'package:emp_system_sun/features/service_emp_view/presentation/cubit/employee_services_cubit/employee_services_cubit.dart';
+import 'package:emp_system_sun/features/service_emp_view/presentation/pages/service_emp_view_orders/service_emp_view_orders_page/ui/service_emp_view_orders_page.dart';
 import 'package:emp_system_sun/features/spare_parts/presentation/pages/spare_parts_orders/first_screen_spare_parts_orders/first_screen_spare_parts_orders.dart';
 import 'package:emp_system_sun/features/spare_parts/presentation/pages/spare_parts_statistics/spare_parts_page/ui/spare_parts_statistics_page.dart';
 import 'package:emp_system_sun/features/store_page/presentation/pages/store_widgets/facility_account/facility_account.dart';
@@ -209,11 +213,22 @@ class PagesOfAllApp {
   static const int oilChangeServiceStaticsPageNumber = 533;
 
 }
-
+final services = getIt<EmployeeServicesCubit>().services;
 List<PageNodeModel> appPages = [];
 
 void getPages() {
   appPages.clear();
+  final services = getIt<EmployeeServicesCubit>().services;
+  print(
+    'GETPAGES CUBIT HASH => ${getIt<EmployeeServicesCubit>().hashCode}',
+  );
+  print('SERVICES COUNT => ${services.length}');
+
+  for (final service in services) {
+    print(
+      'SERVICE => ID: ${service.id} NAME: ${service.name}',
+    );
+  }
   appPages = [
     const PageNodeModel(
       name: AppLanguageKeys.dashBoardPageKey,
@@ -221,60 +236,86 @@ void getPages() {
       number: PagesOfAllApp.dashboardPageNumber,
       page: DashboardPage(),
     ),
-    const PageNodeModel(
-        name: AppLanguageKeys.maintenanceAndInternalServicesKey,
-        image: AppImageKeys.carServices,
-        number: PagesOfAllApp.internalServicesPageNumber,
-        children: [
-           PageNodeModel(
-            name: AppLanguageKeys.permissionsGroupPageKey,
-            number: PagesOfAllApp.internalServicesStatisticsPageNumber,
-            page: FirstScreenInternalOrders(),
+    PageNodeModel(
+      name: AppLanguageKeys.permissionsKey,
+      image: AppImageKeys.userPermissions,
+      number: PagesOfAllApp.permissionsPageNumber,
+      children: services.map((service) {
+        return PageNodeModel(
+          name: service.name ?? '',
+          number: service.id ?? 0,
+          page: ServiceEmpViewOrdersPage(
+            serviceId: service.id ?? 0,
           ),
-          PageNodeModel(
-            name: AppLanguageKeys.ordersSectionKey,
-            number: PagesOfAllApp.internalOrdersPageNumber,
-            page: InternalOrdersPage(),
-          ),
-        ]),
+        );
+      }).toList(),
+    ),
+    // const PageNodeModel(
+    //     name: AppLanguageKeys.maintenanceAndInternalServicesKey,
+    //     image: AppImageKeys.carServices,
+    //     number: PagesOfAllApp.internalServicesPageNumber,
+    //     children: [
+    //        PageNodeModel(
+    //         name: AppLanguageKeys.permissionsGroupPageKey,
+    //         number: PagesOfAllApp.internalServicesStatisticsPageNumber,
+    //         page: FirstScreenInternalOrders(),
+    //       ),
+    //       PageNodeModel(
+    //         name: AppLanguageKeys.ordersSectionKey,
+    //         number: PagesOfAllApp.internalOrdersPageNumber,
+    //         page: InternalOrdersPage(),
+    //       ),
+    //     ]),
 
-    const PageNodeModel(
-        name: AppLanguageKeys.spareParts,
-        image: AppImageKeys.spare,
-        number: PagesOfAllApp.sparePageNumber,
-        children: [
-          PageNodeModel(
-            name: AppLanguageKeys.statistics,
-            number: PagesOfAllApp.sparePartsOrdersPageNumber,
-            page: FirstScreenSparePartsOrders(),
-          ),
-          PageNodeModel(
-            name: AppLanguageKeys.ordersSectionKey,
-            number: PagesOfAllApp.sparePartsStaticsPageNumber,
-            page: SparePartsStatisticsPage(),
-          ),
-        ]),
-    const PageNodeModel(
-        name: AppLanguageKeys.mobileServices,
-        image: AppImageKeys.mobile_maintenance,
-        number: PagesOfAllApp.mobileServicePageNumber,
-        children: [
-          PageNodeModel(
-            name: AppLanguageKeys.statistics,
-            number: PagesOfAllApp.mobileServiceOrdersPageNumber,
-            page: FirstScreenMobileServicesOrders(),
-          ),
-          PageNodeModel(
-            name: AppLanguageKeys.ordersSectionKey,
-            number: PagesOfAllApp.mobileServiceStaticsPageNumber,
-            page: MobileServicesStatisticsPage(),
-          ),
-        ]),
+    // const PageNodeModel(
+    //     name: AppLanguageKeys.spareParts,
+    //     image: AppImageKeys.spare,
+    //     number: PagesOfAllApp.sparePageNumber,
+    //     children: [
+    //       PageNodeModel(
+    //         name: AppLanguageKeys.statistics,
+    //         number: PagesOfAllApp.sparePartsOrdersPageNumber,
+    //         page: FirstScreenSparePartsOrders(),
+    //       ),
+    //       PageNodeModel(
+    //         name: AppLanguageKeys.ordersSectionKey,
+    //         number: PagesOfAllApp.sparePartsStaticsPageNumber,
+    //         page: SparePartsStatisticsPage(),
+    //       ),
+    //     ]),
+    // const PageNodeModel(
+    //     name: AppLanguageKeys.mobileServices,
+    //     image: AppImageKeys.mobile_maintenance,
+    //     number: PagesOfAllApp.mobileServicePageNumber,
+    //     children: [
+    //       PageNodeModel(
+    //         name: AppLanguageKeys.statistics,
+    //         number: PagesOfAllApp.mobileServiceOrdersPageNumber,
+    //         page: FirstScreenMobileServicesOrders(),
+    //       ),
+    //       PageNodeModel(
+    //         name: AppLanguageKeys.ordersSectionKey,
+    //         number: PagesOfAllApp.mobileServiceStaticsPageNumber,
+    //         page: MobileServicesStatisticsPage(),
+    //       ),
+    //     ]),
+
     // const PageNodeModel(
     //   name: AppLanguageKeys.permissionsKey,
     //   image: AppImageKeys.userPermissions,
     //   number: PagesOfAllApp.permissionsPageNumber,
-    //   page: FirstScreenPermissions(),
+    //   children: [
+    //     PageNodeModel(
+    //       name: AppLanguageKeys.facilityAccountKey,
+    //       number: 1000,
+    //       page:  ServiceEmpViewOrdersPage(serviceId: 6,),
+    //     ),
+    //     PageNodeModel(
+    //       name: AppLanguageKeys.facilityAccountKey,
+    //       number: 1001,
+    //       page:  ServiceEmpViewOrdersPage(serviceId: 7,),
+    //     ),
+    //   ]
     // ),
 
     const PageNodeModel(

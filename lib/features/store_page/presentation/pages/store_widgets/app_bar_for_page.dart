@@ -23,7 +23,6 @@ class _AppBarForPageState extends State<AppBarForPage> {
 
   String _getPageTitle() {
     final selectedIndex = _appCubit.selectedPageIndex;
-
     // Search main pages
     final page = appPages
         .where((e) => e.number == selectedIndex)
@@ -46,11 +45,24 @@ class _AppBarForPageState extends State<AppBarForPage> {
 
     return 'Page Not Found';
   }
+  bool? _previousIsMobile;
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final isMobile = size.width <= ValuesOfAllApp.mobileWidth;
+
+    if (_previousIsMobile != null &&
+        _previousIsMobile == true &&
+        isMobile == false) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (scaffoldKeyDrawer.currentState?.isDrawerOpen ?? false) {
+          Navigator.of(context).pop();
+        }
+      });
+    }
+
+    _previousIsMobile = isMobile;
 
     return BlocBuilder<AppCubit, AppStates>(
       bloc: _appCubit,
@@ -90,7 +102,6 @@ class _AppBarForPageState extends State<AppBarForPage> {
                   }
                 },
               ),
-
               Expanded(
                 child: Container(
                   height: 60,
