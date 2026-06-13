@@ -57,7 +57,8 @@ class _StorePageState extends State<StorePage> {
         listener: (context, state) {
           if (state is EmployeeServicesSuccess) {
             getPages();
-
+            print("AFTER SUCCESS => ${appPages.length}");
+            print("SERVICES => ${getIt<EmployeeServicesCubit>().services.length}");
             setState(() {});
           }
         },

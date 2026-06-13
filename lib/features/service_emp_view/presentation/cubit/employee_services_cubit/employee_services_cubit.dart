@@ -12,7 +12,7 @@ class EmployeeServicesCubit extends Cubit<EmployeeServicesState> {
   EmployeeServicesCubit() : super(EmployeeServicesInitial());
 
   Future<void> getEmployeeServices() async {
-    print('CUBIT HASH => ${hashCode}');
+   // print('CUBIT HASH => ${hashCode}');
     try {
       emit(EmployeeServicesLoading());
 

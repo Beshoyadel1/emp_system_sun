@@ -35,23 +35,22 @@ class FacilityValidator {
     if (!isValid(p?.joblatinname)) missing.add(AppLanguageKeys.facilityNameEn);
     // if (!isValid(p?.cr)) missing.add(AppLanguageKeys.commercialRecordKey);
     // if (!isValid(p?.vatno)) missing.add(AppLanguageKeys.taxNumber);
-    // if (!isValid(p?.nationaladdress)) missing.add(AppLanguageKeys.nationality);
     if (!isValid(user.phone)) missing.add(AppLanguageKeys.phoneNumber);
     if (!isValid(user.email)) missing.add(AppLanguageKeys.email);
 
     if (!isValid(user.image?.toString())) missing.add(AppLanguageKeys.ownerIdKey);
 
-    /// 🔴 Branch
-    print("BRANCHES TYPE => ${branchCubit.branches.runtimeType}");
-    print("BRANCHES => ${branchCubit.branches}");
+    // /// 🔴 Branch
+    // print("BRANCHES TYPE => ${branchCubit.branches.runtimeType}");
+    // print("BRANCHES => ${branchCubit.branches}");
 
     if (branchCubit.branches.isEmpty) {
       missing.add(AppLanguageKeys.addAtLeastOneBranch);
     }
 
-    /// 🔴 Work Time
-    print("WORK TIMES TYPE => ${workTimeCubit.workTimes.runtimeType}");
-    print("WORK TIMES => ${workTimeCubit.workTimes}");
+    // /// 🔴 Work Time
+    // print("WORK TIMES TYPE => ${workTimeCubit.workTimes.runtimeType}");
+    // print("WORK TIMES => ${workTimeCubit.workTimes}");
 
     if (workTimeCubit.workTimes.isEmpty) {
       missing.add(AppLanguageKeys.addAtLeastOneWorkingHours);
