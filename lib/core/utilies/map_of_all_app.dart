@@ -14,6 +14,7 @@ import 'package:emp_system_sun/features/spare_parts/presentation/pages/spare_par
 import 'package:emp_system_sun/features/spare_parts/presentation/pages/spare_parts_statistics/spare_parts_page/ui/spare_parts_statistics_page.dart';
 import 'package:emp_system_sun/features/store_page/presentation/pages/store_widgets/facility_account/facility_account.dart';
 import 'package:emp_system_sun/features/technical_support/presentation/pages/technical_support_emp/technical_support_admin_sun.dart';
+import 'package:flutter/cupertino.dart';
 import '../../../core/general_models/pages_model.dart';
 import '../../../core/language/language_constant.dart';
 import '../../../core/theming/assets.dart';
@@ -216,7 +217,7 @@ class PagesOfAllApp {
 final services = getIt<EmployeeServicesCubit>().services;
 List<PageNodeModel> appPages = [];
 
-void getPages() {
+void getPages(BuildContext context) {
   appPages.clear();
   final services = getIt<EmployeeServicesCubit>().services;
   
@@ -230,12 +231,12 @@ void getPages() {
 
     if (services.isNotEmpty)
       PageNodeModel(
-        name: AppLanguageKeys.permissionsKey,
+        name: AppLanguageKeys.services,
         image: AppImageKeys.userPermissions,
         number: PagesOfAllApp.permissionsPageNumber,
         children: services.map((service) {
           return PageNodeModel(
-            name: service.name ?? '',
+            name: service.getName(context) ?? '',
             number: service.id ?? 0,
             page: ServiceEmpViewOrdersPage(
               serviceId: service.id ?? 0,

@@ -26,7 +26,7 @@ class _StorePageState extends State<StorePage> {
   @override
   void initState() {
     super.initState();
-    getPages();
+    getPages(context);
     getIt<EmployeeServicesCubit>().getEmployeeServices();
 
     final facilityAccountPage = appPages.firstWhere(
@@ -56,7 +56,7 @@ class _StorePageState extends State<StorePage> {
         bloc: getIt<EmployeeServicesCubit>(),
         listener: (context, state) {
           if (state is EmployeeServicesSuccess) {
-            getPages();
+            getPages(context);
             print("AFTER SUCCESS => ${appPages.length}");
             print("SERVICES => ${getIt<EmployeeServicesCubit>().services.length}");
             setState(() {});

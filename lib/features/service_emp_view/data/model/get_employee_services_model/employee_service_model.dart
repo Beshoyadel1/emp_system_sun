@@ -31,10 +31,12 @@ class EmployeeServiceModel {
           : null,
     );
   }
-
   String getName(BuildContext context) {
-    final isArabic = LanguageCubit.get(context).isAllAppLanguageArabic;
+    final isArabic =
+        LanguageCubit.get(context).isAllAppLanguageArabic;
 
-    return isArabic ? (name ?? "") : (latinName ?? "");
+    return isArabic
+        ? (name ?? "")
+        : (latinName ?? "");
   }
 }

@@ -26,8 +26,8 @@ class FacilityDataContent extends StatefulWidget {
 }
 
 class _FacilityDataContentState extends State<FacilityDataContent> {
-  final facilityNameController = TextEditingController();
-  final facilityNameEnController = TextEditingController();
+  final jobNameController = TextEditingController();
+  final jobLatinNameController = TextEditingController();
   final phoneController = TextEditingController();
   final emailController = TextEditingController();
   final genderController = TextEditingController();
@@ -56,8 +56,8 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
     final user = await AuthLocalStorage.getUser();
 
     if (user != null) {
-      facilityNameController.text = user.employeeDetails?.employeeDetails?.jobname ?? "";
-      facilityNameEnController.text = user.employeeDetails?.employeeDetails?.joblatinname ?? "";
+      jobNameController.text = user.employeeDetails?.employeeDetails?.jobname ?? "";
+      jobLatinNameController.text = user.employeeDetails?.employeeDetails?.joblatinname ?? "";
       phoneController.text = user.phone ?? "";
       emailController.text = user.email ?? "";
       ageController.text = user.age?.toString() ?? "";
@@ -109,15 +109,14 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
 
           provid: oldEmployee?.provid,
 
-          jobname: safe(facilityNameController.text),
+          jobname: safe(jobNameController.text),
 
           joblatinname:
-          safe(facilityNameEnController.text),
+          safe(jobLatinNameController.text),
 
           branchid:
           oldEmployee?.branchid,
         ),
-
         serviceIds:
         user?.employeeDetails
             ?.serviceIds ??
@@ -125,11 +124,11 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
       ),
     );
 
-    debugPrint(
-        "========== REQUEST ==========");
+    // debugPrint(
+    //     "========== REQUEST ==========");
 
-    debugPrint(
-        jsonEncode(request.toJson()));
+    // debugPrint(
+    //     jsonEncode(request.toJson()));
 
     context
         .read<AuthCubit>()
@@ -148,15 +147,15 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
           runSpacing: 10,
           children: [
             UserTextFieldWidget(
-              controller: facilityNameController,
-              text: AppLanguageKeys.facilityName,
+              controller: jobNameController,
+              text: AppLanguageKeys.jobName,
               type: UserFieldType.name,
               readOnly: !isEditMode,
               width: 250,
             ),
             UserTextFieldWidget(
-              controller: facilityNameEnController,
-              text: AppLanguageKeys.facilityNameEn,
+              controller: jobLatinNameController,
+              text: AppLanguageKeys.jobLatinName,
               type: UserFieldType.name,
               readOnly: !isEditMode,
               width: 250,

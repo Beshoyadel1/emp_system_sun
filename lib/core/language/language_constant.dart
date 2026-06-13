@@ -19,6 +19,9 @@ class AppLanguageKeys {
   //end//
 
   //others//
+  static const String searchTheMap = 'searchTheMap';
+  static const String branchNationalAddress = 'branchNationalAddress';
+  static const String jobLatinName = 'jobLatinName';
   static const String pleaseEnterValidEmail =
       'pleaseEnterValidEmail';
   static const String enterSystem = 'enterSystem';

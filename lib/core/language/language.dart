@@ -31,6 +31,9 @@ class AppLocalizations {
       //END//
 
       //others//
+      AppLanguageKeys.searchTheMap: 'البحث في الخريطة',
+      AppLanguageKeys.branchNationalAddress: 'العنوان الوطني للفرع',
+      AppLanguageKeys.jobLatinName: 'اسم الوظيفة بالإنجليزية',
       AppLanguageKeys.pleaseEnterValidEmail: 'يرجى إدخال بريد إلكتروني صحيح',
       AppLanguageKeys.enterSystem: 'دخول النظام',
       AppLanguageKeys.check: 'تحقق',
@@ -1315,6 +1318,9 @@ class AppLocalizations {
       AppLanguageKeys.cancelledByUser: 'Cancelled by User',
       //END//
       //others//
+      AppLanguageKeys.searchTheMap: 'Search the Map',
+      AppLanguageKeys.branchNationalAddress: 'Branch National Address',
+      AppLanguageKeys.jobLatinName: 'Job Name (EN)',
       AppLanguageKeys.pleaseEnterValidEmail: 'Please enter a valid email',
       AppLanguageKeys.enterSystem: 'Enter System',
       AppLanguageKeys.check: 'Check',

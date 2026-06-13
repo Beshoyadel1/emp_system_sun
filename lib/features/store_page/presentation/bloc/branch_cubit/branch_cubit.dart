@@ -71,7 +71,6 @@ class BranchCubit extends Cubit<BranchState> {
       }
 
       emit(
-
         BranchError(
           error,
         ),

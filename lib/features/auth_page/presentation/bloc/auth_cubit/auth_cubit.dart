@@ -281,9 +281,9 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       final oldUser = await AuthLocalStorage.getUser();
 
-      print("========== REQUEST ==========");
-
-      print(jsonEncode(request.toJson()));
+      // print("========== REQUEST ==========");
+      //
+      // print(jsonEncode(request.toJson()));
 
       final result = await updateUserFunction(
         createUserRequest: request,
@@ -291,11 +291,11 @@ class AuthCubit extends Cubit<AuthState> {
 
       if (isClosed) return;
 
-      print("========== UPDATE RESULT ==========");
-
-      print("SUCCESS => ${result.success}");
-
-      print("MESSAGE => ${result.message}");
+      // print("========== UPDATE RESULT ==========");
+      //
+      // print("SUCCESS => ${result.success}");
+      //
+      // print("MESSAGE => ${result.message}");
 
       if (result.success) {
         final updatedUser = CreateUserRequest(
@@ -317,9 +317,9 @@ class AuthCubit extends Cubit<AuthState> {
           employeeDetails: request.employeeDetails ?? oldUser?.employeeDetails,
         );
 
-        print("========== SAVED USER ==========");
-
-        print(jsonEncode(updatedUser.toJson()));
+        // print("========== SAVED USER ==========");
+        //
+        // print(jsonEncode(updatedUser.toJson()));
 
         if (result.success) {
           await AuthLocalStorage.saveUser(updatedUser);
