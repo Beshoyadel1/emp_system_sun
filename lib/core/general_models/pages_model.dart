@@ -1,9 +1,13 @@
+
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 class PageNodeModel {
   final String name;
   final int number;
   final String? image;
+  final Uint8List? imageUint8List;
   final Widget? page;
   final List<PageNodeModel> children;
 
@@ -12,6 +16,7 @@ class PageNodeModel {
     required this.number,
     this.image,
     this.page,
+    this.imageUint8List,
     this.children = const [],
   });
 }

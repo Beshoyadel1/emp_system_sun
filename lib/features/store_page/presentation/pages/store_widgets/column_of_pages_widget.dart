@@ -84,10 +84,18 @@ class ColumnOfPagesWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       spacing: 5,
                       children: [
-                        if (pageNode.image != null &&
-                            pageNode.image!.isNotEmpty)
+                        if (pageNode.image != null && pageNode.image!.isNotEmpty)
                           Image.asset(
                             pageNode.image!,
+                            color: pageNode.number == appCubit.selectedPageIndex
+                                ? AppColors.orangeColor
+                                : AppColors.whiteColor,
+                            height: 18,
+                            width: 18,
+                          ),
+                        if (pageNode.imageUint8List != null && pageNode.imageUint8List!.isNotEmpty)
+                          Image.memory(
+                            pageNode.imageUint8List!,
                             color: pageNode.number == appCubit.selectedPageIndex
                                 ? AppColors.orangeColor
                                 : AppColors.whiteColor,
