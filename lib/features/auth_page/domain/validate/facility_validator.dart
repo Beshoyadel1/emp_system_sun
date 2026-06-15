@@ -44,17 +44,17 @@ class FacilityValidator {
     // print("BRANCHES TYPE => ${branchCubit.branches.runtimeType}");
     // print("BRANCHES => ${branchCubit.branches}");
 
-    if (branchCubit.branches.isEmpty) {
-      missing.add(AppLanguageKeys.addAtLeastOneBranch);
-    }
+    // if (branchCubit.branches.isEmpty) {
+    //   missing.add(AppLanguageKeys.addAtLeastOneBranch);
+    // }
 
     // /// 🔴 Work Time
     // print("WORK TIMES TYPE => ${workTimeCubit.workTimes.runtimeType}");
     // print("WORK TIMES => ${workTimeCubit.workTimes}");
 
-    if (workTimeCubit.workTimes.isEmpty) {
-      missing.add(AppLanguageKeys.addAtLeastOneWorkingHours);
-    }
+    // if (workTimeCubit.workTimes.isEmpty) {
+    //   missing.add(AppLanguageKeys.addAtLeastOneWorkingHours);
+    // }
 
     return FacilityValidationResult(
       isValid: missing.isEmpty,

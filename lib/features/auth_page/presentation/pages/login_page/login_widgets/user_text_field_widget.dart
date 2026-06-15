@@ -1,16 +1,13 @@
-import 'package:emp_system_sun/features/auth_page/presentation/bloc/auth_cubit/auth_cubit.dart';
-import 'package:emp_system_sun/features/auth_page/presentation/bloc/auth_cubit/auth_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../../features/auth_page/presentation/bloc/auth_cubit/auth_cubit.dart';
+import '../../../../../../features/auth_page/presentation/bloc/auth_cubit/auth_state.dart';
 import '../../../../../../core/language/language_constant.dart';
 import '../../../../../../core/theming/text_styles.dart';
-import '../../../../../../core/language/language.dart';
 import '../../../../../../core/pages_widgets/text_form_field_widget.dart';
 import '../../../../../../core/theming/colors.dart';
-import '../../../../../../core/theming/fonts.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:intl_phone_field/countries.dart';
 
 
 enum UserFieldType {
@@ -20,6 +17,7 @@ enum UserFieldType {
   name,
   password,
   gender,
+  number,
 }
 
 class UserTextFieldWidget extends StatelessWidget {
@@ -123,10 +121,30 @@ class UserTextFieldWidget extends StatelessWidget {
         borderColor: AppColors.darkGreyColor,
         fillColor: AppColors.whiteColor,
         textFormHeight: 35,
+
+        isDigit: type == UserFieldType.number,
+
         validator: (value) {
-          if (value == null || value.isEmpty) {
+          if (value == null || value.trim().isEmpty) {
             return AppLanguageKeys.enterYourData;
           }
+
+          if (type == UserFieldType.email) {
+            final emailRegex = RegExp(
+              r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+            );
+
+            if (!emailRegex.hasMatch(value.trim())) {
+              return "invalid_email";
+            }
+          }
+
+          if (type == UserFieldType.number) {
+            if (!RegExp(r'^\d+$').hasMatch(value.trim())) {
+              return "invalid_number";
+            }
+          }
+
           return null;
         },
       );
@@ -309,11 +327,9 @@ class PhoneTextField extends StatelessWidget {
               ),
             ),
 
-            /// 🔧 ضبط الأيقونات
             flagsButtonPadding: const EdgeInsets.only(left: 6, right: 4),
             dropdownIconPosition: IconPosition.trailing,
 
-            /// 🔧 يمنع التمدد الغريب
             dropdownIcon: const Icon(Icons.arrow_drop_down, size: 18),
 
             onChanged: isReadOnly
