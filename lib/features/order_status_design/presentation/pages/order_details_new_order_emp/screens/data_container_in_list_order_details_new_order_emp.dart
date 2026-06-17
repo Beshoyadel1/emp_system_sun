@@ -22,7 +22,7 @@ class DataContainerInListOrderDetailsNewOrderEmp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    bool isMobile = size.width <= 950;
+    bool isMobile = size.width <= 960;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Column(
