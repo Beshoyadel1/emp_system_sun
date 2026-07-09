@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:emp_system_sun/core/api/dio_function/api_constants.dart';
 import 'package:emp_system_sun/core/language/language_constant.dart';
 import 'package:emp_system_sun/core/pages_widgets/general_widgets/navigate_to_page_widget.dart';
+import 'package:emp_system_sun/core/signalr/signalr_service.dart';
 import 'package:emp_system_sun/features/auth_page/data/datasource/change_password_datasource/change_password_repository.dart';
 import 'package:emp_system_sun/features/auth_page/data/datasource/check_if_user_exist_datasource/check_if_user_exist_repository.dart';
 import 'package:emp_system_sun/features/auth_page/data/datasource/check_if_user_exist_or_not_datasource/check_if_user_exist_or_not_repository.dart';
@@ -49,16 +50,23 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> init() async {
-    print("INIT CALLED");
-
     emit(AuthLoading());
 
     final user = await AuthLocalStorage.getUser();
 
     if (user == null) {
-      print("INIT => AuthUnauthenticated");
       emit(AuthUnauthenticated());
       return;
+    }
+
+    if (!SignalRService.instance.isConnected) {
+      try {
+        await SignalRService.instance.connect(
+          hubUrl: ApiLink.notificationHub,
+        );
+      } catch (e) {
+        print("SignalR Init Error => $e");
+      }
     }
 
     await _checkFacilityCompletion(user);
@@ -172,8 +180,16 @@ class AuthCubit extends Cubit<AuthState> {
     print("LOGIN MESSAGE => ${result.message}");
 
     if (result.success && result.user != null) {
-
       await AuthLocalStorage.saveUser(result.user!);
+
+      // الاتصال بالـ SignalR
+      try {
+        await SignalRService.instance.connect(
+          hubUrl: ApiLink.notificationHub,
+        );
+      } catch (e) {
+        print("SignalR Login Error => $e");
+      }
 
       emit(
         AuthLoginSuccess(
@@ -182,9 +198,7 @@ class AuthCubit extends Cubit<AuthState> {
       );
 
       await _checkFacilityCompletion(result.user!);
-
     } else {
-
       emit(
         AuthLoginError(
           result.message,

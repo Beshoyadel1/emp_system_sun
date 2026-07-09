@@ -33,6 +33,7 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
   final genderController = TextEditingController();
   final ageController = TextEditingController();
   final dateController = TextEditingController();
+  final idController = TextEditingController();
 
   bool isEditMode = false;
   bool isLoaded = false;
@@ -63,7 +64,7 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
       ageController.text = user.age?.toString() ?? "";
       genderController.text = user.gander?.toString() ?? "";
       dateController.text = OrderFunctions.formatDateFromDateTime(user.joinDate);
-
+      idController.text=user.userid.toString();
       setState(() {});
     }
   }
@@ -146,6 +147,13 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
           spacing: 10,
           runSpacing: 10,
           children: [
+            UserTextFieldWidget(
+              controller: idController,
+              text: AppLanguageKeys.identity,
+              type: UserFieldType.name,
+              readOnly:true,
+              width: 250,
+            ),
             UserTextFieldWidget(
               controller: jobNameController,
               text: AppLanguageKeys.jobName,

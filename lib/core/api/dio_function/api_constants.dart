@@ -33,9 +33,21 @@ class ApiConfig {
   static const String serviceProvider = "ServiceProvider";
   static const String workTIme = "WorkTIme";
   static const String branch = "Branch";
+  static const String notification = "Notification";
+
 }
 
 class ApiLink {
+  static const String notificationHub =
+      "${ApiConfig.baseUrlApi}/sunStatusHub";
+  static const String makeNotificationViewed =
+      "${ApiConfig.baseUrlApi}/${ApiConfig.notification}/MakeNotificationViewed";
+
+  static const String getUserNotification =
+      "${ApiConfig.baseUrlApi}/${ApiConfig.notification}/GetUserNotification";
+
+  static const String getUserNewNotification =
+      "${ApiConfig.baseUrlApi}/${ApiConfig.notification}/GetUserNewNotification";
   //User
   static const String loginUser =
       "${ApiConfig.baseUrlApi}/${ApiConfig.user}/LogInUser";

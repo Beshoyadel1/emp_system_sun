@@ -16,8 +16,8 @@ class FlutterMapWidget extends StatelessWidget {
     return FlutterMap(
       mapController: mapController,
       options: MapOptions(
-        initialCenter: centerLocation,
-        initialZoom: 13.0,
+        center: centerLocation,
+        zoom: 13.0,
       ),
       children: [
         TileLayer(
@@ -39,50 +39,53 @@ class FlutterMapWidget extends StatelessWidget {
         MarkerLayer(
           markers: [
             Marker(
+              builder: (context) =>
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.deepOrange.withOpacity(0.2),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      Container(
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color: Colors.deepOrange.withOpacity(0.3),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      Container(
+                        width: 18,
+                        height: 18,
+                        decoration: const BoxDecoration(
+                          color: AppColors.orangeColor,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ],
+                  ),
               width: 60.0,
               height: 60.0,
               point: centerLocation,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: Colors.deepOrange.withOpacity(0.2),
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      color: Colors.deepOrange.withOpacity(0.3),
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  Container(
-                    width: 18,
-                    height: 18,
-                    decoration: const BoxDecoration(
-                      color: AppColors.orangeColor,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ],
-              ),
+
             ),
             Marker(
+              builder: (context) =>
+                  Image.asset(
+                    AppImageKeys.carLocation,
+                    width: 32,
+                    height: 19,
+                  ),
               width: 40.0,
               height: 40.0,
               point: LatLng(
                 centerLocation.latitude - 0.0064,
                 centerLocation.longitude,
-              ),
-              child: Image.asset(
-                AppImageKeys.carLocation,
-                width: 32,
-                height: 19,
               ),
             ),
           ],

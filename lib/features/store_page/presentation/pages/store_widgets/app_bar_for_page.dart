@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/features/notifications/presentation/pages/notification_popup/notification_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../main.dart';
@@ -117,11 +118,7 @@ class _AppBarForPageState extends State<AppBarForPage> {
                 ),
               ),
 
-              const Icon(
-                Icons.notifications,
-                size: 40,
-                color: AppColors.blackColor,
-              ),
+              const NotificationPopup(),
 
               const SizedBox(width: 10),
 

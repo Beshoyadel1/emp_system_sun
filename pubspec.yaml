@@ -61,6 +61,7 @@ dependencies:
   flutter_image_compress: ^2.4.0
   image: ^4.8.0
   crypto: ^3.0.7
+  signalr_core:
 
 
 

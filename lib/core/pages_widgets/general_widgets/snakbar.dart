@@ -40,4 +40,42 @@ class AppSnackBar {
       ),
     );
   }
+
+  static void showNotification({
+    required String title,
+    required String description,
+  }) {
+    scaffoldKey.currentState?.hideCurrentSnackBar();
+
+    scaffoldKey.currentState?.showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: AppColors.greenColor,
+        duration: const Duration(seconds: 4),
+        margin: const EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextInAppWidget(
+              text: title,
+              textSize: 16,
+              textColor: AppColors.whiteColor,
+              fontWeightIndex: FontSelectionData.boldFontFamily,
+            ),
+            const SizedBox(height: 4),
+            TextInAppWidget(
+              text: description,
+              textSize: 14,
+              textColor: AppColors.whiteColor,
+              fontWeightIndex: FontSelectionData.regularFontFamily,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
