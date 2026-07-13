@@ -31,6 +31,7 @@ class AppLocalizations {
       //END//
 
       //others//
+      AppLanguageKeys.youHaveOrderUpdate: 'لديك تحديث على الطلب.',
       AppLanguageKeys.viewMore: 'عرض المزيد',
       AppLanguageKeys.searchTheMap: 'البحث في الخريطة',
       AppLanguageKeys.branchNationalAddress: 'العنوان الوطني للفرع',
@@ -1319,6 +1320,7 @@ class AppLocalizations {
       AppLanguageKeys.cancelledByUser: 'Cancelled by User',
       //END//
       //others//
+      AppLanguageKeys.youHaveOrderUpdate: 'You have an order update.',
       AppLanguageKeys.viewMore: 'View More',
       AppLanguageKeys.searchTheMap: 'Search the Map',
       AppLanguageKeys.branchNationalAddress: 'Branch National Address',

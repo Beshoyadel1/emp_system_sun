@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import '../../../../../../features/notifications/data/datasource/signalr_datasource/signalr_connection/signalr_connection.dart';
 import '../../../../../../features/notifications/data/datasource/signalr_datasource/signalr_event_register/signalr_event_register.dart';
@@ -56,7 +58,12 @@ class SignalRService {
         .handle(args);
   }
 
-  void _handleUpdateOrderStatus(List<Object?>? args) {}
+
+  Future<void> _handleUpdateOrderStatus(List<Object?>? args) {
+    return NotificationModule.instance
+        .updateOrderStatusHandler
+        .handle(args);
+  }
 
   void _handleNewServiceRequest(List<Object?>? args) {}
 
