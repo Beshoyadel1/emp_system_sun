@@ -31,6 +31,7 @@ class AppLocalizations {
       //END//
 
       //others//
+      AppLanguageKeys.viewMore: 'عرض المزيد',
       AppLanguageKeys.searchTheMap: 'البحث في الخريطة',
       AppLanguageKeys.branchNationalAddress: 'العنوان الوطني للفرع',
       AppLanguageKeys.jobLatinName: 'اسم الوظيفة بالإنجليزية',
@@ -1318,6 +1319,7 @@ class AppLocalizations {
       AppLanguageKeys.cancelledByUser: 'Cancelled by User',
       //END//
       //others//
+      AppLanguageKeys.viewMore: 'View More',
       AppLanguageKeys.searchTheMap: 'Search the Map',
       AppLanguageKeys.branchNationalAddress: 'Branch National Address',
       AppLanguageKeys.jobLatinName: 'Job Name (EN)',

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../../core/language/language_constant.dart';
+import '../../../../../../core/theming/fonts.dart';
 import '../../../../../../core/theming/colors.dart';
 import '../../../../../../core/theming/text_styles.dart';
 import '../../../../../../features/internal_services/presentation/pages/internal_orders/custom_widget/text_empty_view_data.dart';
@@ -37,13 +39,30 @@ class NotificationListWidget extends StatelessWidget {
           return const TextEmptyViewData();
         }
 
-        final notifications = cubit.notifications;
+        final notifications = cubit.visibleNotifications;
 
         return ListView.separated(
           padding: const EdgeInsets.all(15),
-          itemCount: notifications.length,
+          itemCount: notifications.length + (cubit.hasMore ? 1 : 0),
           separatorBuilder: (_, __) => const Divider(),
           itemBuilder: (_, index) {
+            if (index == notifications.length) {
+              return Center(
+                child: InkWell(
+                  onTap: cubit.loadMore,
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: TextInAppWidget(
+                      text: AppLanguageKeys.viewMore,
+                      textSize: 14,
+                      textColor: AppColors.greyColor,
+                      fontWeightIndex: FontSelectionData.regularFontFamily,
+                    ),
+                  ),
+                ),
+              );
+            }
+
             return NotificationItem(
               notification: notifications[index],
             );

@@ -331,6 +331,42 @@ class ApiLink {
       "${ApiConfig.baseUrlApi}/${ApiConfig.coupon}/UploadCoupon";
 }
 
+class NotificationTopic {
+  static const String customer = "customer";
+
+  static const String company = "company";
+
+  static const String driver = "driver";
+
+  static const String provider = "provider";
+
+  static const String employee = "employee";
+
+  static const String admin = "admin";
+}
+
+class NotificationTypes {
+  static const String chat = "chat";
+  static const String newOrder = "new_order";
+  static const String updateOrderStatus = "update_order_status";
+  static const String cancelOrder = "cancel_order";
+  static const String newServiceRequest = "new_service_request";
+  static const String newServiceOffer = "new_service_offer";
+  static const String acceptServiceOffer = "accept_service_offer";
+  static const String transferCarOwnership = "transfer_ownership";
+}
+
+class SignalRTypes {
+  static const String newOrder = "NewOrder";
+  static const String updateOrderStatus = "UpdateOrderStatus";
+  static const String newServiceRequest = "NewServiceRequest";
+  static const String newServiceOffer = "NewServiceOffer";
+  static const String receiveMessage = "ReceiveMessage";
+  static const String receiveNotification = "ReceiveNotification";
+  static const String openCloseChat = "OpenCloseChat";
+  static const String transferCarOwnership = "TransferCarOwnership";
+}
+
 class OrderStatus {
   static const int newOrderForCompany = -2;
   static const int rejectedByCompany = -1;

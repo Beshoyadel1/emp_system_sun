@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:emp_system_sun/core/audio_service/audio_service.dart';
 import 'package:emp_system_sun/features/auth_page/presentation/auth_gate.dart';
 import 'package:emp_system_sun/features/auth_page/presentation/bloc/auth_cubit/auth_cubit.dart';
 import 'package:emp_system_sun/features/notifications/presentation/bloc/notification_cubit/notification_cubit.dart';
@@ -14,7 +15,7 @@ import '../../../core/setup_git_it.dart';
 
 final GlobalKey<ScaffoldState> scaffoldKeyDrawer = GlobalKey<ScaffoldState>();
 final GlobalKey<ScaffoldMessengerState> scaffoldKey = GlobalKey<ScaffoldMessengerState>();
-
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() {
   setupGetIt();
   runApp(
@@ -27,7 +28,6 @@ void main() {
           create: (_) =>
           getIt<LanguageCubit>()..getLanguageFromSharedPreference(),
         ),
-
         BlocProvider<AuthCubit>(
           create: (_) => AuthCubit()..init(),
         ),
@@ -37,23 +37,34 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void reassemble() {
+    super.reassemble();
+
+    AudioService.instance.stopNotificationSound();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   final width = MediaQuery.of(context).size.width;
-    //   print("📱 Screen width = $width");
-    // });
+    final width = MediaQuery.of(context).size.width;
+    print("📱 Screen width = $width");
+
     return BlocProvider(
       create: (BuildContext context) => getIt<AppCubit>(),
       child: BlocBuilder<LanguageCubit, LanguageStates>(
-        buildWhen: (previous, current) {
-          return current is ChangeAllAppLanguageState;
-        },
+        buildWhen: (previous, current) =>
+        current is ChangeAllAppLanguageState,
         builder: (BuildContext context, state) {
           return MaterialApp(
+            navigatorKey: navigatorKey,
             scaffoldMessengerKey: scaffoldKey,
             supportedLocales: supportedLocales,
             locale: LanguageCubit.get(context).selectedLanguage,
@@ -63,19 +74,7 @@ class MyApp extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            scrollBehavior: const MaterialScrollBehavior().copyWith(
-              dragDevices: {
-                PointerDeviceKind.mouse,
-                PointerDeviceKind.touch,
-                PointerDeviceKind.stylus,
-                PointerDeviceKind.unknown
-              },
-            ),
-            title: 'San Employee System',
-            theme: ThemeData(
-              scaffoldBackgroundColor: AppColors.lightWhiteColor,
-              useMaterial3: true,
-            ),
+            title: 'San Admin System',
             debugShowCheckedModeBanner: false,
             home: const AuthGate(),
           );

@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:emp_system_sun/core/api/dio_function/api_constants.dart';
 import 'package:emp_system_sun/core/language/language_constant.dart';
 import 'package:emp_system_sun/core/pages_widgets/general_widgets/navigate_to_page_widget.dart';
-import 'package:emp_system_sun/core/signalr/signalr_service.dart';
 import 'package:emp_system_sun/features/auth_page/data/datasource/change_password_datasource/change_password_repository.dart';
 import 'package:emp_system_sun/features/auth_page/data/datasource/check_if_user_exist_datasource/check_if_user_exist_repository.dart';
 import 'package:emp_system_sun/features/auth_page/data/datasource/check_if_user_exist_or_not_datasource/check_if_user_exist_or_not_repository.dart';
@@ -18,6 +17,7 @@ import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/c
 import 'package:emp_system_sun/features/auth_page/data/request/login_request/login_request.dart';
 import 'package:emp_system_sun/features/auth_page/domain/validate/facility_validator.dart';
 import 'package:emp_system_sun/features/auth_page/presentation/pages/change_password/change_password_page.dart';
+import 'package:emp_system_sun/features/notifications/data/datasource/signalr_datasource/signalr_service/signalr_service.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/branch_cubit/branch_cubit.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/work_time_cubit/work_time_cubit.dart';
 import 'package:flutter/cupertino.dart';
@@ -60,13 +60,9 @@ class AuthCubit extends Cubit<AuthState> {
     }
 
     if (!SignalRService.instance.isConnected) {
-      try {
-        await SignalRService.instance.connect(
-          hubUrl: ApiLink.notificationHub,
-        );
-      } catch (e) {
-        print("SignalR Init Error => $e");
-      }
+      await SignalRService.instance.connect(
+        hubUrl: ApiLink.notificationHub,
+      );
     }
 
     await _checkFacilityCompletion(user);
@@ -183,12 +179,10 @@ class AuthCubit extends Cubit<AuthState> {
       await AuthLocalStorage.saveUser(result.user!);
 
       // الاتصال بالـ SignalR
-      try {
+      if (!SignalRService.instance.isConnected) {
         await SignalRService.instance.connect(
           hubUrl: ApiLink.notificationHub,
         );
-      } catch (e) {
-        print("SignalR Login Error => $e");
       }
 
       emit(

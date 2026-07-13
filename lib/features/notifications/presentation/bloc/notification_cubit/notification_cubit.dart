@@ -68,6 +68,8 @@ class NotificationCubit extends Cubit<NotificationState> {
             (a, b) => b.date!.compareTo(a.date!),
       );
 
+      resetVisibleCount();
+
       if (isClosed) return;
 
       safeEmit(NotificationSuccess(notifications));
@@ -131,5 +133,28 @@ class NotificationCubit extends Cubit<NotificationState> {
       if (isClosed) return;
       safeEmit(NotificationError(e.toString()));
     }
+  }
+
+  int visibleCount = 10;
+
+  List<NotificationModel> get visibleNotifications =>
+      notifications.take(visibleCount).toList();
+
+  bool get hasMore => visibleCount < notifications.length;
+
+  void loadMore() {
+    if (!hasMore) return;
+
+    visibleCount += 10;
+
+    if (visibleCount > notifications.length) {
+      visibleCount = notifications.length;
+    }
+
+    safeEmit(NotificationSuccess(notifications));
+  }
+
+  void resetVisibleCount() {
+    visibleCount = 10;
   }
 }

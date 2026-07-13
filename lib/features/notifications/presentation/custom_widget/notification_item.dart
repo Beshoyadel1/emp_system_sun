@@ -74,6 +74,7 @@ class NotificationItem extends StatelessWidget{
                 shape: BoxShape.circle,
               ),
             ),
+          
         ],
       ),
     );
