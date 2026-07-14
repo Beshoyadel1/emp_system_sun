@@ -1,3 +1,5 @@
+import '../../../../../../features/notifications/data/datasource/parsers/receive_message_parser/receive_message_parser.dart';
+import '../../../../../../features/notifications/presentation/handlers/receive_message_handler/receive_message_handler.dart';
 import '../../../../../../features/notifications/data/datasource/parsers/update_order_status_parser/update_order_status_parser.dart';
 import '../../../../../../features/notifications/presentation/handlers/update_order_status_handler/update_order_status_handler.dart';
 import '../../../../../../features/notifications/data/datasource/parsers/new_order_parser/new_order_parser.dart';
@@ -50,6 +52,16 @@ class NotificationModule {
   late final updateOrderStatusHandler =
   UpdateOrderStatusHandler(
     parser: updateOrderStatusParser,
+    dialogService: dialogService,
+    navigationService: navigationService,
+  );
+
+  late final receiveMessageParser =
+  ReceiveMessageParser();
+
+  late final receiveMessageHandler =
+  ReceiveMessageHandler(
+    parser: receiveMessageParser,
     dialogService: dialogService,
     navigationService: navigationService,
   );

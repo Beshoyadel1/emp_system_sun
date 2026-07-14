@@ -15,4 +15,13 @@ class NotificationNavigationService {
       PagesOfAllApp.dashboardPageNumber,
     );
   }
+  void openChat() {
+    final context = navigatorKey.currentContext;
+
+    if (context == null) return;
+
+    AppCubit.get(context).navigateToPage(
+      PagesOfAllApp.technicalSupportPageNumber,
+    );
+  }
 }
