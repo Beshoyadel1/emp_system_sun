@@ -17,6 +17,15 @@ class NotificationCubit extends Cubit<NotificationState> {
   int get unreadCount =>
       notifications.where((e) => e.isViewed == false).length;
 
+  int _pageNumber = 1;
+  final int _pageSize = 10;
+
+  bool hasMore = true;
+  bool isLoadingMore = false;
+
+  int totalCount = 0;
+  int pageCount = 0;
+
   void safeEmit(NotificationState state) {
     if (!isClosed) {
       emit(state);
@@ -36,45 +45,49 @@ class NotificationCubit extends Cubit<NotificationState> {
         return;
       }
 
-      /// إشعارات المستخدم
-      final userNotifications = await getUserNotificationFunction(
+      _pageNumber = 1;
+
+      final userResponse = await getUserNotificationFunction(
         request: GetUserNewNotificationRequest(
           userId: user.userid ?? 0,
           userType: user.type ?? 0,
+          pageNumber: _pageNumber,
+          pageSize: _pageSize,
         ),
       );
 
-      /// إشعارات عامة لنفس النوع (userId = 0)
-      final globalNotifications = await getUserNotificationFunction(
+      final globalResponse = await getUserNotificationFunction(
         request: GetUserNewNotificationRequest(
           userId: 0,
           userType: user.type ?? 0,
+          pageNumber: _pageNumber,
+          pageSize: _pageSize,
         ),
       );
 
-      /// دمج القائمتين
       notifications = [
-        ...userNotifications,
-        ...globalNotifications,
+        ...userResponse.data,
+        ...globalResponse.data,
       ];
 
-      /// إزالة التكرار حسب الـ ID
       notifications = {
         for (final item in notifications) item.id!: item,
       }.values.toList();
 
-      /// الأحدث أولاً
       notifications.sort(
             (a, b) => b.date!.compareTo(a.date!),
       );
 
-      resetVisibleCount();
+      totalCount = userResponse.totalCount + globalResponse.totalCount;
 
-      if (isClosed) return;
+      pageCount = userResponse.pageCount > globalResponse.pageCount
+          ? userResponse.pageCount
+          : globalResponse.pageCount;
+
+      hasMore = _pageNumber < pageCount;
 
       safeEmit(NotificationSuccess(notifications));
     } catch (e) {
-      if (isClosed) return;
       safeEmit(NotificationError(e.toString()));
     }
   }
@@ -135,26 +148,53 @@ class NotificationCubit extends Cubit<NotificationState> {
     }
   }
 
-  int visibleCount = 10;
+  Future<void> loadMore() async {
+    if (!hasMore || isLoadingMore) return;
 
-  List<NotificationModel> get visibleNotifications =>
-      notifications.take(visibleCount).toList();
+    isLoadingMore = true;
 
-  bool get hasMore => visibleCount < notifications.length;
+    try {
+      final user = await AuthLocalStorage.getUser();
 
-  void loadMore() {
-    if (!hasMore) return;
+      if (user == null) return;
 
-    visibleCount += 10;
+      _pageNumber++;
 
-    if (visibleCount > notifications.length) {
-      visibleCount = notifications.length;
+      final userResponse = await getUserNotificationFunction(
+        request: GetUserNewNotificationRequest(
+          userId: user.userid ?? 0,
+          userType: user.type ?? 0,
+          pageNumber: _pageNumber,
+          pageSize: _pageSize,
+        ),
+      );
+
+      final globalResponse = await getUserNotificationFunction(
+        request: GetUserNewNotificationRequest(
+          userId: 0,
+          userType: user.type ?? 0,
+          pageNumber: _pageNumber,
+          pageSize: _pageSize,
+        ),
+      );
+
+      notifications.addAll(userResponse.data);
+      notifications.addAll(globalResponse.data);
+
+      notifications = {
+        for (final item in notifications) item.id!: item,
+      }.values.toList();
+
+      notifications.sort(
+            (a, b) => b.date!.compareTo(a.date!),
+      );
+
+      hasMore = _pageNumber < pageCount;
+
+      safeEmit(NotificationSuccess(notifications));
+    } finally {
+      isLoadingMore = false;
     }
-
-    safeEmit(NotificationSuccess(notifications));
   }
 
-  void resetVisibleCount() {
-    visibleCount = 10;
-  }
 }

@@ -39,7 +39,7 @@ class NotificationListWidget extends StatelessWidget {
           return const TextEmptyViewData();
         }
 
-        final notifications = cubit.visibleNotifications;
+        final notifications = cubit.notifications;
 
         return ListView.separated(
           padding: const EdgeInsets.all(15),

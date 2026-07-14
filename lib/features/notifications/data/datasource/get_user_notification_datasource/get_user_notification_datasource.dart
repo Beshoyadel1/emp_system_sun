@@ -5,7 +5,7 @@ import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';
 import '../../../../../core/api/dio_function/failures.dart';
 
-Future<List<NotificationModel>> getUserNotificationFunction({
+Future<GetUserNotificationResponse> getUserNotificationFunction({
   required GetUserNewNotificationRequest request,
 }) async {
   try {
@@ -15,11 +15,7 @@ Future<List<NotificationModel>> getUserNotificationFunction({
       ApiLink.getUserNotification,
     );
 
-    return (response.data as List)
-        .map(
-          (e) => NotificationModel.fromJson(e),
-    )
-        .toList();
+    return GetUserNotificationResponse.fromJson(response.data);
   } catch (e) {
     throw Exception(
       e is DioException
