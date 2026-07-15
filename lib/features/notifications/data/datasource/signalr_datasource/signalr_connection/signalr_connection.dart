@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:signalr_core/signalr_core.dart';
+import '../../../../../../core/api/dio_function/api_constants.dart';
 
 class SignalRConnection {
   SignalRConnection._();
@@ -14,6 +15,9 @@ class SignalRConnection {
   String? _hubUrl;
   VoidCallback? _onReconnect;
   Future<void> Function(dynamic error)? _onClose;
+
+  // Track whether the user manually called disconnect()
+  bool _isExplicitDisconnect = false;
 
   HubConnection? get hub => _hubConnection;
 
@@ -31,6 +35,7 @@ class SignalRConnection {
     _hubUrl = hubUrl;
     _onReconnect = onReconnect;
     _onClose = onClose;
+    _isExplicitDisconnect = false; // Reset flag on a new manual connection attempt
 
     if (isConnected) {
       debugPrint("✅ SignalR Already Connected");
@@ -68,27 +73,29 @@ class SignalRConnection {
 
       _hubConnection!.onreconnecting((error) {
         connectionState.value = HubConnectionState.reconnecting;
-
         debugPrint("🟡 SignalR Reconnecting...");
         debugPrint(error?.toString() ?? "Unknown");
       });
 
       _hubConnection!.onreconnected((connectionId) {
         connectionState.value = HubConnectionState.connected;
-
         debugPrint("🟢 SignalR Reconnected");
         debugPrint("ConnectionId => $connectionId");
-
         _onReconnect?.call();
       });
 
       _hubConnection!.onclose((error) async {
         connectionState.value = HubConnectionState.disconnected;
-
         debugPrint("🔴 SignalR Closed");
         debugPrint(error?.toString());
 
         await _onClose?.call(error);
+
+        // Only trigger manual reconnect if this wasn't an intentional stop() call
+        if (!_isExplicitDisconnect) {
+          debugPrint("🔄 SignalR connection lost permanently. Initiating reconnect loop...");
+          reconnect();
+        }
       });
     }
 
@@ -102,15 +109,12 @@ class SignalRConnection {
         await _hubConnection!.start();
 
         connectionState.value = HubConnectionState.connected;
-
         debugPrint("✅ SignalR Connected");
         debugPrint("ConnectionId => ${_hubConnection!.connectionId}");
-
         _onReconnect?.call();
       }
     } catch (e, s) {
       connectionState.value = HubConnectionState.disconnected;
-
       debugPrint("❌ SignalR Connect Error => $e");
       debugPrintStack(stackTrace: s);
 
@@ -119,41 +123,80 @@ class SignalRConnection {
       } catch (_) {}
 
       _hubConnection = null;
-
       rethrow;
     }
   }
 
+  /// Attempts to re-establish the connection.
+  /// If variables are missing, it falls back to a default hub URL.
   Future<void> reconnect() async {
-    if (_hubUrl == null ||
-        _onReconnect == null ||
-        _onClose == null) {
-      return;
+    final targetUrl = _hubUrl ?? ApiLink.notificationHub;
+    final targetOnReconnect = _onReconnect ?? () => debugPrint("🟢 Reconnected Fallback");
+    final targetOnClose = _onClose ?? (err) async => debugPrint("🔴 Closed Fallback: $err");
+
+    // Clean up the previous connection safely, but make sure it doesn't wipe our callbacks
+    // before we pass them to the new connect() call.
+    await _softDisconnect();
+
+    try {
+      await connect(
+        hubUrl: targetUrl,
+        onReconnect: targetOnReconnect,
+        onClose: targetOnClose,
+      );
+    } catch (e) {
+      debugPrint("❌ Reconnection attempt failed: $e. Retrying in 10 seconds...");
+      // Wait before trying again to prevent CPU spiking in case the server is completely down
+      await Future.delayed(const Duration(seconds: 10));
+      if (!_isExplicitDisconnect) {
+        reconnect();
+      }
     }
-
-    await disconnect();
-
-    await connect(
-      hubUrl: _hubUrl!,
-      onReconnect: _onReconnect!,
-      onClose: _onClose!,
-    );
   }
 
+  /// Internal helper to tear down the connection state without clearing
+  /// critical reconnection variables like [_hubUrl], [_onReconnect], and [_onClose].
+  Future<void> _softDisconnect() async {
+    if (_hubConnection == null) return;
+
+    try {
+      debugPrint("🛑 Soft Disconnecting current hub instance...");
+      await _hubConnection!
+          .stop()
+          .timeout(const Duration(seconds: 3));
+    } catch (e) {
+      debugPrint("❌ Soft Disconnect Error => $e");
+    } finally {
+      connectionState.value = HubConnectionState.disconnected;
+      _hubConnection = null;
+    }
+  }
+
+  /// Explicitly stop and teardown the signalR connection.
+  /// Will NOT trigger automatic reconnection loops.
   Future<void> disconnect() async {
+    _isExplicitDisconnect = true;
     if (_hubConnection == null) {
       return;
     }
 
     try {
-      debugPrint("🛑 Disconnecting SignalR...");
+      debugPrint("🛑 Disconnect Start");
+      debugPrint("State => ${_hubConnection!.state}");
 
-      await _hubConnection!.stop();
+      await _hubConnection!
+          .stop()
+          .timeout(const Duration(seconds: 3));
+
+      debugPrint("✅ Disconnect Finished");
     } catch (e) {
-      debugPrint("Disconnect Error => $e");
+      debugPrint("❌ Disconnect Error => $e");
     } finally {
       connectionState.value = HubConnectionState.disconnected;
       _hubConnection = null;
+      _hubUrl = null;
+      _onReconnect = null;
+      _onClose = null;
     }
   }
 }

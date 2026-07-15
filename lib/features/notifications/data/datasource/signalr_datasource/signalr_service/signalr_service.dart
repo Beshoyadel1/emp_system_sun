@@ -25,21 +25,13 @@ class SignalRService {
   }) async {
     await SignalRConnection.instance.connect(
       hubUrl: hubUrl,
-
-      onReconnect: () {
-        _registerEvents();
-      },
-
+      onReconnect: _registerEvents,
       onClose: (error) async {},
     );
-
-    _registerEvents();
   }
 
   Future<void> reconnect() async {
     await SignalRConnection.instance.reconnect();
-
-    _registerEvents();
   }
 
   Future<void> disconnect() async {

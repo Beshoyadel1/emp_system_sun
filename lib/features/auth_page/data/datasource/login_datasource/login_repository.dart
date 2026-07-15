@@ -1,24 +1,20 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/create_user_request.dart';
-import 'package:emp_system_sun/features/auth_page/data/model/login_model/login_result.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../../../core/language/language_constant.dart';
-import '../../../../../core/api/dio_function/failures.dart';
-import '../../request/login_request/login_request.dart';
+import '../../../../../core/theming/secure_storage.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
-import '../../../../../core/pages_widgets/general_widgets/snakbar.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';
-
+import '../../../../../core/api/dio_function/failures.dart';
+import '../../../../../core/language/language_constant.dart';
+import '../../../../../features/auth_page/data/model/create_user_model/create_user_request.dart';
+import '../../../../../features/auth_page/data/model/login_model/login_result.dart';
+import '../../request/login_request/login_request.dart';
 
 class AuthLocalStorage {
   static const String userKey = "user_data";
-
   static Future<void> saveUser(CreateUserRequest user) async {
     final prefs = await SharedPreferences.getInstance();
     final jsonString = json.encode(user.toJson());
-
-    //print("SAVING USER: $jsonString");
 
     await prefs.setString(userKey, jsonString);
   }
@@ -27,7 +23,7 @@ class AuthLocalStorage {
     final prefs = await SharedPreferences.getInstance();
     final data = prefs.getString(userKey);
 
-   // print("STORED USER: $data");
+    // print("STORED USER: $data");
 
     if (data == null || data.isEmpty) return null;
 
@@ -37,8 +33,6 @@ class AuthLocalStorage {
   static Future<bool> isLoggedIn() async {
     final prefs = await SharedPreferences.getInstance();
     final data = prefs.getString(userKey);
-
-    //print("CHECK RAW DATA: $data");
 
     return data != null && data.isNotEmpty;
   }
@@ -103,6 +97,9 @@ Future<LoginResult> loginFunction({
 
     await AuthLocalStorage.saveUser(
       user,
+    );
+    await SecureStorage.savePassword(
+      loginRequest.password,
     );
 
     return LoginResult(

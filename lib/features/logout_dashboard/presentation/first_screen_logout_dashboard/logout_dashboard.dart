@@ -33,10 +33,7 @@ class LogoutDashboard extends StatelessWidget {
               const FirstPartInLogoutDashboard(),
               LastTwoButtonInLogoutDashboard(
                 onTapConfirm: () async {
-                  Navigator.pop(context);
-
-                  await context.read<AuthCubit>().logout();
-
+                  await context.read<AuthCubit>().logout(context);
                   if (context.mounted) {
                     Navigator.push(
                       context,
