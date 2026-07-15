@@ -19,6 +19,11 @@ class AppLanguageKeys {
   //end//
 
   //others//
+  static const String notificationConnected = 'notificationConnected';
+  static const String notificationReconnecting = 'notificationReconnecting';
+  static const String notificationConnecting = 'notificationConnecting';
+  static const String notificationDisconnectedTapToReconnect =
+      'notificationDisconnectedTapToReconnect';
   static const String youHaveOrderUpdate = 'youHaveOrderUpdate';
   static const String viewMore = 'viewMore';
   static const String searchTheMap = 'searchTheMap';

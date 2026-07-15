@@ -25,21 +25,40 @@ class SignalRService {
   }) async {
     await SignalRConnection.instance.connect(
       hubUrl: hubUrl,
-      onReconnect: () {},
+
+      onReconnect: () {
+        _registerEvents();
+      },
+
       onClose: (error) async {},
     );
 
-    _events.register(
-      SignalRConnection.instance.hub!,
-    );
+    _registerEvents();
+  }
+
+  Future<void> reconnect() async {
+    await SignalRConnection.instance.reconnect();
+
+    _registerEvents();
   }
 
   Future<void> disconnect() async {
     await SignalRConnection.instance.disconnect();
   }
 
+  void _registerEvents() {
+    final hub = SignalRConnection.instance.hub;
+
+    if (hub == null) {
+      return;
+    }
+
+    _events.register(hub);
+  }
+
   Future<void> _handleReceiveNotification(
-      List<Object?>? args) {
+      List<Object?>? args,
+      ) {
     return NotificationModule.instance
         .receiveNotificationHandler
         .handle(args);
@@ -53,24 +72,35 @@ class SignalRService {
         .handle(args);
   }
 
-  Future<void> _handleNewOrder(List<Object?>? args) {
+  Future<void> _handleNewOrder(
+      List<Object?>? args,
+      ) {
     return NotificationModule.instance
         .newOrderHandler
         .handle(args);
   }
 
-
-  Future<void> _handleUpdateOrderStatus(List<Object?>? args) {
+  Future<void> _handleUpdateOrderStatus(
+      List<Object?>? args,
+      ) {
     return NotificationModule.instance
         .updateOrderStatusHandler
         .handle(args);
   }
 
-  void _handleNewServiceRequest(List<Object?>? args) {}
+  void _handleNewServiceRequest(
+      List<Object?>? args,
+      ) {}
 
-  void _handleNewServiceOffer(List<Object?>? args) {}
+  void _handleNewServiceOffer(
+      List<Object?>? args,
+      ) {}
 
-  void _handleTransferCarOwnership(List<Object?>? args) {}
+  void _handleTransferCarOwnership(
+      List<Object?>? args,
+      ) {}
 
-  void _handleOpenCloseChat(List<Object?>? args) {}
+  void _handleOpenCloseChat(
+      List<Object?>? args,
+      ) {}
 }

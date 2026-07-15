@@ -6,9 +6,14 @@ class SignalRConnection {
 
   static final SignalRConnection instance = SignalRConnection._();
 
+  final ValueNotifier<HubConnectionState> connectionState =
+  ValueNotifier(HubConnectionState.disconnected);
+
   HubConnection? _hubConnection;
 
-  bool _isReconnectRunning = false;
+  String? _hubUrl;
+  VoidCallback? _onReconnect;
+  Future<void> Function(dynamic error)? _onClose;
 
   HubConnection? get hub => _hubConnection;
 
@@ -23,6 +28,10 @@ class SignalRConnection {
     required VoidCallback onReconnect,
     required Future<void> Function(dynamic error) onClose,
   }) async {
+    _hubUrl = hubUrl;
+    _onReconnect = onReconnect;
+    _onClose = onClose;
+
     if (isConnected) {
       debugPrint("✅ SignalR Already Connected");
       return;
@@ -33,110 +42,118 @@ class SignalRConnection {
       return;
     }
 
-    await disconnect();
+    if (_hubConnection == null) {
+      _hubConnection = HubConnectionBuilder()
+          .withAutomaticReconnect([
+        10000,
+        15000,
+        20000,
+        30000,
+        60000,
+        180000,
+      ])
+          .withUrl(
+        hubUrl,
+        HttpConnectionOptions(
+          transport: HttpTransportType.longPolling,
+          logging: (level, message) {
+            debugPrint("SIGNALR [$level] => $message");
+          },
+        ),
+      )
+          .build();
 
-    _hubConnection = HubConnectionBuilder()
-        .withAutomaticReconnect([
-      10000,
-      15000,
-      20000,
-      30000,
-      60000,
-      180000,
-    ])
-        .withUrl(
-      hubUrl,
-      HttpConnectionOptions(
-        transport: HttpTransportType.longPolling,
-        logging: (level, message) {
-          debugPrint("SIGNALR => $message");
-        },
-      ),
-    )
-        .build();
+      _hubConnection!.serverTimeoutInMilliseconds = 60000;
+      _hubConnection!.keepAliveIntervalInMilliseconds = 15000;
 
-    _hubConnection!.serverTimeoutInMilliseconds = 60000;
-    _hubConnection!.keepAliveIntervalInMilliseconds = 15000;
+      _hubConnection!.onreconnecting((error) {
+        connectionState.value = HubConnectionState.reconnecting;
 
-    _hubConnection!.onreconnecting((error) {
-      debugPrint("🟡 SignalR Reconnecting...");
-      debugPrint(error.toString());
-    });
+        debugPrint("🟡 SignalR Reconnecting...");
+        debugPrint(error?.toString() ?? "Unknown");
+      });
 
-    _hubConnection!.onreconnected((connectionId) {
-      debugPrint("🟢 SignalR Reconnected");
-      debugPrint("ConnectionId => $connectionId");
+      _hubConnection!.onreconnected((connectionId) {
+        connectionState.value = HubConnectionState.connected;
 
-      _isReconnectRunning = false;
+        debugPrint("🟢 SignalR Reconnected");
+        debugPrint("ConnectionId => $connectionId");
 
-      onReconnect();
-    });
+        _onReconnect?.call();
+      });
 
-    _hubConnection!.onclose((error) async {
-      debugPrint("🔴 SignalR Closed => $error");
-      debugPrint("State => ${_hubConnection?.state}");
+      _hubConnection!.onclose((error) async {
+        connectionState.value = HubConnectionState.disconnected;
 
-      await onClose(error);
+        debugPrint("🔴 SignalR Closed");
+        debugPrint(error?.toString());
 
-      if (_isReconnectRunning) {
-        return;
-      }
+        await _onClose?.call(error);
+      });
+    }
 
-      _isReconnectRunning = true;
-
-      while (!isConnected) {
-        try {
-          debugPrint("🔄 Reconnecting after 5 seconds...");
-
-          await Future.delayed(
-            const Duration(seconds: 5),
-          );
-
-          await connect(
-            hubUrl: hubUrl,
-            onReconnect: onReconnect,
-            onClose: onClose,
-          );
-
-          if (isConnected) {
-            debugPrint("✅ Manual Reconnect Success");
-            break;
-          }
-        } catch (e) {
-          debugPrint("Reconnect failed => $e");
-        }
-      }
-
-      _isReconnectRunning = false;
-    });
+    connectionState.value = HubConnectionState.connecting;
 
     try {
-      debugPrint("Hub URL => $hubUrl");
-      debugPrint("Hub state before start => ${_hubConnection?.state}");
+      if (_hubConnection!.state == HubConnectionState.disconnected) {
+        debugPrint("🚀 Starting SignalR...");
+        debugPrint("Hub URL => $hubUrl");
 
-      await _hubConnection!.start();
+        await _hubConnection!.start();
 
-      debugPrint("✅ SignalR Connected");
-      debugPrint("ConnectionId => ${_hubConnection?.connectionId}");
-      debugPrint("State => ${_hubConnection?.state}");
+        connectionState.value = HubConnectionState.connected;
+
+        debugPrint("✅ SignalR Connected");
+        debugPrint("ConnectionId => ${_hubConnection!.connectionId}");
+
+        _onReconnect?.call();
+      }
     } catch (e, s) {
+      connectionState.value = HubConnectionState.disconnected;
+
       debugPrint("❌ SignalR Connect Error => $e");
       debugPrintStack(stackTrace: s);
+
+      try {
+        await _hubConnection?.stop();
+      } catch (_) {}
+
+      _hubConnection = null;
 
       rethrow;
     }
   }
 
-  Future<void> disconnect() async {
-    try {
-      if (_hubConnection != null) {
-        debugPrint("Disconnecting SignalR...");
-        await _hubConnection!.stop();
-      }
-    } catch (e) {
-      debugPrint("Disconnect Error => $e");
+  Future<void> reconnect() async {
+    if (_hubUrl == null ||
+        _onReconnect == null ||
+        _onClose == null) {
+      return;
     }
 
-    _hubConnection = null;
+    await disconnect();
+
+    await connect(
+      hubUrl: _hubUrl!,
+      onReconnect: _onReconnect!,
+      onClose: _onClose!,
+    );
+  }
+
+  Future<void> disconnect() async {
+    if (_hubConnection == null) {
+      return;
+    }
+
+    try {
+      debugPrint("🛑 Disconnecting SignalR...");
+
+      await _hubConnection!.stop();
+    } catch (e) {
+      debugPrint("Disconnect Error => $e");
+    } finally {
+      connectionState.value = HubConnectionState.disconnected;
+      _hubConnection = null;
+    }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/features/notifications/presentation/pages/signalR_status_bar/signalR_status_bar.dart';
 import 'package:emp_system_sun/features/service_emp_view/presentation/cubit/employee_services_cubit/employee_services_cubit.dart';
 import 'package:emp_system_sun/features/service_emp_view/presentation/cubit/employee_services_cubit/employee_services_state.dart';
 import 'package:emp_system_sun/features/store_page/presentation/pages/store_widgets/app_bar_for_page.dart';
@@ -100,6 +101,7 @@ class _StorePageState extends State<StorePage> {
               )
             ],
           ),
+          bottomNavigationBar: const SignalRStatusBar(),
         ),
       ),
       );
