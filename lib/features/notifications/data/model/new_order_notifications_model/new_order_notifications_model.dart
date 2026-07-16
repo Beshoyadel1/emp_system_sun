@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
-import '../../../../../../features/auth_page/data/datasource/login_datasource/login_repository.dart';
+import '../../../../../../core/theming/auth_local_storage.dart';
 
 class NewOrderNotificationsModel {
   final int? userId;

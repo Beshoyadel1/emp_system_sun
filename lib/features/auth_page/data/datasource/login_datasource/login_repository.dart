@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:emp_system_sun/core/theming/auth_local_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../../../core/theming/secure_storage.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';
 import '../../../../../core/api/dio_function/failures.dart';
@@ -9,39 +9,6 @@ import '../../../../../core/language/language_constant.dart';
 import '../../../../../features/auth_page/data/model/create_user_model/create_user_request.dart';
 import '../../../../../features/auth_page/data/model/login_model/login_result.dart';
 import '../../request/login_request/login_request.dart';
-
-class AuthLocalStorage {
-  static const String userKey = "user_data";
-  static Future<void> saveUser(CreateUserRequest user) async {
-    final prefs = await SharedPreferences.getInstance();
-    final jsonString = json.encode(user.toJson());
-
-    await prefs.setString(userKey, jsonString);
-  }
-
-  static Future<CreateUserRequest?> getUser() async {
-    final prefs = await SharedPreferences.getInstance();
-    final data = prefs.getString(userKey);
-
-    // print("STORED USER: $data");
-
-    if (data == null || data.isEmpty) return null;
-
-    return CreateUserRequest.fromJson(json.decode(data));
-  }
-
-  static Future<bool> isLoggedIn() async {
-    final prefs = await SharedPreferences.getInstance();
-    final data = prefs.getString(userKey);
-
-    return data != null && data.isNotEmpty;
-  }
-
-  static Future<void> clearUser() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(userKey);
-  }
-}
 
 
 Future<LoginResult> loginFunction({
@@ -98,7 +65,7 @@ Future<LoginResult> loginFunction({
     await AuthLocalStorage.saveUser(
       user,
     );
-    await SecureStorage.savePassword(
+    await AuthLocalStorage.savePassword(
       loginRequest.password,
     );
 

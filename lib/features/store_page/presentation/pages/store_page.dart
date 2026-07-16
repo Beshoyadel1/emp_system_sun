@@ -24,6 +24,9 @@ class StorePage extends StatefulWidget {
 }
 
 class _StorePageState extends State<StorePage> {
+  final GlobalKey<ScaffoldState> scaffoldKeyDrawer =
+  GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -91,11 +94,13 @@ class _StorePageState extends State<StorePage> {
                         : const PagesSelectionBar();
                   },
                 ),
-              const Expanded(
+               Expanded(
                 child: Column(
                   children: [
-                    AppBarForPage(),
-                    SelectedScreenWidget(),
+                    AppBarForPage(
+                      scaffoldKey: scaffoldKeyDrawer,
+                    ),
+                   const SelectedScreenWidget(),
                   ],
                 ),
               )

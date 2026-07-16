@@ -3,6 +3,7 @@ import '../../request/get_user_chats_request/get_user_chats_request.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';
 
+
 Future<List<MessageModel>> getUserMessagesFunction({
   required GetUserChatsRequest request,
 }) async {
@@ -13,8 +14,9 @@ Future<List<MessageModel>> getUserMessagesFunction({
       ApiLink.getUserChats,
     );
 
-    final List data =
-        response.data['data'] ?? [];
+    final responseData = response.data;
+
+    final List data = responseData['data'] ?? [];
 
     return data
         .map((e) => MessageModel.fromJson(e))

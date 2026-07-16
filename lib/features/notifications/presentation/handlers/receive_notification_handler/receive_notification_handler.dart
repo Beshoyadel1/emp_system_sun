@@ -1,4 +1,7 @@
 import 'package:flutter/foundation.dart';
+import '../../../../../../core/cubit/app_cubit/app_cubit.dart';
+import '../../../../../../core/utilies/map_of_all_app.dart';
+import '../../../../../../main.dart';
 import '../../../../../../features/notifications/data/datasource/parsers/receive_notification_parser/receive_notification_parser.dart';
 import '../../../../../../features/notifications/domain/repository/notification_repository/notification_repository.dart';
 import '../../../../../../features/notifications/presentation/services/dialog_service/dialog_service.dart';

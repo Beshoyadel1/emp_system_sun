@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:emp_system_sun/features/internal_services/presentation/pages/internal_orders/custom_widget/text_empty_view_data.dart';
-import 'package:emp_system_sun/features/technical_support/presentation/bloc/work_team_cubit/work_team_cubit.dart';
-import 'package:emp_system_sun/features/technical_support/presentation/bloc/work_team_cubit/work_team_state.dart';
-import 'package:emp_system_sun/features/technical_support/presentation/custom_widget/row_member_team_work_widget.dart';
+import '../../../../../../../features/internal_services/presentation/pages/internal_orders/custom_widget/text_empty_view_data.dart';
+import '../../../../../../../features/technical_support/presentation/bloc/work_team_cubit/work_team_cubit.dart';
+import '../../../../../../../features/technical_support/presentation/bloc/work_team_cubit/work_team_state.dart';
+import '../../../../../../../features/technical_support/presentation/custom_widget/row_member_team_work_widget.dart';
 
 class ListTeamWorkViewAdminSun extends StatelessWidget {
   const ListTeamWorkViewAdminSun({super.key});

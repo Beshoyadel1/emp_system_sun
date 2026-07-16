@@ -1,4 +1,4 @@
-import 'package:emp_system_sun/features/technical_support/data/model/get_user_chats_model/message_model.dart';
+import '../../../../../features/technical_support/data/model/get_user_chats_model/message_model.dart';
 
 abstract class MessageState {}
 

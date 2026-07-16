@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:emp_system_sun/features/technical_support/presentation/bloc/chat_details_cubit/chat_details_cubit.dart';
+import '../../../../../../../../../features/technical_support/presentation/bloc/chat_details_cubit/chat_details_cubit.dart';
 import '../../../../../../../../../core/language/language_constant.dart';
 import '../../../../../../../../../core/pages_widgets/text_form_field_widget.dart';
 import '../../../../../../../../../core/theming/colors.dart';

@@ -13,7 +13,8 @@ import '../../../../../core/theming/text_styles.dart';
 import '../../../../../core/utilies/map_of_all_app.dart';
 
 class AppBarForPage extends StatefulWidget {
-  const AppBarForPage({super.key});
+  final GlobalKey<ScaffoldState> scaffoldKey;
+  const AppBarForPage({super.key,required this.scaffoldKey});
 
   @override
   State<AppBarForPage> createState() => _AppBarForPageState();
@@ -57,7 +58,7 @@ class _AppBarForPageState extends State<AppBarForPage> {
         _previousIsMobile == true &&
         isMobile == false) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (scaffoldKeyDrawer.currentState?.isDrawerOpen ?? false) {
+        if (widget.scaffoldKey.currentState?.isDrawerOpen ?? false) {
           Navigator.of(context).pop();
         }
       });

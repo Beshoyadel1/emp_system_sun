@@ -1,4 +1,4 @@
-import 'package:emp_system_sun/features/technical_support/data/model/get_work_team_chat_model/work_team_user_model.dart';
+import '../../../../../features/technical_support/data/model/get_work_team_chat_repository/work_team_user_model.dart';
 
 abstract class WorkTeamState {}
 
@@ -17,3 +17,4 @@ class WorkTeamError extends WorkTeamState {
 
   WorkTeamError(this.message);
 }
+

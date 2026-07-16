@@ -4,7 +4,9 @@ import 'dart:math';
 import 'package:emp_system_sun/core/api/dio_function/api_constants.dart';
 import 'package:emp_system_sun/core/language/language_constant.dart';
 import 'package:emp_system_sun/core/pages_widgets/general_widgets/navigate_to_page_widget.dart';
-import 'package:emp_system_sun/core/theming/secure_storage.dart';
+import 'package:emp_system_sun/core/theming/auth_local_storage.dart';
+import 'package:emp_system_sun/core/theming/auth_local_storage.dart';
+import 'package:emp_system_sun/core/theming/auth_local_storage.dart';
 import 'package:emp_system_sun/features/auth_page/data/datasource/change_password_datasource/change_password_repository.dart';
 import 'package:emp_system_sun/features/auth_page/data/datasource/check_if_user_exist_datasource/check_if_user_exist_repository.dart';
 import 'package:emp_system_sun/features/auth_page/data/datasource/check_if_user_exist_or_not_datasource/check_if_user_exist_or_not_repository.dart';
@@ -54,7 +56,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
 
     final localUser = await AuthLocalStorage.getUser();
-    final password = await SecureStorage.getPassword();
+    final password = await AuthLocalStorage.getPassword();
 
     if (localUser == null || password == null) {
       emit(AuthUnauthenticated());
@@ -71,7 +73,7 @@ class AuthCubit extends Cubit<AuthState> {
 
     if (!result.success || result.user == null) {
       await AuthLocalStorage.clearUser();
-      await SecureStorage.clearPassword();
+      await AuthLocalStorage.clearPassword();
       await SignalRService.instance.disconnect();
 
       emit(AuthUnauthenticated());
@@ -385,7 +387,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
     await AuthLocalStorage.clearUser();
     await SignalRService.instance.disconnect();
-    await SecureStorage.clearPassword();
+    await AuthLocalStorage.clearPassword();
     emit(AuthUnauthenticated());
     if (context.mounted) {
       Navigator.pop(context);

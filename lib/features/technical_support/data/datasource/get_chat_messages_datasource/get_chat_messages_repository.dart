@@ -3,6 +3,7 @@ import '../../request/get_chat_messages_request/get_chat_messages_request.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';
 
+
 Future<List<ChatDetailsModel>> getChatMessagesFunction({
   required GetChatMessagesRequest request,
 }) async {
@@ -13,8 +14,9 @@ Future<List<ChatDetailsModel>> getChatMessagesFunction({
       ApiLink.getChatMessages,
     );
 
-    final List data =
-        response.data['data'] ?? [];
+    final responseData = response.data;
+
+    final List data = responseData['data'] ?? [];
 
     return data
         .map((e) => ChatDetailsModel.fromJson(e))
