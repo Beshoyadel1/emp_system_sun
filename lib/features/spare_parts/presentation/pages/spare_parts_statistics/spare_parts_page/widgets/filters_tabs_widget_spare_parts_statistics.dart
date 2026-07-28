@@ -61,6 +61,7 @@ class _FiltersTabsWidgetSparePartsStatisticsState extends State<FiltersTabsWidge
               isScrollable: true,
               indicator: const BoxDecoration(),
               dividerColor: Colors.transparent,
+              overlayColor: WidgetStateColor.transparent,
               tabs: List.generate(widget.filterOptions.length, (index) {
 
                 final isSelected = selectedIndex == index;

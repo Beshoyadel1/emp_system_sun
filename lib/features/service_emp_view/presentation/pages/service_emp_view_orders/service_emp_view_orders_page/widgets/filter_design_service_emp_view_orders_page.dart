@@ -71,7 +71,6 @@ class FilterDesignServiceEmpViewOrdersPage extends StatelessWidget {
                 totalPages: state.pageCount,
                 onPageChanged: (page) {
                   final selectedTab = context.read<TabsCubit>().state;
-
                   context
                       .read<GetProviderInternalOrderCubit>()
                       .loadInternalOrders(
