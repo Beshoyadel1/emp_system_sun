@@ -58,7 +58,7 @@ class OrdersPage extends StatelessWidget {
                     create: (_) => GetProviderInternalOrderCubit()
                       ..loadInternalOrders(
                         serviceId: MainCategoryConstants.maintenanceAndInternalServicesID,
-                        orderType: mapOrderType(0),
+                       // orderType: mapOrderType(0),
                       ),
                   ),
                 ],

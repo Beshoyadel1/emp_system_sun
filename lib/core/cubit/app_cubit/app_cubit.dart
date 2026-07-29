@@ -25,13 +25,32 @@ class AppCubit extends Cubit<AppStates> {
 
   bool isMenuOpen = true;
 
+  /// Toggle menu on Desktop
+  void toggleMenu() {
+    isMenuOpen = !isMenuOpen;
+    emit(HideMenuState());
+  }
+
+  /// Force show menu
+  void showMenu() {
+    if (isMenuOpen) return;
+
+    isMenuOpen = true;
+    emit(HideMenuState());
+  }
+
+  /// Force hide menu
   void hideMenu() {
+    if (!isMenuOpen) return;
+
+    isMenuOpen = false;
     emit(HideMenuState());
   }
 
   void dropDown() {
     emit(DropDownState());
   }
+
   int selectedPageIndex = 1;
   int selectedPageFromOpenedPagesIndex = -1;
 

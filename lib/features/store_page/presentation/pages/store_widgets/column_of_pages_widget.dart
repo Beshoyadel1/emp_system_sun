@@ -1,3 +1,5 @@
+import 'package:emp_system_sun/core/utilies/map_of_all_app.dart';
+import 'package:emp_system_sun/features/logout_dashboard/presentation/first_screen_logout_dashboard/logout_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../core/general_models/pages_model.dart';
@@ -38,25 +40,66 @@ class ColumnOfPagesWidget extends StatelessWidget {
     } else {
       return InkWell(
           onTap: () async {
+            // ============================
+            // Logout
+            // ============================
+            if (pageNode.number == PagesOfAllApp.logoutPageNumber) {
+              // لو Mobile اقفل الـ Drawer الأول
+              if (isMobile) {
+                Navigator.of(context).pop();
+              }
+
+              // استنى لحد ما الـ Drawer يقفل
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (!context.mounted) return;
+
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (dialogContext) {
+                    return const LogoutDashboard();
+                  },
+                );
+              });
+
+              return;
+            }
+
+            // ============================
+            // Normal Page
+            // ============================
+
             final keyForUpdate =
-                '${appCubit.selectedPageIndex}${appCubit.selectedPageFromOpenedPagesIndex}';
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            List<String>? getData = prefs.getStringList(keyForUpdate);
+                '${appCubit.selectedPageIndex}'
+                '${appCubit.selectedPageFromOpenedPagesIndex}';
+
+            final prefs = await SharedPreferences.getInstance();
+
+            final getData = prefs.getStringList(keyForUpdate);
+
             if (getData != null && appCubit.data.isNotEmpty) {
-              await prefs.setStringList(keyForUpdate,
-                  appCubit.data.map((e) => e.toString()).toList());
+              await prefs.setStringList(
+                keyForUpdate,
+                appCubit.data.map((e) => e.toString()).toList(),
+              );
             } else {
               if (appCubit.data.isNotEmpty) {
-                await addToOpenedPages(context: context, appCubit: appCubit);
+                await addToOpenedPages(
+                  context: context,
+                  appCubit: appCubit,
+                );
               }
             }
 
             appCubit.selectedPageIndex = pageNode.number;
             appCubit.selectedPageFromOpenedPagesIndex = -1;
+
             appCubit.changeSelectedPageIndex();
+
             appCubit.data.clear();
-            if (isMobile) {
-              Navigator.pop(context);
+
+            if (isMobile && context.mounted) {
+              Navigator.of(context).pop();
             }
           },
           child: Container(

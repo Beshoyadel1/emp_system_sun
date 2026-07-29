@@ -6,8 +6,8 @@ import '../../../../../../../../../core/cubit/new_orders_cubit/new_orders_state.
 
 
 class ServiceEmpViewOrdersPage extends StatelessWidget {
-  final int? serviceId;
-  const ServiceEmpViewOrdersPage({super.key,this.serviceId});
+  final int serviceId;
+  const ServiceEmpViewOrdersPage({super.key,required this.serviceId});
 
   @override
   Widget build(BuildContext context) {

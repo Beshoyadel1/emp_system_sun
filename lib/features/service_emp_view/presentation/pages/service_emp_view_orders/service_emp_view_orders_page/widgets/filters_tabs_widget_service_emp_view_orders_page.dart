@@ -10,11 +10,11 @@ import 'package:emp_system_sun/features/cars_haraj_page/data/model/filter_orders
 import 'package:emp_system_sun/features/cars_haraj_page/data/model/internal_orders_filter/internal_orders_filter.dart';
 
 class FiltersTabsWidgetServiceEmpViewOrdersPage extends StatefulWidget {
-  final int? serviceId;
+  final int serviceId;
   const FiltersTabsWidgetServiceEmpViewOrdersPage({
     super.key,
     required this.filterOptions,
-    this.serviceId
+    required this.serviceId
   });
 
   final List<filterOrdersModel> filterOptions;
@@ -42,7 +42,7 @@ class _FiltersTabsWidgetServiceEmpViewOrdersPageState extends State<FiltersTabsW
         context.read<TabsCubit>().changeTab(tabIndex);
 
         context.read<GetProviderInternalOrderCubit>().loadInternalOrders(
-          serviceId: widget.serviceId??MainCategoryConstants.carSparePartsID,
+          serviceId: widget.serviceId,
           orderType: mapOrderType(tabIndex),
           pageNumber: 1,
         );
@@ -97,7 +97,9 @@ class _FiltersTabsWidgetServiceEmpViewOrdersPageState extends State<FiltersTabsW
                 controller: _tabController,
                 children: List.generate(
                   widget.filterOptions.length,
-                      (index) => const FilterDesignServiceEmpViewOrdersPage(),
+                      (index) => FilterDesignServiceEmpViewOrdersPage(
+                        serviceId:widget.serviceId,
+                      ),
                 ),
               ),
             ),

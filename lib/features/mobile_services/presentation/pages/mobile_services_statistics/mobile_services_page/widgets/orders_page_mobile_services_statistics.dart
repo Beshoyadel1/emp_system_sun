@@ -57,7 +57,7 @@ class OrdersPageMobileServicesStatistics extends StatelessWidget {
                       create: (_) => GetProviderInternalOrderCubit()
                         ..loadInternalOrders(
                           serviceId: MainCategoryConstants.mobileServicesAndTransportationID,
-                          orderType: mapOrderType(0),
+                          //orderType: mapOrderType(0),
                         ),
                     ),
                   ],

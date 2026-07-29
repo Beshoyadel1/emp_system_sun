@@ -14,7 +14,11 @@ import '../../../../../core/utilies/map_of_all_app.dart';
 
 class AppBarForPage extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
-  const AppBarForPage({super.key,required this.scaffoldKey});
+
+  const AppBarForPage({
+    super.key,
+    required this.scaffoldKey,
+  });
 
   @override
   State<AppBarForPage> createState() => _AppBarForPageState();
@@ -23,8 +27,11 @@ class AppBarForPage extends StatefulWidget {
 class _AppBarForPageState extends State<AppBarForPage> {
   final AppCubit _appCubit = getIt<AppCubit>();
 
+  bool? _previousIsMobile;
+
   String _getPageTitle() {
     final selectedIndex = _appCubit.selectedPageIndex;
+
     // Search main pages
     final page = appPages
         .where((e) => e.number == selectedIndex)
@@ -47,24 +54,40 @@ class _AppBarForPageState extends State<AppBarForPage> {
 
     return 'Page Not Found';
   }
-  bool? _previousIsMobile;
 
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final isMobile = size.width <= ValuesOfAllApp.mobileWidth;
+  void _handleResponsiveMenu(bool isMobile) {
+    if (_previousIsMobile == null) {
+      _previousIsMobile = isMobile;
+      return;
+    }
 
-    if (_previousIsMobile != null &&
-        _previousIsMobile == true &&
-        isMobile == false) {
+    final wasMobile = _previousIsMobile!;
+
+    // Mobile -> Desktop
+    if (wasMobile && !isMobile) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+
+        // Close mobile drawer
         if (widget.scaffoldKey.currentState?.isDrawerOpen ?? false) {
-          Navigator.of(context).pop();
+          widget.scaffoldKey.currentState?.closeDrawer();
         }
+
+        // Show desktop menu
+        _appCubit.showMenu();
       });
     }
 
     _previousIsMobile = isMobile;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+
+    final isMobile = width <= ValuesOfAllApp.mobileWidth;
+
+    _handleResponsiveMenu(isMobile);
 
     return BlocBuilder<AppCubit, AppStates>(
       bloc: _appCubit,
@@ -88,7 +111,9 @@ class _AppBarForPageState extends State<AppBarForPage> {
           child: Row(
             children: [
               ButtonWidget(
-                iconData: _appCubit.isMenuOpen
+                iconData: isMobile
+                    ? Icons.menu_outlined
+                    : _appCubit.isMenuOpen
                     ? Icons.menu_outlined
                     : Icons.menu_open,
                 iconColor: AppColors.darkColor,
@@ -97,13 +122,14 @@ class _AppBarForPageState extends State<AppBarForPage> {
                 borderRadius: 7,
                 onTap: () {
                   if (isMobile) {
-                    scaffoldKeyDrawer.currentState?.openDrawer();
-                  } else {
-                    _appCubit.isMenuOpen = !_appCubit.isMenuOpen;
-                    _appCubit.dropDown();
+                    widget.scaffoldKey.currentState?.openDrawer();
+                    return;
                   }
+
+                  _appCubit.toggleMenu();
                 },
               ),
+
               Expanded(
                 child: Container(
                   height: 60,

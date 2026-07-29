@@ -14,8 +14,8 @@ import 'package:emp_system_sun/features/cars_haraj_page/data/model/internal_orde
 import '../../../../../../../features/spare_parts/presentation/pages/spare_parts_statistics/spare_parts_page/widgets/filters_tabs_widget_spare_parts_statistics.dart';
 
 class OrdersPageSparePartsStatistics extends StatelessWidget {
-  final int? serviceId;
-  const OrdersPageSparePartsStatistics({super.key, required this.cubit,this.serviceId});
+  final int serviceId;
+  const OrdersPageSparePartsStatistics({super.key, required this.cubit,required this.serviceId});
 
   final NewOrdersCubit cubit;
 
@@ -58,8 +58,8 @@ class OrdersPageSparePartsStatistics extends StatelessWidget {
                     BlocProvider(
                       create: (_) => GetProviderInternalOrderCubit()
                         ..loadInternalOrders(
-                          serviceId: MainCategoryConstants.carSparePartsID,
-                          orderType: mapOrderType(0),
+                          serviceId: serviceId,
+                          //orderType: mapOrderType(0),
                         ),
                     ),
                   ],

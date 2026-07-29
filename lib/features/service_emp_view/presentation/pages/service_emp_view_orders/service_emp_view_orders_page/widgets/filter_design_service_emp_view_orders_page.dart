@@ -13,7 +13,8 @@ import '../../../../../../../../core/theming/assets.dart';
 import '../../../../../../../../core/language/language_constant.dart';
 
 class FilterDesignServiceEmpViewOrdersPage extends StatelessWidget {
-  const FilterDesignServiceEmpViewOrdersPage({super.key});
+  final int serviceId;
+  const FilterDesignServiceEmpViewOrdersPage({super.key,required this.serviceId});
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +75,7 @@ class FilterDesignServiceEmpViewOrdersPage extends StatelessWidget {
                   context
                       .read<GetProviderInternalOrderCubit>()
                       .loadInternalOrders(
-                        serviceId: MainCategoryConstants.carSparePartsID,
+                        serviceId:serviceId,
                         pageNumber: page,
                         orderType: mapOrderType(selectedTab),
                       );

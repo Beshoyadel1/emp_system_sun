@@ -239,6 +239,7 @@ void getPages(BuildContext context) {
             name: service.getName(context) ?? '',
             number: service.id ?? 0 +100,
             page: ServiceEmpViewOrdersPage(
+              key: ValueKey('order${service.id}'),
               serviceId: service.id ?? 0,
             ),
           );

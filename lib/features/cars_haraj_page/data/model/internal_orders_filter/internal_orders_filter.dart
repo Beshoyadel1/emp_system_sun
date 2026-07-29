@@ -42,7 +42,7 @@ class InternalOrdersFilter {
     }
   }
 }
-int mapOrderType(int tab) {
+int? mapOrderType(int tab) {
   switch (tab) {
     case OrdersTabs.newOrders:
       return 1;
@@ -55,6 +55,6 @@ int mapOrderType(int tab) {
 
     case OrdersTabs.all:
     default:
-      return 0;
+      return null;
   }
 }

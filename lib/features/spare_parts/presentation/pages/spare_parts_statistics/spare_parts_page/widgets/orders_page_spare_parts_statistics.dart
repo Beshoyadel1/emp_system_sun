@@ -57,7 +57,7 @@ class OrdersPageSparePartsStatistics extends StatelessWidget {
                       create: (_) => GetProviderInternalOrderCubit()
                         ..loadInternalOrders(
                           serviceId: MainCategoryConstants.carSparePartsID,
-                          orderType: mapOrderType(0),
+                          //orderType: mapOrderType(0),
                         ),
                     ),
                   ],
