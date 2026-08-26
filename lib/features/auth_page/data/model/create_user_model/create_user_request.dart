@@ -53,7 +53,9 @@ class CreateUserRequest {
     this.companyDetails,
     this.driverDetails,
   });
-
+  bool isSameData(CreateUserRequest other) {
+    return jsonEncode(toJson()) == jsonEncode(other.toJson());
+  }
   factory CreateUserRequest.fromJson(
       Map<String, dynamic> json,
       ) {

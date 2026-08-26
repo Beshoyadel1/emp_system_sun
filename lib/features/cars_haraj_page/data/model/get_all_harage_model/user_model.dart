@@ -13,10 +13,10 @@ class UserModel {
   final String? branchLatinName;
 
   UserModel({
-     this.id,
-     this.type,
-     this.name,
-     this.latinName,
+    this.id,
+    this.type,
+    this.name,
+    this.latinName,
     this.image,
     this.branchName,
     this.branchLatinName,
@@ -28,25 +28,29 @@ class UserModel {
       type: json['type'],
       name: json['name'],
       latinName: json['latinname'],
-      image: json["image"] != null ? base64Decode(json["image"]) : null,
+      image: json['image'] != null
+          ? base64Decode(json['image'])
+          : null,
       branchName: json['branchname'],
       branchLatinName: json['branchlatinname'],
     );
   }
+
   String getName(BuildContext context) {
     final isArabic =
         LanguageCubit.get(context).isAllAppLanguageArabic;
 
     return isArabic
-        ? (name ?? "")
-        : (latinName ?? "");
+        ? (name ?? '')
+        : (latinName ?? '');
   }
+
   String getBranch(BuildContext context) {
     final isArabic =
         LanguageCubit.get(context).isAllAppLanguageArabic;
 
     return isArabic
-        ? (branchName ?? "")
-        : (branchLatinName ?? "");
+        ? (branchName ?? '')
+        : (branchLatinName ?? '');
   }
 }

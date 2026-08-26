@@ -1,11 +1,15 @@
 import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
+import '../../../../../../../../../core/language/language_constant.dart';
+import '../../../../../../../../../core/theming/colors.dart';
+import 'package:emp_system_sun/features/order_status_design/presentation/custom_widget/title_with_sub_title.dart';
 import '../../../../../../../../../features/internal_services/data/model/get_provider_orders_model/order_model.dart';
+import '../../../../../../../../../features/internal_services/presentation/pages/internal_orders/custom_widget/row_image_with_title_widget.dart';
+import '../../../../../../../../../features/internal_services/presentation/pages/internal_orders/custom_widget/text_with_container_status.dart';
 import '../../../../../../../../../features/internal_services/presentation/pages/internal_orders/custom_widget/Column_date_order_with_time_widget.dart';
 import '../../../../../../../../../features/internal_services/presentation/pages/internal_orders/custom_widget/column_price_order_widget.dart';
 import '../../../../../../../../../features/internal_services/presentation/pages/internal_orders/custom_widget/container_details_widget.dart';
-import '../../../../../../../../../features/internal_services/presentation/pages/internal_orders/custom_widget/row_image_with_title_widget.dart';
-import '../../../../../../../../../features/internal_services/presentation/pages/internal_orders/custom_widget/text_with_container_status.dart';
 
 class MobileSecondPartDataContainerInListDataFirstScreenInternalOrders
     extends StatelessWidget {
@@ -18,7 +22,7 @@ class MobileSecondPartDataContainerInListDataFirstScreenInternalOrders
       titlePart3,
       subTitlePart3,
       timePart5,
-      pricePart6;
+      pricePart6,id;
   final int? status,serviceId;
   final Uint8List? imagePathPart1,imagePathPart3;
   final OrderModel order;
@@ -37,7 +41,8 @@ class MobileSecondPartDataContainerInListDataFirstScreenInternalOrders
     required this.timePart5,
     required this.pricePart6,
     required this.order,
-    required this.serviceId
+    required this.serviceId,
+    required this.id
   });
 
   @override
@@ -48,6 +53,14 @@ class MobileSecondPartDataContainerInListDataFirstScreenInternalOrders
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            Flexible(child: TitleWithSubTitle(
+              title: AppLanguageKeys.identity,
+              textSizeTitle: 12,
+              subTitleColor: AppColors.greyColor,
+              titleColor: AppColors.greyColor,
+              subTitle:id,
+              textSizeSubTitle: 10,
+            )),
             Flexible(
               child: RowImageWithTitleWidget(
                 imagePath: imagePathPart1,

@@ -13,9 +13,9 @@ import 'package:emp_system_sun/features/cars_haraj_page/data/model/filter_orders
 import 'package:emp_system_sun/features/cars_haraj_page/data/model/internal_orders_filter/internal_orders_filter.dart';
 import '../../../../../../../features/spare_parts/presentation/pages/spare_parts_statistics/spare_parts_page/widgets/filters_tabs_widget_spare_parts_statistics.dart';
 
-class OrdersPageSparePartsStatistics extends StatelessWidget {
+class OrdersPageServiceEmpViewOrdersPage extends StatelessWidget {
   final int serviceId;
-  const OrdersPageSparePartsStatistics({super.key, required this.cubit,required this.serviceId});
+  const OrdersPageServiceEmpViewOrdersPage({super.key, required this.cubit,required this.serviceId});
 
   final NewOrdersCubit cubit;
 

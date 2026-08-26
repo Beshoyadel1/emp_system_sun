@@ -14,62 +14,88 @@ class TechnicalSupportAdminSun extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => MessageCubit()..getMessages()),
-        BlocProvider(create: (_) => ChatDetailsCubit()),
+        BlocProvider(
+          create: (_) => MessageCubit()..getMessages(),
+        ),
+        BlocProvider(
+          create: (_) => ChatDetailsCubit(),
+        ),
       ],
       child: Scaffold(
-          backgroundColor: AppColors.scaffoldColor,
-          body: SafeArea(
-            child: SingleChildScrollView(
-              child: SizedBox(
-                width: double.infinity,
+        backgroundColor: AppColors.scaffoldColor,
+        body: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final width = constraints.maxWidth;
+
+              final double horizontalPadding = width < 600 ? 10 : 20;
+
+              // Same card height for all cards
+              final double cardHeight = width < 600
+                  ? 550
+                  : width < 1000
+                  ? 600
+                  : 650;
+
+              int columns;
+
+              if (width >= 900) {
+                columns = 3;
+              } else if (width >= 600) {
+                columns = 2;
+              } else {
+                columns = 1;
+              }
+
+              return SingleChildScrollView(
+                padding: EdgeInsets.all(horizontalPadding),
                 child: CustomContainer(
                   isSelected: false,
                   onTap: () {},
                   borderRadius: BorderRadius.circular(12),
-                  typeWidget: const Wrap(
-                    spacing: 5,
-                    runSpacing: 5,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    alignment: WrapAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: 350,
-                        //height: 600,
-                        child: Padding(
-                          padding: EdgeInsets.all(20),
-                          child: SingleChildScrollView(
-                            child: ListDataTechnicalSupportAdminSun(),
+                  typeWidget: LayoutBuilder(
+                    builder: (context, innerConstraints) {
+                      final spacing = width < 600 ? 10.0 : 15.0;
+
+                      final cardWidth = columns == 1
+                          ? innerConstraints.maxWidth
+                          : (innerConstraints.maxWidth -
+                          ((columns - 1) * spacing)) /
+                          columns;
+
+                      return Wrap(
+                        spacing: spacing,
+                        runSpacing: spacing,
+                        children: [
+                          SizedBox(
+                            width: cardWidth,
+                            height: cardHeight,
+                            child: const ListDataTechnicalSupportAdminSun(),
                           ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 400,
-                        height: 600,
-                        child: Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: ChatInTechnicalSupportEmpAdminSun(),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 300,
-                       // height: 600,
-                        child: Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: SingleChildScrollView(
-                              child: ContainerDesignTeamWorkAdminSun()),
-                        ),
-                      ),
-                    ],
+
+                          SizedBox(
+                            width: cardWidth,
+                            height: cardHeight,
+                            child: const ChatInTechnicalSupportEmpAdminSun(),
+                          ),
+
+                          SizedBox(
+                            width: cardWidth,
+                            height: cardHeight,
+                            child: const ContainerDesignTeamWorkAdminSun(),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ),
-              ),
-            ),
-
-          )),
+              );
+            },
+          ),
+        ),
+      ),
     );
   }
 }

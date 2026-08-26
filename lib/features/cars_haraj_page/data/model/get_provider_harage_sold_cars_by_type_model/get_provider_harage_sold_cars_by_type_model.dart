@@ -7,10 +7,14 @@ class GetProviderHarageSoldCarsByTypeModel {
     required this.usedCarsCount,
   });
 
-  factory GetProviderHarageSoldCarsByTypeModel.fromJson(Map<String, dynamic> json) {
+  factory GetProviderHarageSoldCarsByTypeModel.fromJson(
+      Map<String, dynamic> json) {
+
+    final data = json['data'];
+
     return GetProviderHarageSoldCarsByTypeModel(
-      newCarsCount: json['newCarsCount'] ?? 0,
-      usedCarsCount: json['usedCarsCount'] ?? 0,
+      newCarsCount: data['newCarsCount'] ?? 0,
+      usedCarsCount: data['usedCarsCount'] ?? 0,
     );
   }
 }

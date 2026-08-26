@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+import 'package:emp_system_sun/core/language/language_constant.dart';
 import '../../../../core/theming/colors.dart';
 
 class ApiConfig {
@@ -34,10 +34,34 @@ class ApiConfig {
   static const String workTIme = "WorkTIme";
   static const String branch = "Branch";
   static const String notification = "Notification";
-
+  static const String approval = "Approval";
 }
 
 class ApiLink {
+//approveProvider
+  static const String approveProvider =
+      "${ApiConfig.baseUrlApi}/${ApiConfig.approval}/ApproveProvider";
+
+  static const String updateApprovalInfo =
+      "${ApiConfig.baseUrlApi}/${ApiConfig.approval}/UpdateApprovalInfo";
+  static const String createApprovalInfo =
+      "${ApiConfig.baseUrlApi}/${ApiConfig.approval}/CreateApprovalInfo";
+  //warranty
+  static const String getApprovalInfo =
+      "${ApiConfig.baseUrlApi}/${ApiConfig.approval}/GetApprovalInfo";
+  static const String getApprovalInfoById =
+      "${ApiConfig.baseUrlApi}/${ApiConfig.approval}/GetApprovalInfoById";
+
+  static const String getCarDetails =
+      "${ApiConfig.baseUrlApi}/${ApiConfig.car}/GetCarDetails";
+
+  static const String getAllHarages =
+      "${ApiConfig.baseUrlApi}/${ApiConfig.harage}/GetAllHarages";
+  static const String getHarageDetails =
+      "${ApiConfig.baseUrlApi}/${ApiConfig.harage}/GetHarageDetails";
+
+  static const String getUserInfo =
+      "${ApiConfig.baseUrlApi}/${ApiConfig.user}/getUserInfo";
   static const String notificationHub =
       "${ApiConfig.baseUrlApi}/sunStatusHub";
   static const String makeNotificationViewed =
@@ -68,6 +92,13 @@ class ApiLink {
   static const String updateUser =
       "${ApiConfig.baseUrlApi}/${ApiConfig.user}/UpdateUser";
 
+  //Employee
+  static const String getProviderEmployees =
+      "${ApiConfig.baseUrlApi}/${ApiConfig.employeeService}/GetProviderEmployees";
+  static const String getEmployeeServices =
+      "${ApiConfig.baseUrlApi}/${ApiConfig.employeeService}/GetEmployeeServices";
+  static const String getBranchEmployees =
+      "${ApiConfig.baseUrlApi}/${ApiConfig.branch}/getBranchEmployees";
   //Banner
   static const String getBanners =
       "${ApiConfig.baseUrlApi}/${ApiConfig.banner}/GetBanners";
@@ -119,8 +150,6 @@ class ApiLink {
 //Employee Management
   static const String assignServiceToEmployee =
       "${ApiConfig.baseUrlApi}/${ApiConfig.employeeService}/AssignServiceToEmployee";
-  static const String getEmployeeServices =
-      "${ApiConfig.baseUrlApi}/${ApiConfig.employeeService}/GetEmployeeServices";
 
 //General Setup And Config
   static const String addTax =
@@ -161,6 +190,10 @@ class ApiLink {
       "${ApiConfig.baseUrlApi}/${ApiConfig.harage}/DeleteHarage";
   static const String getAllHarage =
       "${ApiConfig.baseUrlApi}/${ApiConfig.harage}/GetAllHarages";
+
+  static const String getUserHarages =
+      "${ApiConfig.baseUrlApi}/${ApiConfig.harage}/GetUserHarages";
+
   static const String getHarage =
       "${ApiConfig.baseUrlApi}/${ApiConfig.harage}/GetHarage";
   static const String updateHarage =
@@ -243,8 +276,7 @@ class ApiLink {
       "${ApiConfig.baseUrlApi}/${ApiConfig.workTIme}/DeleteProviderWorkTime";
   static const String deleteServicePackage =
       "${ApiConfig.baseUrlApi}/${ApiConfig.providerServicePackage}/DeleteServicePackage";
-  static const String getBranchEmployees =
-      "${ApiConfig.baseUrlApi}/${ApiConfig.branch}/GetBranchEmployees";
+
   static const String getProvServices =
       "${ApiConfig.baseUrlApi}/${ApiConfig.provService}/GetProvServices";
   static const String getExpectedPetrolSpend =
@@ -367,6 +399,37 @@ class SignalRTypes {
   static const String transferCarOwnership = "TransferCarOwnership";
 }
 
+class FuelTypeModel {
+  final int id;
+  final String name;
+
+  const FuelTypeModel({
+    required this.id,
+    required this.name,
+  });
+}
+
+class FuelTypes {
+  static  const FuelTypeModel petrol =
+  FuelTypeModel(id: 1, name: AppLanguageKeys.petrol);
+
+  static const FuelTypeModel diesel =
+  FuelTypeModel(id: 2, name: AppLanguageKeys.diesel);
+
+  static const FuelTypeModel electricity =
+  FuelTypeModel(id: 3, name: AppLanguageKeys.electricity);
+
+  static const FuelTypeModel hybrid =
+  FuelTypeModel(id: 4, name: AppLanguageKeys.hybrid);
+
+  static const List<FuelTypeModel> all = [
+    petrol,
+    diesel,
+    electricity,
+    hybrid,
+  ];
+}
+
 class OrderStatus {
   static const int newOrderForCompany = -2;
   static const int rejectedByCompany = -1;
@@ -459,6 +522,7 @@ class UserType {
   static const int adminUser = 6;
 }
 
+
 Color legendColor(int index) {
   const colors = [
     AppColors.brownColor,
@@ -473,4 +537,106 @@ Color legendColor(int index) {
   ];
 
   return colors[index % colors.length];
+}
+
+class OfferStatus {
+  static const int newOffer = 0;
+  static const int rejected = 1;
+  static const int accepted = 2;
+  static const int canceled = 3;
+}
+
+class OrderStatusToString {
+  static String toArabic(int status) {
+    return switch (status) {
+      OrderStatus.newOrderForCompany => "قيد الانتظار",
+      OrderStatus.rejectedByCompany => "مرفوض من الشركة",
+      OrderStatus.newOrderForProvider => "طلب جديد",
+      OrderStatus.waitingAppointment => "في انتظار الموعد",
+      OrderStatus.employeeInRoad => "الموظف في الطريق",
+      OrderStatus.workInProgress => "قيد التنفيذ",
+      OrderStatus.orderCompleted => "مكتمل",
+      OrderStatus.rejectedByProvider => "مرفوض من مزود الخدمة",
+      OrderStatus.cancelledByUser => "ملغي",
+      _ => "حالة غير معروفة",
+    };
+  }
+
+  static String toEnglish(int status) {
+    return switch (status) {
+      OrderStatus.newOrderForCompany => "Pending",
+      OrderStatus.rejectedByCompany => "Rejected by Company",
+      OrderStatus.newOrderForProvider => "New Order",
+      OrderStatus.waitingAppointment => "Waiting Appointment",
+      OrderStatus.employeeInRoad => "Employee on Road",
+      OrderStatus.workInProgress => "Work In Progress",
+      OrderStatus.orderCompleted => "Completed",
+      OrderStatus.rejectedByProvider => "Rejected by Service Provider",
+      OrderStatus.cancelledByUser => "Cancelled",
+      _ => "Unknown Status",
+    };
+  }
+}
+
+class PaymentMethodType {
+  static const int unknown = -1;
+  static const int cash = 0;
+  static const int wallet = 1;
+  static const int mada = 2;
+  static const int visa = 3;
+  static const int applePay = 4;
+  static const int points = 5;
+}
+
+class PointsTransactionType {
+  static const int receive = 1;
+  static const int useInOrder = 2;
+  static const int send = 3;
+  static const int exchange = 4;
+}
+
+class TransactionType {
+  static const int refund = 0;
+  static const int acceptWalletBalance = 1;
+  static const int rechargeWallet = 2;
+  static const int acceptSettlement = 3;
+  static const int order = 6;
+  static const int subscription = 7;
+  static const int transferWalletBalance = 8;
+}
+
+class WalletTransactionType {
+  static const bool deposit = true;
+  static const bool withdrawal = false;
+}
+
+class DiscountType{
+  static const int fixedAmount = 1;
+  static const int percentage = 2;
+}
+
+class DurationType {
+  static const int month = 1;
+  static const int year = 2;
+
+  static const List<DurationTypeItem> all = [
+    DurationTypeItem(
+      id: month,
+      name: AppLanguageKeys.month,
+    ),
+    DurationTypeItem(
+      id: year,
+      name: AppLanguageKeys.year,
+    ),
+  ];
+}
+
+class DurationTypeItem {
+  final int id;
+  final String name;
+
+  const DurationTypeItem({
+    required this.id,
+    required this.name,
+  });
 }

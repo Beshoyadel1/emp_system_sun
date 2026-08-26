@@ -8,9 +8,11 @@ Future<List<CarBrandDataModel>> getCarBrandFunction() async {
   try {
     final response = await Network.getData(ApiLink.getCarBrand);
 
-    final List data = response.data;
+    final List data = response.data['data'] ?? [];
 
-    return data.map((e) => CarBrandDataModel.fromJson(e)).toList();
+    return data
+        .map((e) => CarBrandDataModel.fromJson(e as Map<String, dynamic>))
+        .toList();
   } catch (e) {
     throw e is DioException
         ? responseOfStatusCode(e.response?.statusCode)

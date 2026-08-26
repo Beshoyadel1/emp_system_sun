@@ -3,7 +3,7 @@ import '../../../../../../core/cubit/app_cubit/app_cubit.dart';
 import '../../../../../../core/utilies/map_of_all_app.dart';
 import '../../../../../../main.dart';
 import '../../../../../../core/language/language_constant.dart';
-import '../../../../../../features/internal_services/presentation/cubit/order_funcations/order_functions.dart';
+import '../../../../internal_services/presentation/cubit/order_funcations/order_functions.dart';
 import '../../../../../../features/notifications/data/datasource/parsers/update_order_status_parser/update_order_status_parser.dart';
 import '../../../../../../features/notifications/presentation/services/dialog_service/dialog_service.dart';
 import '../../../../../../features/notifications/presentation/services/navigation_service/navigation_service.dart';

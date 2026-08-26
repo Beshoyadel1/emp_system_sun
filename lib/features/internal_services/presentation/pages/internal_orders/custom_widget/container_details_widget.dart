@@ -1,18 +1,10 @@
-import 'package:emp_system_sun/features/order_status_design/presentation/pages/order_details_cancel_order_emp/order_details_cancel_order_emp.dart';
-import 'package:emp_system_sun/features/order_status_design/presentation/pages/order_details_new_order_emp/order_details_new_order_emp.dart';
-import 'package:emp_system_sun/features/order_status_design/presentation/pages/order_details_on_the_way_emp/order_details_on_the_way_emp.dart';
-import 'package:emp_system_sun/features/order_status_design/presentation/pages/order_details_order_received_emp/order_details_order_received_emp.dart';
-import 'package:emp_system_sun/features/order_status_design/presentation/pages/order_details_reject_by_company_order_emp/order_details_reject_by_company_order_emp.dart';
-import 'package:emp_system_sun/features/order_status_design/presentation/pages/order_details_reject_by_provider_order_emp/order_details_reject_by_provider_order_emp.dart';
-import 'package:emp_system_sun/features/order_status_design/presentation/pages/order_details_under_service_emp/order_details_under_service_emp.dart';
-import 'package:emp_system_sun/features/order_status_design/presentation/pages/order_details_waiting_emp/order_details_waiting_emp.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../../../../features/order_status_design/presentation/pages/order_details/order_details.dart';
 import '../../../../../../../../../features/internal_services/data/model/get_provider_orders_model/order_model.dart';
-import '../../../../../../../../../features/internal_services/presentation/cubit/get_provider_internal_order/get_provider_internal_order_state.dart';
-import '../../../../../../../core/pages_widgets/general_widgets/navigate_to_page_widget.dart';
+import '../../../cubit/get_provider_internal_order/get_provider_internal_order_state.dart';
 import '../../../../../../../core/language/language_constant.dart';
+import '../../../../../../../core/pages_widgets/general_widgets/navigate_to_page_widget.dart';
 import '../../../../../../../core/theming/colors.dart';
 import '../../../../../../../core/theming/fonts.dart';
 import '../../../../../../../core/theming/text_styles.dart';
@@ -41,35 +33,14 @@ class ContainerDetailsWidget extends StatelessWidget {
     switch (status) {
       case OrderStatus.newOrderForProvider:
       case OrderStatus.newOrderForCompany:
-        page = OrderDetailsNewOrderEmp(order: order);
-        break;
-
       case OrderStatus.orderCompleted:
-        page = OrderDetailsOrderReceivedEmp(order: order);
-        break;
-
       case OrderStatus.employeeInRoad:
-        page = OrderDetailsOnTheWayEmp(order: order);
-        break;
-
       case OrderStatus.workInProgress:
-        page = OrderDetailsUnderServiceEmp(order: order);
-        break;
-
       case OrderStatus.rejectedByProvider:
-        page = OrderDetailsRejectByProviderOrderEmp(order: order);
-        break;
-
       case OrderStatus.rejectedByCompany:
-        page = OrderDetailsRejectByCompanyOrderEmp(order: order);
-        break;
-
       case OrderStatus.cancelledByUser:
-        page = OrderDetailsCancelOrderEmp(order: order);
-        break;
-
       case OrderStatus.waitingAppointment:
-        page = OrderDetailsWaitingEmp(order: order);
+        page = OrderDetails(order: order);
         break;
 
       default:
@@ -84,6 +55,7 @@ class ContainerDetailsWidget extends StatelessWidget {
     if (result == true && context.mounted) {
       context.read<GetProviderInternalOrderCubit>().loadInternalOrders(
         serviceId:serviceId,
+        pageNumber: 1
       );
     }
   }

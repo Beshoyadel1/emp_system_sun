@@ -1,13 +1,14 @@
 import 'package:dio/dio.dart';
-import 'package:emp_system_sun/features/cars_haraj_page/data/model/get_provider_harage_sold_cars_by_type_model/get_provider_harage_sold_cars_by_type_model.dart';
+import '../../../../../../../../../features/cars_haraj_page/data/model/get_provider_harage_sold_cars_by_type_model/get_provider_harage_sold_cars_by_type_model.dart';
 import '../../request/get_provider_harage_sold_cars_by_type_request/get_provider_harage_sold_cars_by_type_request.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
-import '../../../../../core/pages_widgets/general_widgets/snakbar.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';
 import '../../../../../core/api/dio_function/failures.dart';
 
-Future<GetProviderHarageSoldCarsByTypeModel?> getProviderHarageSoldCarsByTypeFunction({
-  required GetProviderHarageSoldCarsByTypeRequest getProviderHarageSoldCarsByTypeRequest,
+Future<GetProviderHarageSoldCarsByTypeModel?>
+getProviderHarageSoldCarsByTypeFunction({
+  required GetProviderHarageSoldCarsByTypeRequest
+  getProviderHarageSoldCarsByTypeRequest,
 }) async {
   try {
     final response = await Network.postDataWithBodyAndParams(
@@ -15,15 +16,31 @@ Future<GetProviderHarageSoldCarsByTypeModel?> getProviderHarageSoldCarsByTypeFun
       getProviderHarageSoldCarsByTypeRequest.toJson(),
       ApiLink.getProviderHarageSoldCarsByType,
     );
-    final data = GetProviderHarageSoldCarsByTypeModel.fromJson(response.data);
-    //AppSnackBar.showSuccess(AppLanguageKeys.getProviderHarageSoldCarsByTypeSuccessfully);
-    return data;
-  } catch (e) {
-    AppSnackBar.showError(
-      e is DioException
-          ? responseOfStatusCode(e.response?.statusCode)
-          : e.toString(),
+
+    final responseData = response.data;
+
+    final bool success =
+        responseData['success'] ?? false;
+
+    if (!success) {
+      throw Exception(
+        responseData['message'] ??
+            'Something went wrong',
+      );
+    }
+
+    return GetProviderHarageSoldCarsByTypeModel.fromJson(
+      responseData,
     );
-    return null;
+  } catch (e) {
+    if (e is DioException) {
+      throw Exception(
+        responseOfStatusCode(
+          e.response?.statusCode,
+        ),
+      );
+    }
+
+    rethrow;
   }
 }

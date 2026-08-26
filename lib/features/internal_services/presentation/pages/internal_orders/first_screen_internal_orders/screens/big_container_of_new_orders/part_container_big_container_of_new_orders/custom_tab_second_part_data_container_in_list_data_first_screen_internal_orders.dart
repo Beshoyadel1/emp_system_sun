@@ -1,5 +1,8 @@
 import 'dart:typed_data';
+import 'package:emp_system_sun/features/order_status_design/presentation/custom_widget/title_with_sub_title.dart';
 import 'package:flutter/cupertino.dart';
+import '../../../../../../../../../core/language/language_constant.dart';
+import '../../../../../../../../../core/theming/colors.dart';
 import '../../../../../../../../../features/internal_services/data/model/get_provider_orders_model/order_model.dart';
 import '../../../../../../../../../features/internal_services/presentation/pages/internal_orders/custom_widget/Column_date_order_with_time_widget.dart';
 import '../../../../../../../../../features/internal_services/presentation/pages/internal_orders/custom_widget/column_price_order_widget.dart';
@@ -18,7 +21,7 @@ class CustomTabSecondPartDataContainerInListDataFirstScreenInternalOrders
       titlePart3,
       subTitlePart3,
       timePart5,
-      pricePart6;
+      pricePart6,id;
 
   final int? status,serviceId;
   final Uint8List? imagePathPart1,imagePathPart3;
@@ -39,7 +42,8 @@ class CustomTabSecondPartDataContainerInListDataFirstScreenInternalOrders
     required this.timePart5,
     required this.pricePart6,
     required this.order,
-    required this.serviceId
+    required this.serviceId,
+    required this.id
   });
 
   @override
@@ -52,6 +56,14 @@ class CustomTabSecondPartDataContainerInListDataFirstScreenInternalOrders
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Expanded(child: TitleWithSubTitle(
+              title: AppLanguageKeys.identity,
+              textSizeTitle: 12,
+              subTitleColor: AppColors.greyColor,
+              titleColor: AppColors.greyColor,
+              subTitle:id,
+              textSizeSubTitle: 10,
+            )),
             Expanded(
               child: RowImageWithTitleWidget(
                 imagePath: imagePathPart1,

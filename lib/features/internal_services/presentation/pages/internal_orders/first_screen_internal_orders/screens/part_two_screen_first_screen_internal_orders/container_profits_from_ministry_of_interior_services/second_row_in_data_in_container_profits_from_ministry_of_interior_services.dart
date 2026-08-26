@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../../../../../features/internal_services/presentation/cubit/loading_dashboard/loading_dashboard_cubit.dart';
-import '../../../../../../../../../features/internal_services/presentation/cubit/loading_dashboard/loading_dashboard_state.dart';
+import '../../../../../../cubit/loading_dashboard/loading_dashboard_cubit.dart';
+import '../../../../../../cubit/loading_dashboard/loading_dashboard_state.dart';
 import '../../../../../../../../../features/internal_services/presentation/pages/internal_orders/first_screen_internal_orders/screens/part_two_screen_first_screen_internal_orders/container_profits_from_ministry_of_interior_services/services_legend_list.dart';
 import '../../../../../../../../../features/internal_services/presentation/pages/internal_orders/first_screen_internal_orders/screens/part_two_screen_first_screen_internal_orders/container_profits_from_ministry_of_interior_services/FourPartCircle.dart';
 

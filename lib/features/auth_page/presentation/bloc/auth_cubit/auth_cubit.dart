@@ -71,14 +71,64 @@ class AuthCubit extends Cubit<AuthState> {
       ),
     );
 
+    // Login API failed
     if (!result.success || result.user == null) {
-      await AuthLocalStorage.clearUser();
-      await AuthLocalStorage.clearPassword();
-      await SignalRService.instance.disconnect();
-
-      emit(AuthUnauthenticated());
+      await _forceLogout();
       return;
     }
+
+    final apiUser = result.user!;
+
+    // Local user must be exactly the same as API user
+    if (!localUser.isSameData(apiUser)) {
+      print("INIT => Local user != API user");
+
+      await _forceLogout();
+      return;
+    }
+
+    print("INIT => Local user == API user");
+
+    // Connect SignalR
+    if (!SignalRService.instance.isConnected) {
+      await SignalRService.instance.connect(
+        hubUrl: ApiLink.notificationHub,
+      );
+    }
+
+    // Check facility completion
+    await _checkFacilityCompletion(apiUser);
+  }
+  Future<void> _forceLogout() async {
+    await AuthLocalStorage.clearUser();
+    await AuthLocalStorage.clearPassword();
+
+    await SignalRService.instance.disconnect();
+
+    emit(AuthUnauthenticated());
+  }
+  Future<void> login(LoginRequest request) async {
+    emit(AuthLoginLoading());
+
+    final result = await loginFunction(
+      loginRequest: request,
+    );
+
+    if (!result.success || result.user == null) {
+      emit(
+        AuthLoginError(
+          result.message,
+        ),
+      );
+      return;
+    }
+
+    final apiUser = result.user!;
+
+    // First login → save API user
+    await AuthLocalStorage.saveUser(apiUser);
+    // Save password for auto-login after restart
+    await AuthLocalStorage.savePassword(request.password);
 
     if (!SignalRService.instance.isConnected) {
       await SignalRService.instance.connect(
@@ -86,7 +136,76 @@ class AuthCubit extends Cubit<AuthState> {
       );
     }
 
-    await _checkFacilityCompletion(result.user!);
+    emit(
+      AuthLoginSuccess(
+        message: result.message,
+      ),
+    );
+
+    await _checkFacilityCompletion(apiUser);
+  }
+  Future<void> logout(BuildContext context) async {
+    emit(AuthLoading());
+    _forceLogout();
+    if (context.mounted) {
+      Navigator.pop(context);
+    }
+  }
+
+  Future<void> _checkFacilityCompletion(CreateUserRequest user) async {
+    final branchCubit = BranchCubit();
+    final workTimeCubit = UpdateWorkTimeCubit();
+
+    await Future.wait([
+      branchCubit.getProviderBranches(),
+      workTimeCubit.getWorkTimes(),
+    ]);
+
+    print("BRANCHES => ${branchCubit.branches.length}");
+    print("WORK TIMES => ${workTimeCubit.workTimes.length}");
+
+    final result = FacilityValidator.validate(
+      user: user,
+      branchCubit: branchCubit,
+      workTimeCubit: workTimeCubit,
+    );
+
+    print("IS VALID => ${result.isValid}");
+    print("MISSING FIELDS => ${result.missingFields}");
+
+    if (result.isValid) {
+      emit(AuthAuthenticated());
+    } else {
+      emit(AuthIncompleteProfile(result.missingFields));
+    }
+  }
+  Future<void> reCheckFacility() async {
+    final user = await AuthLocalStorage.getUser();
+
+    if (user == null) {
+      print("RECHECK => AuthUnauthenticated");
+      emit(AuthUnauthenticated());
+      return;
+    }
+    final branchCubit = BranchCubit();
+    final workTimeCubit = UpdateWorkTimeCubit();
+
+    await Future.wait([
+      branchCubit.getProviderBranches(),
+      workTimeCubit.getWorkTimes(),
+    ]);
+
+    final result = FacilityValidator.validate(
+      user: user,
+      branchCubit: branchCubit,
+      workTimeCubit: workTimeCubit,
+    );
+
+    if (result.isValid) {
+      emit(AuthAuthenticated());
+    } else {
+      emit(AuthIncompleteProfile(result.missingFields));
+    }
   }
 
   Timer? _timer;
@@ -186,67 +305,6 @@ class AuthCubit extends Cubit<AuthState> {
 
   void showRestPassword() => emit(AuthShowRestPassword());
 
-  Future<void> login(LoginRequest request) async {
-    emit(AuthLoginLoading());
-
-    final result = await loginFunction(
-      loginRequest: request,
-    );
-
-    print("LOGIN SUCCESS => ${result.success}");
-    print("LOGIN MESSAGE => ${result.message}");
-
-    if (result.success && result.user != null) {
-      await AuthLocalStorage.saveUser(result.user!);
-      if (!SignalRService.instance.isConnected) {
-        await SignalRService.instance.connect(
-          hubUrl: ApiLink.notificationHub,
-        );
-      }
-
-      emit(
-        AuthLoginSuccess(
-          message: result.message,
-        ),
-      );
-
-      await _checkFacilityCompletion(result.user!);
-    } else {
-      emit(
-        AuthLoginError(
-          result.message,
-        ),
-      );
-    }
-  }
-
-  Future<void> _checkFacilityCompletion(CreateUserRequest user) async {
-    final branchCubit = BranchCubit();
-    final workTimeCubit = UpdateWorkTimeCubit();
-
-    await Future.wait([
-      branchCubit.getProviderBranches(),
-      workTimeCubit.getWorkTimes(),
-    ]);
-
-    print("BRANCHES => ${branchCubit.branches.length}");
-    print("WORK TIMES => ${workTimeCubit.workTimes.length}");
-
-    final result = FacilityValidator.validate(
-      user: user,
-      branchCubit: branchCubit,
-      workTimeCubit: workTimeCubit,
-    );
-
-    print("IS VALID => ${result.isValid}");
-    print("MISSING FIELDS => ${result.missingFields}");
-
-    if (result.isValid) {
-      emit(AuthAuthenticated());
-    } else {
-      emit(AuthIncompleteProfile(result.missingFields));
-    }
-  }
 
   static Future<void> saveUserFromRequest(CreateUserRequest request) async {
     await AuthLocalStorage.saveUser(request);
@@ -269,34 +327,6 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> reCheckFacility() async {
-    final user = await AuthLocalStorage.getUser();
-
-    if (user == null) {
-      print("RECHECK => AuthUnauthenticated");
-      emit(AuthUnauthenticated());
-      return;
-    }
-    final branchCubit = BranchCubit();
-    final workTimeCubit = UpdateWorkTimeCubit();
-
-    await Future.wait([
-      branchCubit.getProviderBranches(),
-      workTimeCubit.getWorkTimes(),
-    ]);
-
-    final result = FacilityValidator.validate(
-      user: user,
-      branchCubit: branchCubit,
-      workTimeCubit: workTimeCubit,
-    );
-
-    if (result.isValid) {
-      emit(AuthAuthenticated());
-    } else {
-      emit(AuthIncompleteProfile(result.missingFields));
-    }
-  }
 
   Future<void> updateUser(
     CreateUserRequest request,
@@ -380,17 +410,6 @@ class AuthCubit extends Cubit<AuthState> {
           e.toString(),
         ),
       );
-    }
-  }
-
-  Future<void> logout(BuildContext context) async {
-    emit(AuthLoading());
-    await AuthLocalStorage.clearUser();
-    await SignalRService.instance.disconnect();
-    await AuthLocalStorage.clearPassword();
-    emit(AuthUnauthenticated());
-    if (context.mounted) {
-      Navigator.pop(context);
     }
   }
 

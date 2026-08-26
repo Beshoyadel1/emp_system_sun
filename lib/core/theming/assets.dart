@@ -1,5 +1,11 @@
 class AppImageKeys {
-
+  static const String petrol = 'assets/images/petrol.png';
+  static const String car = 'assets/images/car.png';
+  static const String order = 'assets/images/order.png';
+  //wallet use
+  static const String mada = 'assets/images/mada.png';
+  static const String applePay = 'assets/images/applePay.png';
+  static const String visa = 'assets/images/visa.png';
   //FacilityManagement
   static const String loginImage = 'assets/images/login_image.png';
   static const String loginEmp = 'assets/images/login_emp.png';

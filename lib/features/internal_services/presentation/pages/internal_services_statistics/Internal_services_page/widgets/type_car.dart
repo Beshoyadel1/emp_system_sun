@@ -8,7 +8,7 @@ class TypeCar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
+    return const Wrap(
       children: [
         Column(
           children: [
@@ -18,14 +18,14 @@ class TypeCar extends StatelessWidget {
             //   height: 20,
             //   fit: BoxFit.contain,
             // ),
-            const TextInAppWidget(
+             TextInAppWidget(
                 text: 'Ariya', textSize: 14, textColor: AppColors.darkColor),
           ],
         ),
-        const SizedBox(
+         SizedBox(
           width: 10,
         ),
-        const TextInAppWidget(
+         TextInAppWidget(
             text: 'Nissan', textSize: 14, textColor: AppColors.darkColor),
       ],
     );

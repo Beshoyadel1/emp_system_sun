@@ -4,8 +4,8 @@ import '../../../../../../../../core/language/language.dart';
 import '../../../../../../../../core/language/language_constant.dart';
 import '../../../../../../../../core/theming/assets.dart';
 import '../../../../../../../../core/utilies/map_of_all_app.dart';
-import '../../../../../../../../features/internal_services/presentation/cubit/loading_dashboard/loading_dashboard_cubit.dart';
-import '../../../../../../../../features/internal_services/presentation/cubit/loading_dashboard/loading_dashboard_state.dart';
+import '../../../../../../../internal_services/presentation/cubit/loading_dashboard/loading_dashboard_cubit.dart';
+import '../../../../../../../internal_services/presentation/cubit/loading_dashboard/loading_dashboard_state.dart';
 import '../../../../../../../../features/internal_services/presentation/pages/internal_orders/custom_widget/container_with_image_container_and_two_text_widget.dart';
 
 class FirstRowWithTwoContainerImageAndTwoTextMobileServicesOrders extends StatelessWidget {

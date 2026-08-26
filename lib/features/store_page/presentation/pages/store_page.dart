@@ -5,101 +5,225 @@ import 'package:emp_system_sun/features/store_page/presentation/pages/store_widg
 import 'package:emp_system_sun/features/store_page/presentation/pages/store_widgets/dialog_for_back.dart';
 import 'package:emp_system_sun/features/store_page/presentation/pages/store_widgets/pages_selection_bar.dart';
 import 'package:emp_system_sun/features/store_page/presentation/pages/store_widgets/selected_screen_widget.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../../../core/setup_git_it.dart';
 import '../../../../../../core/cubit/app_cubit/app_cubit.dart';
 import '../../../../../../core/cubit/app_cubit/app_states.dart';
 import '../../../../../../core/utilies/map_of_all_app.dart';
 import '../../../../../../core/theming/colors.dart';
-import '../../../../../../main.dart';
-import '../../../../../../../core/general_models/pages_model.dart';
-
 
 class StorePage extends StatefulWidget {
-  const StorePage({super.key});
+  const StorePage({
+    super.key,
+  });
 
   @override
   State<StorePage> createState() => _StorePageState();
 }
 
 class _StorePageState extends State<StorePage> {
-  final GlobalKey<ScaffoldState> _scaffoldKeyDrawer = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKeyDrawer =
+  GlobalKey<ScaffoldState>();
+
+  final AppCubit _appCubit =
+  getIt<AppCubit>();
+
+  final EmployeeServicesCubit
+  _employeeServicesCubit =
+  getIt<EmployeeServicesCubit>();
+
+  bool _isLoadingPages = true;
 
   @override
   void initState() {
     super.initState();
-    getPages(context);
-    getIt<EmployeeServicesCubit>().getEmployeeServices();
 
-    final facilityAccountPage = appPages.firstWhere(
-          (e) => e.number == PagesOfAllApp.dashboardPageNumber,
-    );
-
-    final facilityAccountWithID = PageNodeWithIDModel(
-      id: facilityAccountPage.number,
-      name: facilityAccountPage.name,
-      number: facilityAccountPage.number,
-      page: facilityAccountPage.page,
-    );
-
-    _appCubit.selectedPageFromOpenedPagesIndex =
-        facilityAccountWithID.id;
-    _appCubit.selectedPageIndex =
-        facilityAccountWithID.id;
+    _initialize();
   }
 
-  final AppCubit _appCubit = getIt<AppCubit>();
+  Future<void> _initialize() async {
+
+    await _employeeServicesCubit.getEmployeeServices();
+
+    await _initializePages();
+  }
+
+  Future<void> _initializePages() async {
+    await getPages(context);
+
+    if (!mounted) return;
+
+    if (appPages.isEmpty) {
+      setState(() {
+        _isLoadingPages = false;
+      });
+
+      return;
+    }
+
+    // ----------------------------------------------------------
+    // FIND DASHBOARD
+    // ----------------------------------------------------------
+
+    final dashboardPages = appPages.where(
+          (page) =>
+      page.number ==
+          PagesOfAllApp.dashboardPageNumber,
+    );
+
+    final selectedPage =
+    dashboardPages.isNotEmpty
+        ? dashboardPages.first
+        : appPages.first;
+
+    // ----------------------------------------------------------
+    // SET SELECTED PAGE
+    // ----------------------------------------------------------
+
+    _appCubit.selectedPageFromOpenedPagesIndex =
+        selectedPage.number;
+
+    _appCubit.selectedPageIndex =
+        selectedPage.number;
+
+    if (!mounted) return;
+
+    setState(() {
+      _isLoadingPages = false;
+    });
+  }
+
+  Future<void> _refreshPages() async {
+    await getPages(context);
+
+    if (!mounted) return;
+
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    bool isMobile = size.width <= ValuesOfAllApp.mobileWidth;
-    return BlocListener<EmployeeServicesCubit, EmployeeServicesState>(
-        bloc: getIt<EmployeeServicesCubit>(),
-        listener: (context, state) {
-          if (state is EmployeeServicesSuccess) {
-            getPages(context);
-            print("AFTER SUCCESS => ${appPages.length}");
-            print("SERVICES => ${getIt<EmployeeServicesCubit>().services.length}");
-            setState(() {});
-          }
-        },
+    final width =
+        MediaQuery.sizeOf(context).width;
+
+    final isMobile =
+        width <= ValuesOfAllApp.mobileWidth;
+
+    // ==========================================================
+    // LOADING
+    // ==========================================================
+
+    if (_isLoadingPages) {
+      return const Scaffold(
+        body: Center(
+          child:
+          CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    // ==========================================================
+    // NO PAGES
+    // ==========================================================
+
+    if (appPages.isEmpty) {
+      return const Scaffold(
+        body: Center(
+          child: Text(
+            'No pages available',
+          ),
+        ),
+      );
+    }
+
+    return BlocListener<
+        EmployeeServicesCubit,
+        EmployeeServicesState>(
+      bloc: _employeeServicesCubit,
+
+      listener: (
+          context,
+          state,
+          ) {
+        if (state
+        is EmployeeServicesSuccess) {
+          _refreshPages();
+        }
+      },
+
       child: PopScope(
         canPop: false,
-        onPopInvokedWithResult: (bool didPop, Object? result) async {
+
+        onPopInvokedWithResult: (
+            bool didPop,
+            Object? result,
+            ) async {
           if (didPop) return;
 
           final shouldPop =
-              await showBackDialog(context: context) ?? false;
+              await showBackDialog(
+                context: context,
+              ) ??
+                  false;
 
-          if (shouldPop && context.mounted) {
+          if (shouldPop &&
+              context.mounted) {
             Navigator.of(context).pop();
           }
         },
+
         child: Scaffold(
           key: _scaffoldKeyDrawer,
-          backgroundColor: AppColors.whiteGreyColor,
 
-          // Mobile Drawer
+          backgroundColor:
+          AppColors.whiteGreyColor,
+
+          // ====================================================
+          // MOBILE DRAWER
+          // ====================================================
+
           drawer: isMobile
               ? const Drawer(
             width: 256,
-            child: PagesSelectionBar(),
+            child:
+            PagesSelectionBar(),
           )
               : null,
 
+          // ====================================================
+          // BODY
+          // ====================================================
+
           body: Row(
             children: [
-              // Desktop Sidebar
+
+              // ==================================================
+              // DESKTOP SIDEBAR
+              // ==================================================
+
               if (!isMobile)
-                BlocBuilder<AppCubit, AppStates>(
-                  bloc: _appCubit, // IMPORTANT
-                  buildWhen: (previous, current) {
-                    return current is HideMenuState;
+                BlocBuilder<
+                    AppCubit,
+                    AppStates>(
+                  bloc: _appCubit,
+
+                  buildWhen: (
+                      previous,
+                      current,
+                      ) {
+                    return current
+                    is HideMenuState;
                   },
-                  builder: (context, state) {
-                    if (!_appCubit.isMenuOpen) {
+
+                  builder: (
+                      context,
+                      state,
+                      ) {
+                    if (!_appCubit
+                        .isMenuOpen) {
                       return const SizedBox.shrink();
                     }
 
@@ -107,14 +231,23 @@ class _StorePageState extends State<StorePage> {
                   },
                 ),
 
+              // ==================================================
+              // CONTENT
+              // ==================================================
+
               Expanded(
                 child: Column(
                   children: [
+
                     AppBarForPage(
-                      scaffoldKey: _scaffoldKeyDrawer,
+                      scaffoldKey:
+                      _scaffoldKeyDrawer,
                     ),
 
-                    const SelectedScreenWidget(),
+                    const Expanded(
+                      child:
+                      SelectedScreenWidget(),
+                    ),
                   ],
                 ),
               ),
@@ -122,7 +255,6 @@ class _StorePageState extends State<StorePage> {
           ),
         ),
       ),
-      );
-
+    );
   }
 }

@@ -1,4 +1,7 @@
+import 'package:emp_system_sun/core/api/dio_function/api_constants.dart';
 import 'package:emp_system_sun/core/setup_git_it.dart';
+import 'package:emp_system_sun/core/theming/auth_local_storage.dart';
+import 'package:emp_system_sun/features/cars_haraj_page/presentation/ui/car_haraj_orders_page/car_haraj_orders_page.dart';
 import 'package:emp_system_sun/features/communication_and_policies_pages/presentation/pages/first_screen_communication_and_policies_pages/first_screen_communication_and_policies_pages.dart';
 import 'package:emp_system_sun/features/dashboard_page/presentation/dashboard_page.dart';
 import 'package:emp_system_sun/features/internal_services/presentation/pages/internal_orders/first_screen_internal_orders/first_screen_internal_orders.dart';
@@ -6,6 +9,7 @@ import 'package:emp_system_sun/features/internal_services/presentation/pages/int
 import 'package:emp_system_sun/features/logout_dashboard/presentation/first_screen_logout_dashboard/logout_dashboard.dart';
 import 'package:emp_system_sun/features/mobile_services/presentation/pages/mobile_services_orders/first_screen_mobile_services_orders/first_screen_mobile_services_orders.dart';
 import 'package:emp_system_sun/features/mobile_services/presentation/pages/mobile_services_statistics/mobile_services_page/ui/mobile_services_statistics_page.dart';
+import 'package:emp_system_sun/features/order_services/presentation/pages/order_services_type/ui/order_services_type_page.dart';
 import 'package:emp_system_sun/features/permissions/presentation/pages/first_screen_permissions/first_screen_permissions.dart';
 import 'package:emp_system_sun/features/service_emp_view/data/model/get_employee_services_model/employee_service_model.dart';
 import 'package:emp_system_sun/features/service_emp_view/presentation/cubit/employee_services_cubit/employee_services_cubit.dart';
@@ -214,132 +218,281 @@ class PagesOfAllApp {
   static const int oilChangeServiceStaticsPageNumber = 533;
 
 }
-final services = getIt<EmployeeServicesCubit>().services;
+
 List<PageNodeModel> appPages = [];
 
-void getPages(BuildContext context) {
+Future<void> getPages(BuildContext context) async {
   appPages.clear();
-  final services = getIt<EmployeeServicesCubit>().services;
-  
-  appPages = [
-    const PageNodeModel(
-      name: AppLanguageKeys.dashBoardPageKey,
-      image: AppImageKeys.home,
-      number: PagesOfAllApp.dashboardPageNumber,
-      page: DashboardPage(),
-    ),
 
-    if (services.isNotEmpty)
-      PageNodeModel(
-        name: AppLanguageKeys.services,
-        image: AppImageKeys.userPermissions,
-        number: PagesOfAllApp.permissionsPageNumber,
-        children: services.map((service) {
-          return PageNodeModel(
-            name: service.getName(context) ?? '',
-            number: service.id ?? 0 +100,
-            page: ServiceEmpViewOrdersPage(
-              key: ValueKey('order${service.id}'),
-              serviceId: service.id ?? 0,
-            ),
+  final user = await AuthLocalStorage.getUser();
+
+  final employee = user?.employeeDetails;
+
+  // ============================================================
+  // NO EMPLOYEE DETAILS
+  // ============================================================
+
+  if (employee == null) {
+    appPages = await _getAllEmployeePages(context);
+    return;
+  }
+
+  final permissions = employee.permissions;
+
+  // ============================================================
+  // CHECK PERMISSIONS
+  // ============================================================
+
+  final allPermissionsAreNull =
+      permissions == null ||
+          (
+              permissions.acceptAllOrders == null &&
+                  permissions.changeOrderStatus == null &&
+                  permissions.harage == null &&
+                  permissions.maintenanceAndInternalServices == null &&
+                  permissions.mobileServices == null &&
+                  permissions.spareParts == null &&
+                  permissions.servicePackage == null &&
+                  permissions.petrol == null
           );
-        }).toList(),
+
+  // ============================================================
+  // NO PERMISSION CONFIGURATION
+  // ============================================================
+
+  if (allPermissionsAreNull) {
+    appPages = await _getAllEmployeePages(context);
+    return;
+  }
+
+  bool hasPermission(bool? permission) {
+    return permission == true;
+  }
+
+  // ============================================================
+  // GET CURRENT SERVICES FROM CUBIT
+  // ============================================================
+
+  final employeeServicesCubit =
+  getIt<EmployeeServicesCubit>();
+
+
+  final services = employeeServicesCubit.services;
+
+
+  // ============================================================
+  // FILTER SERVICES
+  // ============================================================
+
+  final employeeServices = services.where((service) {
+    final serviceId = service.id;
+
+    final exists =
+        serviceId != null &&
+            employee.serviceIds.contains(serviceId);
+
+    return exists;
+  }).toList();
+
+
+  // ============================================================
+  // BUILD PAGES
+  // ============================================================
+
+  appPages = [
+
+    // ==========================================================
+    // MAINTENANCE & INTERNAL SERVICES
+    // ==========================================================
+
+    if (hasPermission(
+      permissions.maintenanceAndInternalServices,
+    ))
+      const PageNodeModel(
+        name:
+        AppLanguageKeys.maintenanceAndInternalServicesKey,
+        image: AppImageKeys.carServices,
+        number:
+        PagesOfAllApp.internalServicesPageNumber,
+        page: OrderServicesTypePage(
+          serviceId:
+          MainCategoryConstants
+              .maintenanceAndInternalServicesID,
+        ),
       ),
 
-    const PageNodeModel(
-        name: AppLanguageKeys.maintenanceAndInternalServicesKey,
-        image: AppImageKeys.carServices,
-        number: PagesOfAllApp.internalServicesPageNumber,
-        children: [
-           PageNodeModel(
-            name: AppLanguageKeys.permissionsGroupPageKey,
-            number: PagesOfAllApp.internalServicesStatisticsPageNumber,
-            page: FirstScreenInternalOrders(),
-          ),
-          PageNodeModel(
-            name: AppLanguageKeys.ordersSectionKey,
-            number: PagesOfAllApp.internalOrdersPageNumber,
-            page: InternalOrdersPage(),
-          ),
-        ]),
+    // ==========================================================
+    // SPARE PARTS
+    // ==========================================================
 
-    const PageNodeModel(
+    if (hasPermission(permissions.spareParts))
+      const PageNodeModel(
         name: AppLanguageKeys.spareParts,
         image: AppImageKeys.spare,
         number: PagesOfAllApp.sparePageNumber,
-        children: [
-          PageNodeModel(
-            name: AppLanguageKeys.statistics,
-            number: PagesOfAllApp.sparePartsOrdersPageNumber,
-            page: FirstScreenSparePartsOrders(),
-          ),
-          PageNodeModel(
-            name: AppLanguageKeys.ordersSectionKey,
-            number: PagesOfAllApp.sparePartsStaticsPageNumber,
-            page: SparePartsStatisticsPage(),
-          ),
-        ]),
-    const PageNodeModel(
+        page: OrderServicesTypePage(
+          serviceId:
+          MainCategoryConstants.carSparePartsID,
+        ),
+      ),
+
+    // ==========================================================
+    // MOBILE SERVICES
+    // ==========================================================
+
+    if (hasPermission(permissions.mobileServices))
+      const PageNodeModel(
         name: AppLanguageKeys.mobileServices,
         image: AppImageKeys.mobile_maintenance,
-        number: PagesOfAllApp.mobileServicePageNumber,
-        children: [
-          PageNodeModel(
-            name: AppLanguageKeys.statistics,
-            number: PagesOfAllApp.mobileServiceOrdersPageNumber,
-            page: FirstScreenMobileServicesOrders(),
-          ),
-          PageNodeModel(
-            name: AppLanguageKeys.ordersSectionKey,
-            number: PagesOfAllApp.mobileServiceStaticsPageNumber,
-            page: MobileServicesStatisticsPage(),
-          ),
-        ]),
+        number:
+        PagesOfAllApp.mobileServicePageNumber,
+        page: OrderServicesTypePage(
+          serviceId:
+          MainCategoryConstants
+              .mobileServicesAndTransportationID,
+        ),
+      ),
 
-    // const PageNodeModel(
-    //   name: AppLanguageKeys.permissionsKey,
-    //   image: AppImageKeys.userPermissions,
-    //   number: PagesOfAllApp.permissionsPageNumber,
-    //   children: [
-    //     PageNodeModel(
-    //       name: AppLanguageKeys.facilityAccountKey,
-    //       number: 1000,
-    //       page:  ServiceEmpViewOrdersPage(serviceId: 6,),
-    //     ),
-    //     PageNodeModel(
-    //       name: AppLanguageKeys.facilityAccountKey,
-    //       number: 1001,
-    //       page:  ServiceEmpViewOrdersPage(serviceId: 7,),
-    //     ),
-    //   ]
-    // ),
+    // ==========================================================
+    // PETROL
+    // ==========================================================
+
+    if (hasPermission(permissions.petrol))
+      const PageNodeModel(
+        name: AppLanguageKeys.petroleum,
+        image: AppImageKeys.petrol,
+        number: PagesOfAllApp.petroleumPageNumber,
+        page: OrderServicesTypePage(
+          serviceId:
+          MainCategoryConstants.petrolMainID,
+        ),
+      ),
+
+    // ==========================================================
+    // HARAJ
+    // ==========================================================
+
+    if (hasPermission(permissions.harage))
+      const PageNodeModel(
+        name: AppLanguageKeys.harage,
+        image: AppImageKeys.car,
+        number:
+        PagesOfAllApp.carHarajOrdersPageNumber,
+        page: CarHarajOrdersPage(),
+      ),
+
+    // ==========================================================
+    // PERSONAL DATA
+    // ==========================================================
 
     const PageNodeModel(
-        name: AppLanguageKeys.facilityManagementKey,
-        image: AppImageKeys.store,
-        number: PagesOfAllApp.securityPageNumber,
-        children: [
-          PageNodeModel(
-            name: AppLanguageKeys.facilityAccountKey,
-            number: PagesOfAllApp.permissionsGroupPageNumber,
-            page: FacilityAccount(),
-          ),
-
-        ]),
-    const PageNodeModel(
-        name: AppLanguageKeys.technicalSupport,
-        image: AppImageKeys.users,
-        number: PagesOfAllApp.technicalSupportPageNumber,
-        page: TechnicalSupportAdminSun()
+      name: AppLanguageKeys.personalData,
+      image: AppImageKeys.store,
+      number: PagesOfAllApp.securityPageNumber,
+      page: FacilityAccount(),
     ),
 
+    // ==========================================================
+    // EMPLOYEE SERVICES
+    // ==========================================================
+
+    if (employeeServices.isNotEmpty)
+      PageNodeModel(
+        name: AppLanguageKeys.services,
+        image: AppImageKeys.userPermissions,
+        number:
+        PagesOfAllApp.permissionsPageNumber,
+
+        children: employeeServices.map(
+              (service) {
+            return PageNodeModel(
+              name: service.getName(context),
+
+              number:
+              (service.id ?? 0) + 100,
+
+              page: ServiceEmpViewOrdersPage(
+                key: ValueKey(
+                  'order_${service.id}',
+                ),
+                serviceId:
+                service.id ?? 0,
+              ),
+            );
+          },
+        ).toList(),
+      ),
+
+    // ==========================================================
+    // TECHNICAL SUPPORT
+    // ==========================================================
 
     const PageNodeModel(
-      name: AppLanguageKeys.socialPagesAndPoliciesKey,
+      name: AppLanguageKeys.technicalSupport,
+      image: AppImageKeys.users,
+      number:
+      PagesOfAllApp.technicalSupportPageNumber,
+      page: TechnicalSupportAdminSun(),
+    ),
+
+    // ==========================================================
+    // SOCIAL PAGES
+    // ==========================================================
+
+    const PageNodeModel(
+      name:
+      AppLanguageKeys.socialPagesAndPoliciesKey,
       image: AppImageKeys.pages,
       number: PagesOfAllApp.pagesPageNumber,
-      page: FirstScreenCommunicationAndPoliciesPages(),
+      page:
+      FirstScreenCommunicationAndPoliciesPages(),
     ),
+
+    // ==========================================================
+    // LOGOUT
+    // ==========================================================
+
+    const PageNodeModel(
+      name: AppLanguageKeys.logoutKey,
+      image: AppImageKeys.logout,
+      number: PagesOfAllApp.logoutPageNumber,
+      page: LogoutDashboard(),
+    ),
+  ];
+
+  print(
+    'TOTAL APP PAGES: ${appPages.length}',
+  );
+}
+
+Future<List<PageNodeModel>> _getAllEmployeePages(
+    BuildContext context,
+    ) async {
+  return [
+    const PageNodeModel(
+      name: AppLanguageKeys.personalData,
+      image: AppImageKeys.store,
+      number: PagesOfAllApp.securityPageNumber,
+      page: FacilityAccount(),
+    ),
+
+    const PageNodeModel(
+      name: AppLanguageKeys.technicalSupport,
+      image: AppImageKeys.users,
+      number:
+      PagesOfAllApp.technicalSupportPageNumber,
+      page: TechnicalSupportAdminSun(),
+    ),
+
+    const PageNodeModel(
+      name:
+      AppLanguageKeys.socialPagesAndPoliciesKey,
+      image: AppImageKeys.pages,
+      number: PagesOfAllApp.pagesPageNumber,
+      page:
+      FirstScreenCommunicationAndPoliciesPages(),
+    ),
+
     const PageNodeModel(
       name: AppLanguageKeys.logoutKey,
       image: AppImageKeys.logout,

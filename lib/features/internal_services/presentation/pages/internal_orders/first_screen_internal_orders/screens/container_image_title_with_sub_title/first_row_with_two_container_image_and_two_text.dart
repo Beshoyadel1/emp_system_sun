@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../../../../../../features/internal_services/presentation/cubit/loading_dashboard/loading_dashboard_cubit.dart';
-import '../../../../../../../../../features/internal_services/presentation/cubit/loading_dashboard/loading_dashboard_state.dart';
+import '../../../../../cubit/loading_dashboard/loading_dashboard_cubit.dart';
+import '../../../../../cubit/loading_dashboard/loading_dashboard_state.dart';
 import '../../../../../../../../core/language/language.dart';
 import '../../../../../../../../core/language/language_constant.dart';
 import '../../../custom_widget/container_with_image_container_and_two_text_widget.dart';

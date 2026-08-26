@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../../../../../features/cars_haraj_page/data/model/filter_orders_model/filter_orders_model.dart';
-import '../../../../../../../../../features/cars_haraj_page/data/model/internal_orders_filter/internal_orders_filter.dart';
-import '../../../../../../../../../features/internal_services/presentation/cubit/get_provider_internal_order/get_provider_internal_order_state.dart';
-import '../../../../../../../../../features/internal_services/presentation/cubit/tabs_cubit/tabs_cubit.dart';
-import '../../../../../../../../../features/internal_services/presentation/pages/internal_services_statistics/Internal_services_page/widgets/filters_tabs_widget.dart';
+import '../../../../../../../../features/cars_haraj_page/data/model/filter_orders_model/filter_orders_model.dart';
+import '../../../../../../../../features/cars_haraj_page/data/model/internal_orders_filter/internal_orders_filter.dart';
+import '../../../../../../../../features/internal_services/presentation/cubit/get_provider_internal_order/get_provider_internal_order_state.dart';
+import '../../../../../../../../features/internal_services/presentation/cubit/tabs_cubit/tabs_cubit.dart';
+import '../../../../../../../../features/internal_services/presentation/pages/internal_services_statistics/Internal_services_page/widgets/filters_tabs_widget.dart';
 import '../../../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../../../core/cubit/new_orders_cubit/new_orders_cubit.dart';
 import '../../../../../../../core/language/language_constant.dart';
@@ -58,7 +58,7 @@ class OrdersPage extends StatelessWidget {
                     create: (_) => GetProviderInternalOrderCubit()
                       ..loadInternalOrders(
                         serviceId: MainCategoryConstants.maintenanceAndInternalServicesID,
-                       // orderType: mapOrderType(0),
+                        orderType: mapOrderType(0),
                       ),
                   ),
                 ],

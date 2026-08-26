@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../../../../features/internal_services/presentation/pages/internal_orders/custom_widget/text_empty_view_data.dart';
-import '../../../../../../../../../features/internal_services/presentation/cubit/order_funcations/order_functions.dart';
+import '../../../../../../internal_services/presentation/cubit/order_funcations/order_functions.dart';
 import '../../../../../../../../../features/technical_support/presentation/bloc/chat_details_cubit/chat_details_cubit.dart';
 import '../../../../../../../../../features/technical_support/presentation/bloc/message_cubit/message_cubit.dart';
 import '../../../../../../../../../features/technical_support/presentation/bloc/message_cubit/message_state.dart';

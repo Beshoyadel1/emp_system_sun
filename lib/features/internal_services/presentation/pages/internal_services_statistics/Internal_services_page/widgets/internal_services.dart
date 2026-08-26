@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../../../../../../core/theming/assets.dart';
+import '../../../../../../../../core/theming/assets.dart';
 import '../../../../../../../core/language/language_constant.dart';
 import '../../../../../../../core/theming/colors.dart';
 import '../../../../../../../core/pages_widgets/general_widgets/custom_container.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../../../../../../features/internal_services/data/model/get_provider_main_service_statistics_model/data_points_model.dart';
-import '../../../../../../../../../features/internal_services/presentation/cubit/loading_dashboard/loading_dashboard_cubit.dart';
-import '../../../../../../../../../features/internal_services/presentation/cubit/loading_dashboard/loading_dashboard_state.dart';
+import '../../../../../../cubit/loading_dashboard/loading_dashboard_cubit.dart';
+import '../../../../../../cubit/loading_dashboard/loading_dashboard_state.dart';
 import '../../../../../../../../../core/theming/colors.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

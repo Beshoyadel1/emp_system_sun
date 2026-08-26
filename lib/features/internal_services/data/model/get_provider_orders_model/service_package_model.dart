@@ -12,17 +12,17 @@ class ServicePackageModel {
   final int? carId;
 
   ServicePackageModel({
-     this.packageName,
-     this.packageLatinName,
-     this.items,
-     this.id,
-     this.orderId,
-     this.servicePackageId,
-     this.price,
-     this.taxPercentage,
-     this.quantity,
-     this.totalPrice,
-     this.carId,
+    this.packageName,
+    this.packageLatinName,
+    this.items,
+    this.id,
+    this.orderId,
+    this.servicePackageId,
+    this.price,
+    this.taxPercentage,
+    this.quantity,
+    this.totalPrice,
+    this.carId,
   });
 
   factory ServicePackageModel.fromJson(Map<String, dynamic> json) {

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../../../../features/internal_services/data/datasource/get_provider_orders_datasource/get_provider_orders_repository.dart';
 import '../../../../../../../../../features/auth_page/data/datasource/login_datasource/login_repository.dart';
 import '../../../data/request/get_provider_orders_request/get_provider_orders_request.dart';
-import '../../../../../../../../../features/internal_services/presentation/cubit/get_provider_internal_order/get_provider_internal_order_cubit.dart';
+import 'get_provider_internal_order_cubit.dart';
 
 class GetProviderInternalOrderCubit
     extends Cubit<GetProviderInternalOrderState> {

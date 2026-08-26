@@ -25,7 +25,7 @@ class ServiceEmpViewOrdersPage extends StatelessWidget {
           //   return const OrderDetailsPage();
           // }
 
-          return OrdersPageSparePartsStatistics(cubit: cubit,serviceId: serviceId,);
+          return OrdersPageServiceEmpViewOrdersPage(cubit: cubit,serviceId: serviceId,);
         },
       ),
     );

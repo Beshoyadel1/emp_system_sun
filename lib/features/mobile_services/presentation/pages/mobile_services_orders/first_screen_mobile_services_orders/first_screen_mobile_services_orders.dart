@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../../../../core/theming/colors.dart';
 import '../../../../../../../../core/utilies/map_of_all_app.dart';
-import '../../../../../../../../features/internal_services/presentation/cubit/loading_dashboard/loading_dashboard_cubit.dart';
+import '../../../../../internal_services/presentation/cubit/loading_dashboard/loading_dashboard_cubit.dart';
 import '../../../../../../../../features/internal_services/presentation/pages/internal_orders/first_screen_internal_orders/screens/part_two_screen_first_screen_internal_orders/container_profits_from_ministry_of_interior_services/container_profits_from_ministry_of_interior_services.dart';
 import '../../../../../../../../features/internal_services/presentation/pages/internal_orders/first_screen_internal_orders/screens/part_two_screen_first_screen_internal_orders/container_rate_service/container_rate_service.dart';
 import '../../../../../../../../features/mobile_services/presentation/pages/mobile_services_orders/first_screen_mobile_services_orders/screens/list_data_first_screen_mobile_services_orders.dart';

@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
-import '../../../../../../../../../features/internal_services/data/model/get_provider_orders_model/order_model.dart';
-import '../../../../../../../../../features/internal_services/presentation/pages/internal_orders/first_screen_internal_orders/screens/big_container_of_new_orders/part_container_big_container_of_new_orders/custom_tab_second_part_data_container_in_list_data_first_screen_internal_orders.dart';
-import '../../../../../../../../../features/internal_services/presentation/pages/internal_orders/first_screen_internal_orders/screens/big_container_of_new_orders/part_container_big_container_of_new_orders/mobile_second_part_data_container_in_list_data_first_screen_internal_orders.dart';
-import '../../../../../../../../../features/internal_services/presentation/pages/internal_orders/first_screen_internal_orders/screens/big_container_of_new_orders/part_container_big_container_of_new_orders/tab_second_part_data_container_in_list_data_first_screen_internal_orders.dart';
+import '../../../../../../../features/internal_services/data/model/get_provider_orders_model/order_model.dart';
+import '../../../../../../../features/internal_services/presentation/pages/internal_orders/first_screen_internal_orders/screens/big_container_of_new_orders/part_container_big_container_of_new_orders/custom_tab_second_part_data_container_in_list_data_first_screen_internal_orders.dart';
+import '../../../../../../../features/internal_services/presentation/pages/internal_orders/first_screen_internal_orders/screens/big_container_of_new_orders/part_container_big_container_of_new_orders/mobile_second_part_data_container_in_list_data_first_screen_internal_orders.dart';
+import '../../../../../../../features/internal_services/presentation/pages/internal_orders/first_screen_internal_orders/screens/big_container_of_new_orders/part_container_big_container_of_new_orders/tab_second_part_data_container_in_list_data_first_screen_internal_orders.dart';
 import '../../../../../../../../core/utilies/map_of_all_app.dart';
 import '../../../../../../../../core/theming/colors.dart';
 
@@ -17,7 +17,8 @@ class ContainerOfSecondPartDataContainerInListDataFirstScreenInternalOrdersWidge
       titlePart3,
       subTitlePart3,
       timePart5,
-      pricePart6;
+      pricePart6,
+      id;
   final int? status, serviceId;
   final Uint8List? imagePathPart1, imagePathPart3;
   final OrderModel order;
@@ -37,7 +38,8 @@ class ContainerOfSecondPartDataContainerInListDataFirstScreenInternalOrdersWidge
       this.timePart5,
       this.pricePart6,
       required this.serviceId,
-      required this.order});
+      required this.order,
+      this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +77,7 @@ class ContainerOfSecondPartDataContainerInListDataFirstScreenInternalOrdersWidge
               pricePart6: pricePart6!,
               order: order,
               serviceId: serviceId,
+        id: id ?? "",
             )
           : isTabletCustom
               ? CustomTabSecondPartDataContainerInListDataFirstScreenInternalOrders(
@@ -91,7 +94,8 @@ class ContainerOfSecondPartDataContainerInListDataFirstScreenInternalOrdersWidge
                   timePart5: timePart5!,
                   pricePart6: pricePart6!,
                   order: order,
-                  serviceId: serviceId)
+                  serviceId: serviceId,
+          id: id ?? "")
               : TabSecondPartDataContainerInListDataFirstScreenInternalOrders(
                   imagePathPart1: imagePathPart1,
                   titlePart1: titlePart1!,
@@ -106,7 +110,8 @@ class ContainerOfSecondPartDataContainerInListDataFirstScreenInternalOrdersWidge
                   timePart5: timePart5!,
                   pricePart6: pricePart6!,
                   order: order,
-                  serviceId: serviceId),
+                  serviceId: serviceId,
+          id: id ?? ""),
     );
   }
 }
