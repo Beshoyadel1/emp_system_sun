@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:emp_system_sun/features/cars_haraj_page/data/model/get_car_brand_models/car_model_data_model.dart';
-import 'package:emp_system_sun/features/cars_haraj_page/data/request/get_car_brand_request/get_car_brand_models_request.dart';
+import '../../../../../../../../../features/cars_haraj_page/data/model/get_car_brand_models/car_model_data_model.dart';
+import '../../../../../../../../../features/cars_haraj_page/data/request/get_car_brand_request/get_car_brand_models_request.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';
 import '../../../../../core/api/dio_function/failures.dart';

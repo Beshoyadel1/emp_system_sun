@@ -33,6 +33,12 @@ class AppLocalizations {
       //END//
 
       //others//
+      AppLanguageKeys.created: 'مُنشأ',
+      AppLanguageKeys.pending: 'معلق',
+      AppLanguageKeys.deleted: 'محذوف',
+      AppLanguageKeys.noComment: 'لا يوجد تعليق',
+      AppLanguageKeys.comment: 'تعليق',
+      AppLanguageKeys.currentStatus: 'الحالة الحالية',
       AppLanguageKeys.approvalInfoId: 'رقم معلومات الاعتماد',
       AppLanguageKeys.approvalStartDate: 'تاريخ بداية الاعتماد',
       AppLanguageKeys.approvalEndDate: 'تاريخ انتهاء الاعتماد',
@@ -582,7 +588,7 @@ class AppLocalizations {
       AppLanguageKeys.saveKey: 'حفظ',
       AppLanguageKeys.selectCarModelKey: 'أختر موديل سيارتك',
       AppLanguageKeys.searchCarModelKey: 'يمكنك البحث لاختيار موديل السيارة',
-      AppLanguageKeys.continueFacilityDataKey: 'استكمال تسجيل بيانات المنشأة',
+      AppLanguageKeys.continueFacilityDataKey: 'استكمال تسجيل بيانات ',
       AppLanguageKeys.fillFacilityDataKey: 'قم بملئ بيانات حساب المنشأة ',
       AppLanguageKeys.saturdayKey: 'السبت',
       AppLanguageKeys.sundayKey: 'الاحد',
@@ -1438,6 +1444,12 @@ class AppLocalizations {
       AppLanguageKeys.acceptOrder: 'Accept Order',
       //END//
       //others//
+      AppLanguageKeys.created: 'Created',
+      AppLanguageKeys.pending: 'Pending',
+      AppLanguageKeys.deleted: 'Deleted',
+      AppLanguageKeys.noComment: 'No Comment',
+      AppLanguageKeys.comment: 'Comment',
+      AppLanguageKeys.currentStatus: 'Current Status',
       AppLanguageKeys.approvalInfoId: 'Approval Info ID',
       AppLanguageKeys.approvalStartDate: 'Approval Start Date',
       AppLanguageKeys.approvalEndDate: 'Approval End Date',
@@ -1997,7 +2009,7 @@ class AppLocalizations {
       AppLanguageKeys.searchCarModelKey:
           'You can search to choose the car api_functions',
       AppLanguageKeys.continueFacilityDataKey:
-          'Continue filling facility information',
+          'Continue filling information',
       AppLanguageKeys.fillFacilityDataKey:
           'Fill in your facility account information',
       AppLanguageKeys.saturdayKey: 'Saturday',

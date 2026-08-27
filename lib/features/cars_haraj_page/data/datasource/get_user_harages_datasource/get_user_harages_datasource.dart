@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:emp_system_sun/features/cars_haraj_page/data/request/get_user_harages_request/get_user_harages_request.dart';
+import '../../../../../../../../../features/cars_haraj_page/data/request/get_user_harages_request/get_user_harages_request.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';
 import '../../../../../core/api/dio_function/failures.dart';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../../../features/cars_haraj_page/presentation/custom_widget/text_with_harage_container_status.dart';
 import '../../../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../../../core/language/language_constant.dart';
 import '../../../../../../../core/pages_widgets/general_widgets/custom_container.dart';
@@ -90,7 +91,15 @@ class WidgetDesignDetailsDataHaragCar extends StatelessWidget {
                     _getFuelTypeName(harage.fuelType),
                   ),
 
+                  _buildInfoItem(
+                    AppLanguageKeys.comment,
+                    harage.currentStatus?.notes ?? AppLanguageKeys.noComment,
+                  ),
 
+                  TextWithHarageContainerStatus(
+                    text: AppLanguageKeys.orderStatus,
+                    status:harage.currentStatus?.status,
+                  ),
                 ],
               ),
             ),

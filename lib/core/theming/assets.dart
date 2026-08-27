@@ -1,4 +1,6 @@
 class AppImageKeys {
+  static const String servicePackage = 'assets/images/servicePackage.png';
+
   static const String petrol = 'assets/images/petrol.png';
   static const String car = 'assets/images/car.png';
   static const String order = 'assets/images/order.png';

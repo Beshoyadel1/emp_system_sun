@@ -66,15 +66,38 @@ class RowMessageSupportWidget extends StatelessWidget {
     );
   }
   Widget _buildImage() {
+    Widget image;
+
     if (imageBytes != null && imageBytes!.isNotEmpty) {
-      return Image.memory(
+      image = Image.memory(
         imageBytes!,
         fit: BoxFit.cover,
+        width: 50,
+        height: 50,
         errorBuilder: (_, __, ___) {
-          return Image.asset(AppImageKeys.support_message_emp1);
+          return Image.asset(
+            AppImageKeys.support_message_emp1,
+            fit: BoxFit.cover,
+            width: 50,
+            height: 50,
+          );
         },
       );
+    } else {
+      image = Image.asset(
+        AppImageKeys.support_message_emp1,
+        fit: BoxFit.cover,
+        width: 50,
+        height: 50,
+      );
     }
-    return Image.asset(AppImageKeys.support_message_emp1);
+
+    return ClipOval(
+      child: SizedBox(
+        width: 50,
+        height: 50,
+        child: image,
+      ),
+    );
   }
 }

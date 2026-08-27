@@ -216,6 +216,7 @@ class PagesOfAllApp {
   static const int oilChangeServicePageNumber = 531;
   static const int oilChangeServiceOrdersPageNumber = 532;
   static const int oilChangeServiceStaticsPageNumber = 533;
+  static const int servicePackagePageNumber = 534;
 
 }
 
@@ -315,9 +316,8 @@ Future<void> getPages(BuildContext context) async {
         number:
         PagesOfAllApp.internalServicesPageNumber,
         page: OrderServicesTypePage(
-          serviceId:
-          MainCategoryConstants
-              .maintenanceAndInternalServicesID,
+          key: ValueKey('permissions${MainCategoryConstants.maintenanceAndInternalServicesID}'),
+          serviceId: MainCategoryConstants.maintenanceAndInternalServicesID,
         ),
       ),
 
@@ -331,8 +331,20 @@ Future<void> getPages(BuildContext context) async {
         image: AppImageKeys.spare,
         number: PagesOfAllApp.sparePageNumber,
         page: OrderServicesTypePage(
+          key: ValueKey('permissions${MainCategoryConstants.carSparePartsID}'),
           serviceId:
           MainCategoryConstants.carSparePartsID,
+        ),
+      ),
+
+    if (hasPermission(permissions.servicePackage))
+      const PageNodeModel(
+        name: AppLanguageKeys.servicePackage,
+        image: AppImageKeys.servicePackage,
+        number: PagesOfAllApp.servicePackagePageNumber,
+        page: OrderServicesTypePage(
+          key: ValueKey('permissions${MainCategoryConstants.servicePackagesID}'),
+          serviceId: MainCategoryConstants.servicePackagesID,
         ),
       ),
 
@@ -347,6 +359,7 @@ Future<void> getPages(BuildContext context) async {
         number:
         PagesOfAllApp.mobileServicePageNumber,
         page: OrderServicesTypePage(
+          key: ValueKey('permissions${MainCategoryConstants.mobileServicesAndTransportationID}'),
           serviceId:
           MainCategoryConstants
               .mobileServicesAndTransportationID,
@@ -363,6 +376,7 @@ Future<void> getPages(BuildContext context) async {
         image: AppImageKeys.petrol,
         number: PagesOfAllApp.petroleumPageNumber,
         page: OrderServicesTypePage(
+          key: ValueKey('permissions${MainCategoryConstants.petrolMainID}'),
           serviceId:
           MainCategoryConstants.petrolMainID,
         ),
@@ -378,7 +392,9 @@ Future<void> getPages(BuildContext context) async {
         image: AppImageKeys.car,
         number:
         PagesOfAllApp.carHarajOrdersPageNumber,
-        page: CarHarajOrdersPage(),
+        page: CarHarajOrdersPage(
+          key: ValueKey('permissions${PagesOfAllApp.carHarajOrdersPageNumber}'),
+        ),
       ),
 
     // ==========================================================
@@ -386,8 +402,8 @@ Future<void> getPages(BuildContext context) async {
     // ==========================================================
 
     const PageNodeModel(
-      name: AppLanguageKeys.personalData,
-      image: AppImageKeys.store,
+      name: AppLanguageKeys.myAccount,
+      image: AppImageKeys.users,
       number: PagesOfAllApp.securityPageNumber,
       page: FacilityAccount(),
     ),
@@ -407,10 +423,8 @@ Future<void> getPages(BuildContext context) async {
               (service) {
             return PageNodeModel(
               name: service.getName(context),
-
               number:
               (service.id ?? 0) + 100,
-
               page: ServiceEmpViewOrdersPage(
                 key: ValueKey(
                   'order_${service.id}',
@@ -460,9 +474,6 @@ Future<void> getPages(BuildContext context) async {
     ),
   ];
 
-  print(
-    'TOTAL APP PAGES: ${appPages.length}',
-  );
 }
 
 Future<List<PageNodeModel>> _getAllEmployeePages(
@@ -470,8 +481,8 @@ Future<List<PageNodeModel>> _getAllEmployeePages(
     ) async {
   return [
     const PageNodeModel(
-      name: AppLanguageKeys.personalData,
-      image: AppImageKeys.store,
+      name: AppLanguageKeys.myAccount,
+      image: AppImageKeys.users,
       number: PagesOfAllApp.securityPageNumber,
       page: FacilityAccount(),
     ),

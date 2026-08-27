@@ -35,6 +35,7 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
   final ageController = TextEditingController();
   final dateController = TextEditingController();
   final idController = TextEditingController();
+  final userNameController = TextEditingController();
 
   bool isEditMode = false;
   bool isLoaded = false;
@@ -66,6 +67,7 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
       genderController.text = user.gander?.toString() ?? "";
       dateController.text = OrderFunctions.formatDateFromDateTime(user.joinDate);
       idController.text=user.userid.toString();
+      userNameController.text=user.username.toString();
       setState(() {});
     }
   }
@@ -82,7 +84,7 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
 
       userid: user?.userid ?? 0,
 
-      username: user?.username,
+      username: safe(userNameController.text),
 
       type: user?.type,
 
@@ -103,7 +105,6 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
           user?.image,
 
       employeeDetails: EmployeeWrapperRequest(
-
         employeeDetails:
         EmployeeDetailsRequest(
 
@@ -156,6 +157,13 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
               width: 250,
             ),
             UserTextFieldWidget(
+              controller: userNameController,
+              text: AppLanguageKeys.username,
+              type: UserFieldType.name,
+              readOnly: !isEditMode,
+              width: 250,
+            ),
+            UserTextFieldWidget(
               controller: jobNameController,
               text: AppLanguageKeys.jobName,
               type: UserFieldType.name,
@@ -173,14 +181,14 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
               controller: phoneController,
               text: AppLanguageKeys.phoneNumber,
               type: UserFieldType.phone,
-              readOnly: !isEditMode,
+              readOnly: true,
               width: 250,
             ),
             UserTextFieldWidget(
               controller: emailController,
               text: AppLanguageKeys.email,
               type: UserFieldType.email,
-              readOnly: !isEditMode,
+              readOnly: true,
               width: 250,
             ),
             UserTextFieldWidget(
@@ -212,7 +220,7 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
           runSpacing: 20,
           children: [
             AttachImage(
-              title: AppLanguageKeys.ownerIdKey,
+              title: AppLanguageKeys.profilePicture,
               type: 'image',
               isEditMode: isEditMode,
             ),

@@ -20,7 +20,13 @@ class AppLanguageKeys {
   //end//
 
   //others//
+  static const String created = 'created';
+  static const String pending = 'pending';
+  static const String deleted = 'deleted';
 
+  static const String noComment = 'noComment';
+  static const String comment = 'comment';
+  static const String currentStatus = 'currentStatus';
   static const String approvalInfoId = 'approvalInfoId';
   static const String approvalStartDate = 'approvalStartDate';
   static const String approvalEndDate = 'approvalEndDate';

@@ -38,6 +38,8 @@ class ApiConfig {
 }
 
 class ApiLink {
+  static const String changeHarageStatus =
+      "${ApiConfig.baseUrlApi}/${ApiConfig.harage}/ChangeHarageStatus";
 //approveProvider
   static const String approveProvider =
       "${ApiConfig.baseUrlApi}/${ApiConfig.approval}/ApproveProvider";
@@ -639,4 +641,11 @@ class DurationTypeItem {
     required this.id,
     required this.name,
   });
+}
+
+class HarageStatus {
+  static const int created = 1;
+  static const int pending = 2;
+  static const int sold = 3;
+  static const int deleted = 4;
 }

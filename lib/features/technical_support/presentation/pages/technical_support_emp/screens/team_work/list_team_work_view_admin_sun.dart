@@ -33,8 +33,9 @@ class ListTeamWorkViewAdminSun extends StatelessWidget {
           if (state.users.isEmpty) {
             return const TextEmptyViewData();
           }
+
           return SizedBox(
-            height: 300,
+            height: 400,
             child: ListView.separated(
               padding: EdgeInsets.zero,
               itemCount: users.length,

@@ -4,6 +4,7 @@ import 'package:emp_system_sun/features/store_page/data/model/facility_model/fac
 import 'package:emp_system_sun/features/store_page/presentation/bloc/facility_cubit/facility_tab_cubit/facility_tab_cubit.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/facility_cubit/facility_tab_cubit/facility_tab_state.dart';
 import 'package:emp_system_sun/features/store_page/presentation/pages/store_widgets/car_model_widget/widgets/tabs_widget.dart';
+import 'package:emp_system_sun/features/store_page/presentation/pages/store_widgets/facility_account/tabs/facility_data_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../core/pages_widgets/general_widgets/snakbar.dart';
@@ -47,16 +48,8 @@ class FacilityAccountCheck extends StatelessWidget {
                         CustomContainer(
                           containerWidth: double.infinity,
                           isSelected: false,
-                          border: const Border(
-                            top: BorderSide(color: AppColors.lightGreyColor),
-                            left: BorderSide(color: AppColors.lightGreyColor),
-                            right: BorderSide(color: AppColors.lightGreyColor),
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
-                          ),
                           typeWidget: Column(
+                            spacing: 10,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const TextInAppWidget(
@@ -65,18 +58,7 @@ class FacilityAccountCheck extends StatelessWidget {
                                 fontWeightIndex:
                                 FontSelectionData.mediumFontFamily,
                               ),
-                              const SizedBox(height: 10),
-                              const TabsWidget(),
-                              const SizedBox(height: 30),
-
-                              facilityTabs[
-                              context
-                                  .read<FacilityTabCubit>()
-                                  .selectedIndex]
-                                  .content,
-
-                              const SizedBox(height: 40),
-
+                              const FacilityDataContent(),
                               Row(
                                 children: [
                                   Expanded(

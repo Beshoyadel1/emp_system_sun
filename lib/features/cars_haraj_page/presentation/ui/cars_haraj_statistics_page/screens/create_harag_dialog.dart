@@ -32,7 +32,6 @@ class CreateHaragDialog extends StatefulWidget {
 
 class _CreateHaragDialogState extends State<CreateHaragDialog> {
   final _formKey = GlobalKey<FormState>();
-
   final descriptionController = TextEditingController();
   final priceController = TextEditingController();
   final costController = TextEditingController();
@@ -40,9 +39,10 @@ class _CreateHaragDialogState extends State<CreateHaragDialog> {
   final addressController = TextEditingController();
   final releaseDateController = TextEditingController();
   final transmissionTypeController = TextEditingController();
+  final noteStatusController = TextEditingController();
 
   int? selectedFuelTypeId;
-
+  int? selectedStatus;
   bool isNew = false;
 
   bool addCar = true;
@@ -91,6 +91,7 @@ class _CreateHaragDialogState extends State<CreateHaragDialog> {
     // EDIT
     // =========================
 
+    selectedStatus = car.currentStatus?.status;
     descriptionController.text = car.description ?? '';
 
     priceController.text = car.price?.toString() ?? '';
@@ -100,6 +101,8 @@ class _CreateHaragDialogState extends State<CreateHaragDialog> {
     kilometersController.text = car.kilometers?.toString() ?? '';
 
     addressController.text = car.addressText ?? '';
+
+    noteStatusController.text=car.currentStatus?.notes.toString()?? "";
 
     releaseDateController.text = car.releaseDate ?? '';
 
@@ -112,6 +115,7 @@ class _CreateHaragDialogState extends State<CreateHaragDialog> {
     selectedBrandId = car.carbrandid;
 
     selectedModelId = car.carmodelid;
+
 
     // Edit:
     // show car selection only if both exist.
@@ -131,7 +135,7 @@ class _CreateHaragDialogState extends State<CreateHaragDialog> {
     addressController.dispose();
     releaseDateController.dispose();
     transmissionTypeController.dispose();
-
+    noteStatusController.dispose();
     super.dispose();
   }
 
@@ -193,7 +197,7 @@ class _CreateHaragDialogState extends State<CreateHaragDialog> {
                   _switch(
                     AppLanguageKeys.addNewCarKey,
                     addCar,
-                    (value) {
+                        (value) {
                       setState(() {
                         addCar = value;
 
@@ -230,11 +234,11 @@ class _CreateHaragDialogState extends State<CreateHaragDialog> {
                             return const SizedBox();
                           }
                           final brandExists = state.brands.any(
-                            (brand) => brand.id == selectedBrandId,
+                                (brand) => brand.id == selectedBrandId,
                           );
 
                           final dropdownValue =
-                              brandExists ? selectedBrandId : null;
+                          brandExists ? selectedBrandId : null;
                           return _dropdown<int>(
                             value: dropdownValue,
                             hint: AppLanguageKeys.selectItem,
@@ -242,13 +246,13 @@ class _CreateHaragDialogState extends State<CreateHaragDialog> {
                                 .where((brand) => brand.id != null)
                                 .map(
                                   (brand) => DropdownMenuItem<int>(
-                                    value: brand.id!,
-                                    child: TextInAppWidget(
-                                      text: brand.getName(context),
-                                      textSize: 15,
-                                    ),
-                                  ),
-                                )
+                                value: brand.id!,
+                                child: TextInAppWidget(
+                                  text: brand.getName(context),
+                                  textSize: 15,
+                                ),
+                              ),
+                            )
                                 .toList(),
                             onChanged: (value) {
                               if (value == null) {
@@ -263,8 +267,8 @@ class _CreateHaragDialogState extends State<CreateHaragDialog> {
                               });
 
                               context.read<HaragCubit>().getCarModels(
-                                    brandId: value,
-                                  );
+                                brandId: value,
+                              );
                             },
                           );
                         }
@@ -301,11 +305,11 @@ class _CreateHaragDialogState extends State<CreateHaragDialog> {
                             return const SizedBox();
                           }
                           final modelExists = state.models.any(
-                            (model) => model.id == selectedModelId,
+                                (model) => model.id == selectedModelId,
                           );
 
                           final dropdownValue =
-                              modelExists ? selectedModelId : null;
+                          modelExists ? selectedModelId : null;
 
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -391,7 +395,7 @@ class _CreateHaragDialogState extends State<CreateHaragDialog> {
                   _switch(
                     AppLanguageKeys.isNew,
                     isNew,
-                    (value) {
+                        (value) {
                       setState(() {
                         isNew = value;
                       });
@@ -445,7 +449,7 @@ class _CreateHaragDialogState extends State<CreateHaragDialog> {
                           textSize: 15,
                         ),
                         items: FuelTypes.all.map(
-                          (fuel) {
+                              (fuel) {
                             return DropdownMenuItem<int>(
                               value: fuel.id,
                               child: TextInAppWidget(
@@ -467,6 +471,61 @@ class _CreateHaragDialogState extends State<CreateHaragDialog> {
                   // ==================================================
                   // IMAGES
                   // ==================================================
+
+                  if(widget.car!=null)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 5,
+                      children: [
+                        _field(
+                          AppLanguageKeys.notes,
+                          noteStatusController,
+                        ),
+                        _title(
+                          AppLanguageKeys.currentStatus,
+                        ),
+
+                        _dropdown<int>(
+                          value: selectedStatus,
+                          hint: AppLanguageKeys.status,
+                          items: const [
+                            DropdownMenuItem<int>(
+                              value: HarageStatus.created,
+                              child: TextInAppWidget(
+                                text: AppLanguageKeys.created,
+                                textSize: 15,
+                              ),
+                            ),
+                            DropdownMenuItem<int>(
+                              value: HarageStatus.pending,
+                              child: TextInAppWidget(
+                                text: AppLanguageKeys.pending,
+                                textSize: 15,
+                              ),
+                            ),
+                            DropdownMenuItem<int>(
+                              value: HarageStatus.sold,
+                              child: TextInAppWidget(
+                                text: AppLanguageKeys.sold,
+                                textSize: 15,
+                              ),
+                            ),
+                            DropdownMenuItem<int>(
+                              value: HarageStatus.deleted,
+                              child: TextInAppWidget(
+                                text: AppLanguageKeys.deleted,
+                                textSize: 15,
+                              ),
+                            ),
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              selectedStatus = value;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
 
                   _imagesSection(),
                 ],
@@ -513,17 +572,17 @@ class _CreateHaragDialogState extends State<CreateHaragDialog> {
                 onPressed: isLoading ? null : _submit,
                 child: isLoading
                     ? const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(),
-                      )
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(),
+                )
                     : TextInAppWidget(
-                        text: widget.isEdit
-                            ? AppLanguageKeys.edit
-                            : AppLanguageKeys.create,
-                        textSize: 15,
-                        textColor: AppColors.whiteColor,
-                      ),
+                  text: widget.isEdit
+                      ? AppLanguageKeys.edit
+                      : AppLanguageKeys.create,
+                  textSize: 15,
+                  textColor: AppColors.whiteColor,
+                ),
               );
             },
           ),
@@ -581,9 +640,9 @@ class _CreateHaragDialogState extends State<CreateHaragDialog> {
 
       AppSnackBar.showError(
         e.toString().replaceFirst(
-              'Exception: ',
-              '',
-            ),
+          'Exception: ',
+          '',
+        ),
       );
     }
   }
@@ -644,7 +703,7 @@ class _CreateHaragDialogState extends State<CreateHaragDialog> {
 
               ...List.generate(
                 existingImages.length,
-                (index) {
+                    (index) {
                   return _imageItem(
                     image: existingImages[index],
                     onRemove: () => _removeExistingImage(
@@ -660,7 +719,7 @@ class _CreateHaragDialogState extends State<CreateHaragDialog> {
 
               ...List.generate(
                 selectedImages.length,
-                (index) {
+                    (index) {
                   return _imageItem(
                     image: selectedImages[index],
                     onRemove: () => _removeNewImage(
@@ -786,11 +845,11 @@ class _CreateHaragDialogState extends State<CreateHaragDialog> {
   // ============================================================
 
   Widget _field(
-    String title,
-    TextEditingController controller, {
-    bool isDouble = false,
-    bool isInt = false,
-  }) {
+      String title,
+      TextEditingController controller, {
+        bool isDouble = false,
+        bool isInt = false,
+      }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -821,10 +880,10 @@ class _CreateHaragDialogState extends State<CreateHaragDialog> {
   // ============================================================
 
   Widget _switch(
-    String title,
-    bool value,
-    Function(bool) onChanged,
-  ) {
+      String title,
+      bool value,
+      Function(bool) onChanged,
+      ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -940,15 +999,13 @@ class _CreateHaragDialogState extends State<CreateHaragDialog> {
       images: images,
     );
 
-    // =========================
-    // SEND
-    // =========================
-
     final cubit = context.read<HaragCubit>();
 
     if (widget.isEdit) {
       cubit.updateHarage(
         request: request,
+        harageStatus: selectedStatus,
+        statusNotes: noteStatusController.text.trim(),
       );
     } else {
       cubit.createHarage(

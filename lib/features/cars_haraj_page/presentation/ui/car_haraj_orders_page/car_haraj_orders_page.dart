@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/features/cars_haraj_page/presentation/ui/cars_haraj_statistics_page/screens/create_harag_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../../../../core/theming/colors.dart';
@@ -29,6 +30,23 @@ class CarHarajOrdersPage extends StatelessWidget {
                   child: ListViewCarHarag(),
                 ),
               ),
+            ),
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: AppColors.orangeColor,
+              onPressed: () async {
+                final result = await showDialog(
+                  context: context,
+                  builder: (_) => BlocProvider.value(
+                    value: context.read<HaragCubit>(),
+                    child: const CreateHaragDialog(),
+                  ),
+                );
+
+                if (result == true) {
+                  await context.read<HaragCubit>().getUserHarages(currentPage: 1);
+                }
+              },
+              child: const Icon(Icons.add, color: Colors.white),
             ),
           );
         },

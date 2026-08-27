@@ -1,4 +1,4 @@
-import 'package:emp_system_sun/features/cars_haraj_page/data/model/get_car_brand_models/car_model_data_model.dart';
+import '../../../../../../../../../features/cars_haraj_page/data/model/get_car_brand_models/car_model_data_model.dart';
 import 'package:equatable/equatable.dart';
 import '../../../../../../../../../features/cars_haraj_page/data/model/get_car_brand_models_model/car_brand_data_model.dart';
 import '../../../../../../../../../features/cars_haraj_page/data/model/get_car_details_model/get_car_details_model.dart';
@@ -315,4 +315,13 @@ class SendMessageError extends HaragState {
   const SendMessageError({
     required this.message,
   });
+}
+class ChangeHarageStatusLoading extends HaragState {}
+
+class ChangeHarageStatusSuccess extends HaragState {}
+
+class ChangeHarageStatusError extends HaragState {
+  final String message;
+
+  const ChangeHarageStatusError(this.message);
 }

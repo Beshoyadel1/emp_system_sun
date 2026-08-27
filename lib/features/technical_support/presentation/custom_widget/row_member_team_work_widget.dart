@@ -55,18 +55,32 @@ class RowMemberTeamWorkWidget extends StatelessWidget {
   }
 
   Widget _buildImage() {
-    /// ✅ لو فيه bytes
-    if (imageBytes != null && imageBytes!.isNotEmpty) {
-      return Image.memory(
-        imageBytes!,
-        fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) {
-          return Image.asset(AppImageKeys.support_message_emp1);
-        },
-      );
-    }
-
-    /// ❌ fallback
-    return Image.asset(AppImageKeys.support_message_emp1);
+    return ClipOval(
+      child: SizedBox(
+        width: 50,
+        height: 50,
+        child: imageBytes != null && imageBytes!.isNotEmpty
+            ? Image.memory(
+          imageBytes!,
+          fit: BoxFit.cover,
+          width: 50,
+          height: 50,
+          errorBuilder: (_, __, ___) {
+            return Image.asset(
+              AppImageKeys.support_message_emp1,
+              fit: BoxFit.cover,
+              width: 50,
+              height: 50,
+            );
+          },
+        )
+            : Image.asset(
+          AppImageKeys.support_message_emp1,
+          fit: BoxFit.cover,
+          width: 50,
+          height: 50,
+        ),
+      ),
+    );
   }
 }

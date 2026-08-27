@@ -44,7 +44,6 @@ class GetProviderInternalOrderCubit
 
       if (!isClosed) {
         emit(
-
           GetProviderInternalOrderSuccess(
             response.data ?? [],
             currentPage: response.currentPage ?? 1,

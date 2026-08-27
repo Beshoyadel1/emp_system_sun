@@ -13,6 +13,8 @@ import 'package:emp_system_sun/features/auth_page/data/datasource/check_if_user_
 import 'package:emp_system_sun/features/auth_page/data/datasource/create_user_datasource/create_user_repository.dart';
 import 'package:emp_system_sun/features/auth_page/data/datasource/login_datasource/login_repository.dart';
 import 'package:emp_system_sun/features/auth_page/data/datasource/update_user_datasource/update_user_repository.dart';
+import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/employee_details_request.dart';
+import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/employee_wrapper_request.dart';
 import 'package:emp_system_sun/features/auth_page/data/request/change_password_request/change_password_request.dart';
 import 'package:emp_system_sun/features/auth_page/data/request/check_if_user_exist_request/check_if_user_exist_request.dart';
 import 'package:emp_system_sun/features/auth_page/data/request/check_if_user_exist_or_not_request/check_if_user_exist_or_not_request.dart';
@@ -80,12 +82,10 @@ class AuthCubit extends Cubit<AuthState> {
     final apiUser = result.user!;
 
     // Local user must be exactly the same as API user
-    if (!localUser.isSameData(apiUser)) {
-      print("INIT => Local user != API user");
-
-      await _forceLogout();
-      return;
-    }
+    // if (!localUser.isSameData(apiUser)) {
+    //   await _forceLogout();
+    //   return;
+    // }
 
     print("INIT => Local user == API user");
 
@@ -329,8 +329,8 @@ class AuthCubit extends Cubit<AuthState> {
 
 
   Future<void> updateUser(
-    CreateUserRequest request,
-  ) async {
+      CreateUserRequest request,
+      ) async {
     if (isClosed) return;
 
     emit(AuthUpdateLoading());
@@ -338,71 +338,132 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       final oldUser = await AuthLocalStorage.getUser();
 
-      // print("========== REQUEST ==========");
-      //
-      // print(jsonEncode(request.toJson()));
+      if (oldUser == null) {
+        emit(
+          AuthUpdateError('User not found'),
+        );
+        return;
+      }
+
+      // =========================================================
+      // EMPLOYEE MERGE
+      // =========================================================
+
+      final oldEmployee = oldUser.employeeDetails;
+      final newEmployee = request.employeeDetails;
+
+      final EmployeeWrapperRequest? mergedEmployee =
+      newEmployee != null
+          ? EmployeeWrapperRequest(
+        employeeDetails:
+        newEmployee.employeeDetails != null
+            ? EmployeeDetailsRequest(
+          id: newEmployee.employeeDetails?.id ??
+              oldEmployee?.employeeDetails?.id,
+          provid: newEmployee.employeeDetails?.provid ??
+              oldEmployee?.employeeDetails?.provid,
+          jobname: newEmployee.employeeDetails?.jobname ??
+              oldEmployee?.employeeDetails?.jobname,
+          joblatinname:
+          newEmployee.employeeDetails?.joblatinname ??
+              oldEmployee?.employeeDetails?.joblatinname,
+          branchid: newEmployee.employeeDetails?.branchid ??
+              oldEmployee?.employeeDetails?.branchid,
+        )
+            : oldEmployee?.employeeDetails,
+
+        // Keep old services if request doesn't provide them
+        serviceIds: newEmployee.serviceIds.isNotEmpty
+            ? newEmployee.serviceIds
+            : oldEmployee?.serviceIds ?? const [],
+
+        permissions:
+        newEmployee.permissions ?? oldEmployee?.permissions,
+      )
+          : oldEmployee;
+
+      // =========================================================
+      // MERGED USER
+      // =========================================================
+
+      final mergedRequest = CreateUserRequest(
+        userid: oldUser.userid,
+
+        username: request.username ?? oldUser.username,
+
+        phone: request.phone ?? oldUser.phone,
+
+        email: request.email ?? oldUser.email,
+
+        password: request.password ?? oldUser.password,
+
+        age: request.age ?? oldUser.age,
+
+        // Keep original user type
+        type: oldUser.type,
+
+        nationality:
+        request.nationality ?? oldUser.nationality,
+
+        isActive:
+        request.isActive ?? oldUser.isActive,
+
+        joinDate:
+        request.joinDate ?? oldUser.joinDate,
+
+        referralCode:
+        request.referralCode ?? oldUser.referralCode,
+
+        image:
+        request.image ?? oldUser.image,
+
+        fcmToken:
+        request.fcmToken ?? oldUser.fcmToken,
+
+        currentCarId:
+        request.currentCarId ?? oldUser.currentCarId,
+
+        gander:
+        request.gander ?? oldUser.gander,
+
+        employeeDetails: mergedEmployee,
+
+        providerDetails: request.providerDetails ?? oldUser.providerDetails,
+        adminDetails:  request.adminDetails ?? oldUser.adminDetails,
+        companyDetails: request.companyDetails ?? oldUser.companyDetails,
+        driverDetails: request.driverDetails ?? oldUser.driverDetails,
+      );
+
+      // =========================================================
+      // API
+      // =========================================================
 
       final result = await updateUserFunction(
-        createUserRequest: request,
+        createUserRequest: mergedRequest,
       );
 
       if (isClosed) return;
 
-      // print("========== UPDATE RESULT ==========");
-      //
-      // print("SUCCESS => ${result.success}");
-      //
-      // print("MESSAGE => ${result.message}");
-
       if (result.success) {
-        final updatedUser = CreateUserRequest(
-          userid: oldUser?.userid,
-          username: request.username ?? oldUser?.username,
-          phone: request.phone ?? oldUser?.phone,
-          email: request.email ?? oldUser?.email,
-          age: request.age ?? oldUser?.age,
-          gander: request.gander ?? oldUser?.gander,
-          image: request.image ?? oldUser?.image,
-          type: oldUser?.type,
-          isActive: oldUser?.isActive,
-          joinDate: oldUser?.joinDate,
-          nationality: request.nationality ?? oldUser?.nationality,
-          referralCode: oldUser?.referralCode,
-          fcmToken: oldUser?.fcmToken,
-          currentCarId: oldUser?.currentCarId,
-          providerDetails: request.providerDetails ?? oldUser?.providerDetails,
-          employeeDetails: request.employeeDetails ?? oldUser?.employeeDetails,
+        await AuthLocalStorage.saveUser(
+          mergedRequest,
         );
 
-        // print("========== SAVED USER ==========");
-        //
-        // print(jsonEncode(updatedUser.toJson()));
-
-        if (result.success) {
-          await AuthLocalStorage.saveUser(updatedUser);
-
-          emit(
-            AuthUpdateSuccess(
-              result.message,
-            ),
-          );
-
-          return;
-        }
-      } else {
         emit(
-          AuthUpdateError(
+          AuthUpdateSuccess(
             result.message,
           ),
         );
+
+        return;
       }
-    } catch (e, stackTrace) {
-      print("🔥 ERROR => $e");
 
-      print("🔥 STACKTRACE =>");
-
-      print(stackTrace);
-
+      emit(
+        AuthUpdateError(
+          result.message,
+        ),
+      );
+    } catch (e) {
       if (isClosed) return;
 
       emit(
