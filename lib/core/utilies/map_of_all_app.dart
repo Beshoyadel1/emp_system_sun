@@ -302,9 +302,7 @@ Future<void> getPages(BuildContext context) async {
 
   appPages = [
 
-    // ==========================================================
-    // MAINTENANCE & INTERNAL SERVICES
-    // ==========================================================
+
 
     if (hasPermission(
       permissions.maintenanceAndInternalServices,

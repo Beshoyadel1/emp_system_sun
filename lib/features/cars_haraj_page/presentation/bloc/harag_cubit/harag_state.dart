@@ -1,3 +1,5 @@
+import 'package:emp_system_sun/features/cars_haraj_page/data/model/get_harage_chat_model/get_harage_chat_model.dart';
+
 import '../../../../../../../../../features/cars_haraj_page/data/model/get_car_brand_models/car_model_data_model.dart';
 import 'package:equatable/equatable.dart';
 import '../../../../../../../../../features/cars_haraj_page/data/model/get_car_brand_models_model/car_brand_data_model.dart';
@@ -20,6 +22,37 @@ abstract class HaragState extends Equatable {
     currentPage,
     pageCount,
   ];
+}
+
+// ============================================================
+// GET HARAGE CHAT STATES
+// ============================================================
+
+class GetHarageChatLoading extends HaragState {
+  const GetHarageChatLoading({
+    required super.currentPage,
+    required super.pageCount,
+  });
+}
+
+class GetHarageChatSuccess extends HaragState {
+  final GetHarageChatResponse? response;
+
+  const GetHarageChatSuccess({
+    required this.response,
+    required super.currentPage,
+    required super.pageCount,
+  });
+}
+
+class GetHarageChatError extends HaragState {
+  final String message;
+
+  const GetHarageChatError({
+    required this.message,
+    required super.currentPage,
+    required super.pageCount,
+  });
 }
 
 class HaragInitial extends HaragState {

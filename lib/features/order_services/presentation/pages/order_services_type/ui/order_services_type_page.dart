@@ -20,10 +20,6 @@ class OrderServicesTypePage extends StatelessWidget {
         builder: (context, state) {
           final cubit = context.read<NewOrdersCubit>();
 
-          // if (state is NewOrderDetails) {
-          //   return const OrderDetailsPage();
-          // }
-
           return OrdersPageMobileServicesStatistics(cubit: cubit,serviceId:serviceId,);
         },
       ),

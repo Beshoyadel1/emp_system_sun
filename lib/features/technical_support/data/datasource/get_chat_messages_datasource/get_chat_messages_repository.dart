@@ -8,7 +8,8 @@ Future<List<ChatDetailsModel>> getChatMessagesFunction({
   required GetChatMessagesRequest request,
 }) async {
   try {
-    final response = await Network.postDataWithBodyAndParams(
+    final response =
+    await Network.postDataWithBodyAndParams(
       {},
       request.toJson(),
       ApiLink.getChatMessages,
@@ -16,13 +17,25 @@ Future<List<ChatDetailsModel>> getChatMessagesFunction({
 
     final responseData = response.data;
 
-    final List data = responseData['data'] ?? [];
+    if (responseData == null) {
+      return [];
+    }
+
+    final List data =
+        responseData['data'] ?? [];
 
     return data
-        .map((e) => ChatDetailsModel.fromJson(e))
+        .whereType<Map<String, dynamic>>()
+        .map(
+      ChatDetailsModel.fromJson,
+    )
         .toList();
-
   } catch (e) {
-    throw Exception(e.toString());
+    throw Exception(
+      e.toString().replaceFirst(
+        'Exception: ',
+        '',
+      ),
+    );
   }
 }

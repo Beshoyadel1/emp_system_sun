@@ -39,6 +39,7 @@ class GetProviderInternalOrderCubit
           pageNumber: pageNumber ?? 1,
           orderType: orderType,
           serviceId: serviceId,
+          branchId: user.employeeDetails?.employeeDetails?.branchid
         ),
       );
 

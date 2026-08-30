@@ -4,6 +4,7 @@ class GetProviderOrdersRequest {
   final int? pageNumber;
   final int? orderType;
   final int? serviceId;
+  final int? branchId;
 
   GetProviderOrdersRequest({
      this.providerId,
@@ -11,6 +12,7 @@ class GetProviderOrdersRequest {
      this.pageNumber,
      this.orderType,
      this.serviceId,
+    this.branchId,
   });
 
   Map<String, dynamic> toJson() {
@@ -20,6 +22,7 @@ class GetProviderOrdersRequest {
       "pageNumber": pageNumber,
       "orderType": orderType,
       "ServiceId": serviceId,
+      "branchId":branchId,
     };
   }
 }
