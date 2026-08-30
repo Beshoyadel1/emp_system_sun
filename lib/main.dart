@@ -74,7 +74,7 @@ class _MyAppState extends State<MyApp> {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            title: 'San Admin System',
+            title: 'San Employee System',
             debugShowCheckedModeBanner: false,
             home: const AuthGate(),
           );
