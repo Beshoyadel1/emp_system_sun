@@ -15,128 +15,199 @@ import '../../../../../core/theming/text_styles.dart';
 import '../../../../../core/utilies/map_of_all_app.dart';
 
 
-
-
 class CheckEmailExistPage extends StatefulWidget {
   const CheckEmailExistPage({super.key});
+
   @override
   State<CheckEmailExistPage> createState() => _CheckEmailExistPageState();
 }
 
 class _CheckEmailExistPageState extends State<CheckEmailExistPage> {
-  late TextEditingController emailController,phoneController ;
-  late GlobalKey<FormState> checkEmailExistFormKey ;
+  late TextEditingController emailController;
+
+  late GlobalKey<FormState> checkEmailExistFormKey;
 
   @override
   void initState() {
-    emailController = TextEditingController();
-    phoneController = TextEditingController();
-    checkEmailExistFormKey = GlobalKey<FormState>();
     super.initState();
+
+    emailController = TextEditingController();
+
+    checkEmailExistFormKey = GlobalKey<FormState>();
   }
+
   @override
   void dispose() {
     emailController.dispose();
-    phoneController.dispose();
-    checkEmailExistFormKey.currentState?.dispose();
+
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AuthCubit(),
       child: Scaffold(
-          body: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 40,
-                      child: AppBar(backgroundColor: AppColors.seaBlueColor),
+        body: Row(
+          children: [
+            Expanded(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 40,
+                    child: AppBar(
+                      backgroundColor: AppColors.blueColor,
                     ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 32),
-                        child: Center(
-                          child: SingleChildScrollView(
-                            child: Form(
-                              autovalidateMode: AutovalidateMode.disabled,
-                              key: checkEmailExistFormKey,
-                              child: Column(
-                                spacing: 10,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const  TextInAppWidget(
-                                    text: AppLanguageKeys.email,
-                                    textColor: AppColors.darkColor,
-                                    textSize: 20,
-                                    fontWeightIndex: FontSelectionData.semiBoldFontFamily,
-                                  ),
-                                  UserTextFieldWidget(type: UserFieldType.email, controller: emailController,),
-                                  const  TextInAppWidget(
-                                    text: AppLanguageKeys.phoneNumber,
-                                    textColor: AppColors.darkColor,
-                                    textSize: 20,
-                                    fontWeightIndex: FontSelectionData.semiBoldFontFamily,
-                                  ),
-                                  UserTextFieldWidget(type: UserFieldType.phone, controller: phoneController,),
-                                  BlocBuilder<AuthCubit, AuthState>(
-                                    buildWhen: (previous, current) =>
-                                    current is AuthLoginLoading ||
-                                        current is AuthLoginSuccess ||
-                                        current is AuthLoginError ||
-                                        previous is AuthLoginLoading,
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                      ),
+                      child: Center(
+                        child: SingleChildScrollView(
+                          child: Form(
+                            autovalidateMode: AutovalidateMode.disabled,
+                            key: checkEmailExistFormKey,
+                            child: Column(
+                              spacing: 10,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const TextInAppWidget(
+                                  text: AppLanguageKeys.pleaseEnterYourEmail,
+                                  textColor: AppColors.darkColor,
+                                  textSize: 20,
+                                  fontWeightIndex:
+                                  FontSelectionData.semiBoldFontFamily,
+                                ),
 
-                                    builder: (context, state) {
-                                      final bool isLoading = state is AuthLoginLoading;
+                                UserTextFieldWidget(
+                                  type: UserFieldType.email,
+                                  controller: emailController,
+                                ),
 
-                                      if (state is AuthLoginSuccess) {
-                                        Future.microtask(() {
-                                          Navigator.of(context).pushReplacement(
-                                            NavigateToPageWidget(
-                                                OtpPage(
-                                              email: emailController.text.trim(),
-                                            )),
-                                          );
-                                        });
+
+                                BlocConsumer<AuthCubit, AuthState>(
+                                  listenWhen: (previous, current) =>
+                                  current is CheckIfUserExistOrNotSuccess ||
+                                      current is CheckIfUserExistOrNotNotFound ||
+                                      current is CheckIfUserExistOrNotError,
+
+                                  listener: (context, state) {
+                                    if (state is CheckIfUserExistOrNotSuccess) {
+                                      final cubit = context.read<AuthCubit>();
+
+                                      print("=================================");
+                                      print("OTP PAGE NAVIGATION");
+                                      print("EMAIL => ${cubit.verificationEmail}");
+                                      print("PHONE => ${cubit.verificationPhone}");
+                                      print("OTP => ${cubit.otpCode}");
+                                      print("=================================");
+
+                                      final email = cubit.verificationEmail;
+
+                                      if (email == null || email.isEmpty) {
+                                        AppSnackBar.showError(
+                                          AppLanguageKeys.somethingWentWrong,
+                                        );
+                                        return;
                                       }
 
-                                      if (state is AuthLoginError) {
-                                        Future.microtask(() {
-                                          AppSnackBar.showError(state.message);
-                                        });
-                                      }
-
-                                      return LoginButtonWidget(
-                                        text: AppLanguageKeys.send,
-                                        isLoading: isLoading,
-                                        onPressed: isLoading
-                                            ? null
-                                            : () {
-                                          if (!checkEmailExistFormKey.currentState!.validate()) return;
-
-                                          context.read<AuthCubit>().checkIfUserExistOrNot(
-                                            email: emailController.text.trim(),
-                                            phone: phoneController.text.trim(),
-                                          );
-                                        },
+                                      Navigator.push(
+                                        context,
+                                        NavigateToPageWidget(
+                                          BlocProvider.value(
+                                            value: cubit,
+                                            child: OtpPage(
+                                              email: email,
+                                              purpose: OtpPurpose.forgotPassword,
+                                            ),
+                                          ),
+                                        ),
                                       );
-                                    },
-                                  ),
-                                ],
-                              ),
+                                    }
+
+                                    if (state is CheckIfUserExistOrNotNotFound) {
+                                      AppSnackBar.showError(
+                                        AppLanguageKeys.userNotFound,
+                                      );
+                                    }
+
+                                    if (state is CheckIfUserExistOrNotError) {
+                                      AppSnackBar.showError(
+                                        state.error,
+                                      );
+                                    }
+                                  },
+
+                                  builder: (context, state) {
+                                    final bool isLoading =
+                                    state is CheckIfUserExistOrNotLoading;
+
+                                    return LoginButtonWidget(
+                                      text: AppLanguageKeys.send,
+                                      isLoading: isLoading,
+
+                                      onPressed: isLoading
+                                          ? null
+                                          : () {
+                                        // ==========================================
+                                        // 1. GET EMAIL
+                                        // ==========================================
+
+                                        final email =
+                                        emailController.text.trim();
+
+                                        // ==========================================
+                                        // 2. CHECK EMPTY
+                                        // ==========================================
+
+                                        if (email.isEmpty) {
+                                          AppSnackBar.showError(
+                                            AppLanguageKeys.yourEmailIsEmpty,
+                                          );
+                                          return;
+                                        }
+
+                                        // ==========================================
+                                        // 3. CHECK GMAIL FORMAT
+                                        // ==========================================
+
+                                        final emailRegex = RegExp(
+                                          r'^[a-zA-Z0-9._%+-]+@gmail\.com$',
+                                        );
+
+                                        if (!emailRegex.hasMatch(email)) {
+                                          AppSnackBar.showError(
+                                            AppLanguageKeys.pleaseEnterValidEmail,
+                                          );
+                                          return;
+                                        }
+
+
+                                        context
+                                            .read<AuthCubit>()
+                                            .checkIfUserExistOrNot(
+                                          email: email,
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              if(MediaQuery.of(context).size.width > ValuesOfAllApp.mobileWidth) const LoginImage(),
-            ],
-          )
+            ),
+            if (MediaQuery.of(context).size.width > ValuesOfAllApp.mobileWidth)
+              const LoginImage(),
+          ],
+        ),
       ),
     );
   }

@@ -38,6 +38,8 @@ class ApiConfig {
 }
 
 class ApiLink {
+  static const String sendVerificationCode =
+      "${ApiConfig.baseUrlApi}/${ApiConfig.user}/SendVerificationCode";
   static const String getHarageChat =
       "${ApiConfig.baseUrlApi}/${ApiConfig.harage}/GetHarageChat";
   static const String changeHarageStatus =

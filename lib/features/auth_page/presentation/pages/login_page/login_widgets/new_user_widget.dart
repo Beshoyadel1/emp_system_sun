@@ -15,7 +15,6 @@ class NewUserWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        context.read<AuthCubit>().showSignup();
         Navigator.push(
           context,
           NavigateToPageWidget(const SignUpPage()),

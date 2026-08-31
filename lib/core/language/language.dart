@@ -33,6 +33,16 @@ class AppLocalizations {
       //END//
 
       //others//
+      AppLanguageKeys.verificationCodeSent: 'تم إرسال رمز التحقق',
+      AppLanguageKeys.failedToSendVerificationCode:
+      'فشل إرسال رمز التحقق',
+      AppLanguageKeys.phoneNumberNotFoundForThisAccount:
+      'رقم الهاتف غير موجود لهذا الحساب',
+      AppLanguageKeys.phoneNumberNotFound:
+      'رقم الهاتف غير موجود',
+      AppLanguageKeys.codeSentTo: 'تم إرسال الرمز إلى',
+      AppLanguageKeys.pleaseEnterYourEmail: 'يرجى إدخال بريدك الإلكتروني',
+      AppLanguageKeys.yourEmailIsEmpty: 'البريد الإلكتروني فارغ',
       AppLanguageKeys.allBranches: 'جميع الفروع',
       AppLanguageKeys.created: 'مُنشأ',
       AppLanguageKeys.pending: 'معلق',
@@ -1445,6 +1455,16 @@ class AppLocalizations {
       AppLanguageKeys.acceptOrder: 'Accept Order',
       //END//
       //others//
+      AppLanguageKeys.verificationCodeSent: 'Verification code sent',
+      AppLanguageKeys.failedToSendVerificationCode:
+      'Failed to send verification code',
+      AppLanguageKeys.phoneNumberNotFoundForThisAccount:
+      'Phone number not found for this account',
+      AppLanguageKeys.phoneNumberNotFound:
+      'Phone number not found',
+      AppLanguageKeys.codeSentTo: 'Code sent to',
+      AppLanguageKeys.pleaseEnterYourEmail: 'Please enter your email',
+      AppLanguageKeys.yourEmailIsEmpty: 'Your email is empty',
       AppLanguageKeys.allBranches: 'All Branches',
       AppLanguageKeys.created: 'Created',
       AppLanguageKeys.pending: 'Pending',

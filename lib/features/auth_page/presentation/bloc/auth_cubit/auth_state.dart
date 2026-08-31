@@ -1,8 +1,50 @@
 
+import 'package:emp_system_sun/features/auth_page/data/model/check_if_user_exist_or_not_model/check_if_user_exist_or_not_model.dart';
 import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/create_user_request.dart';
 
 abstract class AuthState {}
 
+class CheckIfUserExistOrNotLoading extends AuthState {}
+
+class CheckIfUserExistOrNotSuccess extends AuthState {
+  final CheckIfUserExistOrNotModel data;
+
+  CheckIfUserExistOrNotSuccess(this.data);
+}
+
+class CheckIfUserExistOrNotNotFound extends AuthState {
+  final CheckIfUserExistOrNotModel data;
+
+  CheckIfUserExistOrNotNotFound(this.data);
+}
+
+class CheckIfUserExistOrNotError extends AuthState {
+  final String error;
+
+  CheckIfUserExistOrNotError(this.error);
+}
+
+class ChangePasswordLoading extends AuthState {}
+
+class ChangePasswordSuccess extends AuthState {
+  final String message;
+
+  ChangePasswordSuccess(this.message);
+}
+
+class ChangePasswordError extends AuthState {
+  final String message;
+
+  ChangePasswordError(this.message);
+}
+class AuthSignupCompleted extends AuthState {
+  final String message;
+
+  AuthSignupCompleted(this.message);
+}
+
+class AuthSignupOtpSent extends AuthState {}
+class AuthOtpResendSuccess extends AuthState {}
 
 final class AuthInitial extends AuthState {}
 
