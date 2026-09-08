@@ -51,7 +51,7 @@ dependencies:
   http:
   geolocator: ^14.0.2
   flutter_map:
-  permission_handler: ^11.3.0
+  permission_handler: ^13.0.2
   file_picker: ^8.0.0
   syncfusion_flutter_charts: ^31.1.22
   timeline_tile_plus:
