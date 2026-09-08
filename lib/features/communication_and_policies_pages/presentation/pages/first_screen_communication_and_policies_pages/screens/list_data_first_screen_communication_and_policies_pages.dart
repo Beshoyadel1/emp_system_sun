@@ -17,7 +17,7 @@ class _ScreenListDataFirstScreenCommunicationAndPoliciesPagesState
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => TabInsuranceNewOffersCubit(),
+      create: (_) => TabInsuranceNewOffersCubit()..loadPages(),
       child: const CommunicationAndPoliciesPagesScreen(),
     );
   }

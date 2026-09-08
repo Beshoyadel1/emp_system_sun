@@ -13,35 +13,16 @@ Future<bool> sendVerificationCodeFunction({
       ApiLink.sendVerificationCode,
     );
 
-    print(
-      "SendVerificationCode HTTP Status => "
-          "${response.statusCode}",
-    );
-
-    print(
-      "SendVerificationCode Response => "
-          "${response.data}",
-    );
-
     final data = response.data;
 
     if (data is Map<String, dynamic>) {
       final statusCode = data['statusCode'];
 
-      print(
-        "SendVerificationCode API Status => "
-            "$statusCode",
-      );
-
       return statusCode == 201;
     }
 
     return false;
-  } catch (e) {
-    print(
-      "SendVerificationCode Error => $e",
-    );
-
+  } catch (_) {
     return false;
   }
 }

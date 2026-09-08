@@ -1,14 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 import 'package:emp_system_sun/core/api/dio_function/api_constants.dart';
 import 'package:emp_system_sun/core/language/language_constant.dart';
-import 'package:emp_system_sun/core/pages_widgets/general_widgets/navigate_to_page_widget.dart';
-import 'package:emp_system_sun/core/theming/auth_local_storage.dart';
-import 'package:emp_system_sun/core/theming/auth_local_storage.dart';
 import 'package:emp_system_sun/core/theming/auth_local_storage.dart';
 import 'package:emp_system_sun/features/auth_page/data/datasource/change_password_datasource/change_password_repository.dart';
-import 'package:emp_system_sun/features/auth_page/data/datasource/check_if_user_exist_datasource/check_if_user_exist_repository.dart';
 import 'package:emp_system_sun/features/auth_page/data/datasource/check_if_user_exist_or_not_datasource/check_if_user_exist_or_not_repository.dart';
 import 'package:emp_system_sun/features/auth_page/data/datasource/create_user_datasource/create_user_repository.dart';
 import 'package:emp_system_sun/features/auth_page/data/datasource/login_datasource/login_repository.dart';
@@ -17,13 +12,11 @@ import 'package:emp_system_sun/features/auth_page/data/datasource/update_user_da
 import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/employee_details_request.dart';
 import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/employee_wrapper_request.dart';
 import 'package:emp_system_sun/features/auth_page/data/request/change_password_request/change_password_request.dart';
-import 'package:emp_system_sun/features/auth_page/data/request/check_if_user_exist_request/check_if_user_exist_request.dart';
 import 'package:emp_system_sun/features/auth_page/data/request/check_if_user_exist_or_not_request/check_if_user_exist_or_not_request.dart';
 import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/create_user_request.dart';
 import 'package:emp_system_sun/features/auth_page/data/request/login_request/login_request.dart';
 import 'package:emp_system_sun/features/auth_page/data/request/send_verification_code_request/send_verification_code_request.dart';
 import 'package:emp_system_sun/features/auth_page/domain/validate/facility_validator.dart';
-import 'package:emp_system_sun/features/auth_page/presentation/pages/change_password/change_password_page.dart';
 import 'package:emp_system_sun/features/notifications/data/datasource/signalr_datasource/signalr_service/signalr_service.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/branch_cubit/branch_cubit.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/work_time_cubit/work_time_cubit.dart';
@@ -32,6 +25,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'auth_state.dart';
+
+enum OtpMessagePurpose {
+  verification,
+  passwordReset,
+}
+
+String buildOtpMessage({
+  required String otp,
+  required String languageCode,
+  required OtpMessagePurpose purpose,
+}) {
+  if (purpose == OtpMessagePurpose.passwordReset) {
+    if (languageCode.toLowerCase() == 'ar') {
+      return 'مرحبا بكم في صان، الرمز الخاص بكم لتغيير كلمة المرور هو $otp';
+    }
+
+    return 'Welcome to San, your password reset code is $otp';
+  }
+
+  return 'Your verification code is: $otp. '
+      'Please do not share this code with anyone.';
+}
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
@@ -101,6 +116,7 @@ class AuthCubit extends Cubit<AuthState> {
     // Check facility completion
     await _checkFacilityCompletion(apiUser);
   }
+
   Future<void> _forceLogout() async {
     await AuthLocalStorage.clearUser();
     await AuthLocalStorage.clearPassword();
@@ -109,6 +125,7 @@ class AuthCubit extends Cubit<AuthState> {
 
     emit(AuthUnauthenticated());
   }
+
   Future<void> login(LoginRequest request) async {
     emit(AuthLoginLoading());
 
@@ -146,6 +163,7 @@ class AuthCubit extends Cubit<AuthState> {
 
     await _checkFacilityCompletion(apiUser);
   }
+
   Future<void> logout(BuildContext context) async {
     emit(AuthLoading());
     _forceLogout();
@@ -181,6 +199,7 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthIncompleteProfile(result.missingFields));
     }
   }
+
   Future<void> reCheckFacility() async {
     final user = await AuthLocalStorage.getUser();
 
@@ -210,9 +229,6 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-
-
-
   static Future<void> saveUserFromRequest(CreateUserRequest request) async {
     await AuthLocalStorage.saveUser(request);
   }
@@ -234,10 +250,9 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-
   Future<void> updateUser(
-      CreateUserRequest request,
-      ) async {
+    CreateUserRequest request,
+  ) async {
     if (isClosed) return;
 
     emit(AuthUpdateLoading());
@@ -259,34 +274,30 @@ class AuthCubit extends Cubit<AuthState> {
       final oldEmployee = oldUser.employeeDetails;
       final newEmployee = request.employeeDetails;
 
-      final EmployeeWrapperRequest? mergedEmployee =
-      newEmployee != null
+      final EmployeeWrapperRequest? mergedEmployee = newEmployee != null
           ? EmployeeWrapperRequest(
-        employeeDetails:
-        newEmployee.employeeDetails != null
-            ? EmployeeDetailsRequest(
-          id: newEmployee.employeeDetails?.id ??
-              oldEmployee?.employeeDetails?.id,
-          provid: newEmployee.employeeDetails?.provid ??
-              oldEmployee?.employeeDetails?.provid,
-          jobname: newEmployee.employeeDetails?.jobname ??
-              oldEmployee?.employeeDetails?.jobname,
-          joblatinname:
-          newEmployee.employeeDetails?.joblatinname ??
-              oldEmployee?.employeeDetails?.joblatinname,
-          branchid: newEmployee.employeeDetails?.branchid ??
-              oldEmployee?.employeeDetails?.branchid,
-        )
-            : oldEmployee?.employeeDetails,
+              employeeDetails: newEmployee.employeeDetails != null
+                  ? EmployeeDetailsRequest(
+                      id: newEmployee.employeeDetails?.id ??
+                          oldEmployee?.employeeDetails?.id,
+                      provid: newEmployee.employeeDetails?.provid ??
+                          oldEmployee?.employeeDetails?.provid,
+                      jobname: newEmployee.employeeDetails?.jobname ??
+                          oldEmployee?.employeeDetails?.jobname,
+                      joblatinname: newEmployee.employeeDetails?.joblatinname ??
+                          oldEmployee?.employeeDetails?.joblatinname,
+                      branchid: newEmployee.employeeDetails?.branchid ??
+                          oldEmployee?.employeeDetails?.branchid,
+                    )
+                  : oldEmployee?.employeeDetails,
 
-        // Keep old services if request doesn't provide them
-        serviceIds: newEmployee.serviceIds.isNotEmpty
-            ? newEmployee.serviceIds
-            : oldEmployee?.serviceIds ?? const [],
+              // Keep old services if request doesn't provide them
+              serviceIds: newEmployee.serviceIds.isNotEmpty
+                  ? newEmployee.serviceIds
+                  : oldEmployee?.serviceIds ?? const [],
 
-        permissions:
-        newEmployee.permissions ?? oldEmployee?.permissions,
-      )
+              permissions: newEmployee.permissions ?? oldEmployee?.permissions,
+            )
           : oldEmployee;
 
       // =========================================================
@@ -309,34 +320,26 @@ class AuthCubit extends Cubit<AuthState> {
         // Keep original user type
         type: oldUser.type,
 
-        nationality:
-        request.nationality ?? oldUser.nationality,
+        nationality: request.nationality ?? oldUser.nationality,
 
-        isActive:
-        request.isActive ?? oldUser.isActive,
+        isActive: request.isActive ?? oldUser.isActive,
 
-        joinDate:
-        request.joinDate ?? oldUser.joinDate,
+        joinDate: request.joinDate ?? oldUser.joinDate,
 
-        referralCode:
-        request.referralCode ?? oldUser.referralCode,
+        referralCode: request.referralCode ?? oldUser.referralCode,
 
-        image:
-        request.image ?? oldUser.image,
+        image: request.image ?? oldUser.image,
 
-        fcmToken:
-        request.fcmToken ?? oldUser.fcmToken,
+        fcmToken: request.fcmToken ?? oldUser.fcmToken,
 
-        currentCarId:
-        request.currentCarId ?? oldUser.currentCarId,
+        currentCarId: request.currentCarId ?? oldUser.currentCarId,
 
-        gander:
-        request.gander ?? oldUser.gander,
+        gander: request.gander ?? oldUser.gander,
 
         employeeDetails: mergedEmployee,
 
         providerDetails: request.providerDetails ?? oldUser.providerDetails,
-        adminDetails:  request.adminDetails ?? oldUser.adminDetails,
+        adminDetails: request.adminDetails ?? oldUser.adminDetails,
         companyDetails: request.companyDetails ?? oldUser.companyDetails,
         driverDetails: request.driverDetails ?? oldUser.driverDetails,
       );
@@ -380,6 +383,7 @@ class AuthCubit extends Cubit<AuthState> {
       );
     }
   }
+
   String? verificationEmail;
   String? verificationPhone;
 
@@ -389,20 +393,11 @@ class AuthCubit extends Cubit<AuthState> {
   int secondsRemaining = 30;
 
   bool isOtpError = false;
+  bool isOtpSubmitting = false;
+  bool isOtpResending = false;
 
-  void generateOtp() {
-    final random = Random();
-
-    otpCode = (1000 + random.nextInt(9000)).toString();
-
-    print("🔐 OTP CODE => $otpCode");
-
-    startTimer();
-
-    isOtpError = false;
-
-    emit(AuthOtpGenerated());
-  }
+  OtpMessagePurpose _otpMessagePurpose = OtpMessagePurpose.verification;
+  String _otpLanguageCode = 'en';
 
   void startTimer() {
     secondsRemaining = 30;
@@ -413,7 +408,7 @@ class AuthCubit extends Cubit<AuthState> {
 
     _timer = Timer.periodic(
       const Duration(seconds: 1),
-          (timer) {
+      (timer) {
         if (isClosed) {
           timer.cancel();
           return;
@@ -446,21 +441,9 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> validateOtp(String code) async {
-    if (isClosed) return;
+    if (isClosed || isOtpSubmitting) return;
 
     final enteredOtp = code.trim();
-
-    if (secondsRemaining <= 0) {
-      isOtpError = true;
-
-      emit(
-        AuthOtpError(
-          AppLanguageKeys.badRequestError,
-        ),
-      );
-
-      return;
-    }
 
     if (enteredOtp.length != 4) {
       isOtpError = true;
@@ -491,7 +474,6 @@ class AuthCubit extends Cubit<AuthState> {
     // ==========================================
 
     isOtpError = false;
-    _timer?.cancel();
 
     // SIGNUP
     if (_pendingSignup != null) {
@@ -500,11 +482,15 @@ class AuthCubit extends Cubit<AuthState> {
     }
 
     // FORGOT PASSWORD
+    isOtpSubmitting = true;
+    emit(AuthOtpVerifying());
+    _timer?.cancel();
+    isOtpSubmitting = false;
     emit(AuthOtpSuccess());
   }
 
-  Future<void> resendOtp() async {
-    if (isClosed) return;
+  Future<void> resendOtp({String? languageCode}) async {
+    if (isClosed || isOtpResending) return;
 
     final phone = verificationPhone;
 
@@ -517,25 +503,20 @@ class AuthCubit extends Cubit<AuthState> {
       return;
     }
 
+    final newOtp = (1000 + Random().nextInt(9000)).toString();
+    final currentLanguageCode = languageCode ?? _otpLanguageCode;
+    final message = buildOtpMessage(
+      otp: newOtp,
+      languageCode: currentLanguageCode,
+      purpose: _otpMessagePurpose,
+    );
+
     isOtpError = false;
-
-    // Generate NEW OTP
-    generateOtp();
-
-    final message =
-        'Your verification code is: $otpCode. '
-        'Please do not share this code with anyone.';
-
-    print("=================================");
-    print("📤 RESEND OTP");
-    print("📱 PHONE => $phone");
-    print("🔐 NEW OTP => $otpCode");
-    print("💬 MESSAGE => $message");
-    print("=================================");
+    isOtpResending = true;
+    emit(AuthOtpResendLoading());
 
     try {
-      final result =
-      await sendVerificationCodeFunction(
+      final result = await sendVerificationCodeFunction(
         request: SendVerificationCodeRequest(
           user: phone,
           message: message,
@@ -545,13 +526,16 @@ class AuthCubit extends Cubit<AuthState> {
       if (isClosed) return;
 
       if (result) {
-        print("✅ NEW OTP SENT SUCCESSFULLY");
+        otpCode = newOtp;
+        _otpLanguageCode = currentLanguageCode;
+        isOtpResending = false;
+        startTimer();
 
         emit(
           AuthOtpResendSuccess(),
         );
       } else {
-        print("❌ NEW OTP SEND FAILED");
+        isOtpResending = false;
 
         emit(
           AuthOtpError(
@@ -562,7 +546,7 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (e) {
       if (isClosed) return;
 
-      print("❌ RESEND OTP ERROR => $e");
+      isOtpResending = false;
 
       emit(
         AuthOtpError(
@@ -572,19 +556,16 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  // void resendOtp() {
-  //   generateOtp();
-  //   isOtpError = false;
-  //   emit(AuthOtpGenerated());
-  // }
-
   void updatePhone(String phone) {
     phoneNumber = phone;
     emit(AuthInitial());
   }
+
   Future<bool> sendOtp({
     required String email,
     required String phone,
+    OtpMessagePurpose purpose = OtpMessagePurpose.verification,
+    String languageCode = 'en',
   }) async {
     if (isClosed) return false;
 
@@ -593,12 +574,13 @@ class AuthCubit extends Cubit<AuthState> {
 
     final random = Random();
 
-    final newOtp =
-    (1000 + random.nextInt(9000)).toString();
+    final newOtp = (1000 + random.nextInt(9000)).toString();
 
-    final message =
-        'Your verification code is: $newOtp. '
-        'Please do not share this code with anyone.';
+    final message = buildOtpMessage(
+      otp: newOtp,
+      languageCode: languageCode,
+      purpose: purpose,
+    );
 
     try {
       final sent = await _sendOtpToPhoneVariations(
@@ -614,6 +596,8 @@ class AuthCubit extends Cubit<AuthState> {
 
       otpCode = newOtp;
       isOtpError = false;
+      _otpMessagePurpose = purpose;
+      _otpLanguageCode = languageCode;
 
       startTimer();
 
@@ -627,6 +611,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> checkIfUserExistOrNot({
     required String email,
+    required String languageCode,
   }) async {
     if (isClosed) return;
 
@@ -635,12 +620,7 @@ class AuthCubit extends Cubit<AuthState> {
     );
 
     try {
-      print("=================================");
-      print("CHECK USER EMAIL => $email");
-      print("=================================");
-
-      final result =
-      await checkIfUserExistOrNotFunction(
+      final result = await checkIfUserExistOrNotFunction(
         request: CheckIfUserExistOrNotRequest(
           user: email,
           type: UserType.employeeUser,
@@ -648,8 +628,6 @@ class AuthCubit extends Cubit<AuthState> {
       );
 
       if (isClosed) return;
-
-      print("CHECK USER RESULT => $result");
 
       if (result == null || result.isEmpty) {
         emit(
@@ -661,9 +639,6 @@ class AuthCubit extends Cubit<AuthState> {
       }
 
       final user = result.first;
-
-      print("USER VALUE => ${user.value}");
-      print("USER PHONE => ${user.phone}");
 
       if (user.value != true) {
         emit(
@@ -685,20 +660,14 @@ class AuthCubit extends Cubit<AuthState> {
         return;
       }
 
-      print("=================================");
-      print("CALLING SEND OTP");
-      print("EMAIL => $email");
-      print("PHONE => $phone");
-      print("=================================");
-
       final sent = await sendOtp(
         email: email,
         phone: phone,
+        purpose: OtpMessagePurpose.passwordReset,
+        languageCode: languageCode,
       );
 
       if (isClosed) return;
-
-      print("OTP SENT RESULT => $sent");
 
       if (sent) {
         emit(
@@ -718,8 +687,6 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (e) {
       if (isClosed) return;
 
-      print("CHECK USER ERROR => $e");
-
       emit(
         CheckIfUserExistOrNotError(
           e.toString(),
@@ -727,7 +694,6 @@ class AuthCubit extends Cubit<AuthState> {
       );
     }
   }
-
 
   List<String> _getPhoneVariations(String phone) {
     final original = phone.trim();
@@ -751,23 +717,17 @@ class AuthCubit extends Cubit<AuthState> {
 
     return phones.toSet().toList();
   }
+
   Future<bool> _sendOtpToPhoneVariations({
     required String phone,
     required String message,
   }) async {
     final phones = _getPhoneVariations(phone);
 
-    print("📱 PHONE OPTIONS => $phones");
-
     for (final phoneNumber in phones) {
       if (isClosed) return false;
 
-      print(
-        "📤 TRY OTP => $phoneNumber",
-      );
-
-      final result =
-      await sendVerificationCodeFunction(
+      final result = await sendVerificationCodeFunction(
         request: SendVerificationCodeRequest(
           user: phoneNumber,
           message: message,
@@ -776,15 +736,8 @@ class AuthCubit extends Cubit<AuthState> {
 
       if (result) {
         verificationPhone = phoneNumber;
-        print(
-          "✅ OTP SENT => $phoneNumber",
-        );
         return true;
       }
-
-      print(
-        "❌ OTP FAILED => $phoneNumber",
-      );
     }
 
     return false;
@@ -885,8 +838,7 @@ class AuthCubit extends Cubit<AuthState> {
       print('EMAIL => $email');
       print('=================================');
 
-      final existingUsers =
-      await checkIfUserExistOrNotFunction(
+      final existingUsers = await checkIfUserExistOrNotFunction(
         request: CheckIfUserExistOrNotRequest(
           user: email,
           type: UserType.employeeUser,
@@ -942,13 +894,6 @@ class AuthCubit extends Cubit<AuthState> {
       // 7. SEND OTP
       // =========================================================
 
-      print('=================================');
-      print('EMAIL AVAILABLE');
-      print('SENDING SIGNUP OTP');
-      print('EMAIL => $email');
-      print('PHONE => $phone');
-      print('=================================');
-
       final sent = await sendOtp(
         email: email,
         phone: phone,
@@ -976,13 +921,6 @@ class AuthCubit extends Cubit<AuthState> {
       // 9. OTP SENT SUCCESSFULLY
       // =========================================================
 
-      print('=================================');
-      print('OTP SENT FOR SIGNUP');
-      print('EMAIL => $verificationEmail');
-      print('PHONE => $verificationPhone');
-      print('OTP => $otpCode');
-      print('=================================');
-
       emit(
         AuthSignupSuccess(
           AppLanguageKeys.verificationCodeSent,
@@ -1004,12 +942,14 @@ class AuthCubit extends Cubit<AuthState> {
       );
     }
   }
+
   Future<void> completeSignupAfterOtp() async {
-    if (isClosed) return;
+    if (isClosed || isOtpSubmitting) return;
 
     final request = _pendingSignup;
 
     if (request == null) {
+      isOtpSubmitting = false;
       emit(
         AuthSignupError(
           AppLanguageKeys.somethingWentWrong,
@@ -1018,6 +958,7 @@ class AuthCubit extends Cubit<AuthState> {
       return;
     }
 
+    isOtpSubmitting = true;
     emit(AuthSignupLoading());
 
     try {
@@ -1028,6 +969,7 @@ class AuthCubit extends Cubit<AuthState> {
       if (isClosed) return;
 
       if (!result.success) {
+        isOtpSubmitting = false;
         emit(
           AuthSignupError(
             result.message,
@@ -1037,6 +979,8 @@ class AuthCubit extends Cubit<AuthState> {
       }
 
       _pendingSignup = null;
+      _timer?.cancel();
+      isOtpSubmitting = false;
 
       emit(
         AuthSignupCompleted(
@@ -1046,12 +990,19 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (e) {
       if (isClosed) return;
 
+      isOtpSubmitting = false;
       emit(
         AuthSignupError(
           e.toString(),
         ),
       );
     }
+  }
+
+  @override
+  Future<void> close() {
+    _timer?.cancel();
+    return super.close();
   }
 
 // ================= Validators ================
@@ -1069,5 +1020,4 @@ class AuthCubit extends Cubit<AuthState> {
 // Check Email + Phone -> Create User
 // NO OTP
 // =========================================================
-
 }
