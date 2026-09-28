@@ -31,6 +31,36 @@
 
   <title>San Employee System</title>
   <link rel="manifest" href="manifest.json">
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/firebase-messaging-sw.js', { scope: '/' }).catch(function (error) {
+          console.warn('Firebase Messaging Service Worker registration failed: ', error);
+        });
+      });
+    }
+
+    window.showBrowserNotification = function(title, body) {
+      if (!('Notification' in window)) return;
+      if (Notification.permission === 'granted') {
+        try {
+          new Notification(title, { body: body, icon: '/favicon.png' });
+        } catch (e) {
+          console.warn('Notification display failed: ', e);
+        }
+      } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission().then(function(permission) {
+          if (permission === 'granted') {
+            try {
+              new Notification(title, { body: body, icon: '/favicon.png' });
+            } catch (e) {
+              console.warn('Notification display failed: ', e);
+            }
+          }
+        });
+      }
+    };
+  </script>
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>

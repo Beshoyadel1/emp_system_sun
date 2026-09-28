@@ -55,8 +55,53 @@ class NotificationModel {
     this.date,
   });
 
-  factory NotificationModel.fromJson(
-      Map<String, dynamic> json) {
+  NotificationModel copyWith({
+    int? id,
+    String? title,
+    String? latinTitle,
+    String? description,
+    String? latinDesc,
+    int? toUserId,
+    int? toUserType,
+    int? fromUserId,
+    int? fromUserType,
+    bool? isViewed,
+    DateTime? date,
+  }) {
+    return NotificationModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      latinTitle: latinTitle ?? this.latinTitle,
+      description: description ?? this.description,
+      latinDesc: latinDesc ?? this.latinDesc,
+      toUserId: toUserId ?? this.toUserId,
+      toUserType: toUserType ?? this.toUserType,
+      fromUserId: fromUserId ?? this.fromUserId,
+      fromUserType: fromUserType ?? this.fromUserType,
+      isViewed: isViewed ?? this.isViewed,
+      date: date ?? this.date,
+    );
+  }
+
+  factory NotificationModel.fromJson(Map<String, dynamic> json) {
+    DateTime? parseDate(dynamic v) {
+      if (v == null) return null;
+      if (v is DateTime) return v;
+      final str = v.toString().trim();
+      if (str.isEmpty) return null;
+      final iso = DateTime.tryParse(str);
+      if (iso != null) return iso;
+      try {
+        return DateFormat('MM/dd/yyyy HH:mm:ss').parse(str);
+      } catch (_) {
+        try {
+          return DateFormat('yyyy-MM-dd HH:mm:ss').parse(str);
+        } catch (_) {
+          return null;
+        }
+      }
+    }
+
     return NotificationModel(
       id: json["id"],
       title: json["title"],
@@ -68,34 +113,54 @@ class NotificationModel {
       fromUserId: json["fromuserid"],
       fromUserType: json["fromusertype"],
       isViewed: json["isviewed"],
-      date:
-      json["date"] == null ? null : DateTime.parse(json["date"]),
+      date: parseDate(json["date"]),
     );
   }
+
   bool _isEnglish(BuildContext context) {
     return Localizations.localeOf(context).languageCode == 'en';
   }
 
   String getTitle(BuildContext context) {
     return _isEnglish(context)
-        ? (latinTitle ?? "")
-        : (title ?? "");
+        ? (latinTitle?.isNotEmpty == true ? latinTitle! : (title ?? ""))
+        : (title?.isNotEmpty == true ? title! : (latinTitle ?? ""));
   }
 
   String getDescription(BuildContext context) {
     return _isEnglish(context)
-        ? (latinDesc ?? "")
-        : (description ?? "");
+        ? (latinDesc?.isNotEmpty == true ? latinDesc! : (description ?? ""))
+        : (description?.isNotEmpty == true ? description! : (latinDesc ?? ""));
   }
 
   String getFormattedDate(BuildContext context) {
     if (date == null) return "";
+    try {
+      final locale = Localizations.localeOf(context).languageCode;
+      return DateFormat(
+        "dd MMM yyyy • hh:mm a",
+        locale,
+      ).format(date!);
+    } catch (_) {
+      return date.toString();
+    }
+  }
 
-    final locale = Localizations.localeOf(context).languageCode;
+  bool get isOrderRelated {
+    final text = "${title ?? ''} ${latinTitle ?? ''} ${description ?? ''} ${latinDesc ?? ''}".toLowerCase();
+    return text.contains("order") ||
+        text.contains("طلب") ||
+        text.contains("خدمة") ||
+        text.contains("service") ||
+        text.contains("حالة");
+  }
 
-    return DateFormat(
-      "dd MMM yyyy • hh:mm a",
-      locale,
-    ).format(date!);
+  bool get isChatRelated {
+    final text = "${title ?? ''} ${latinTitle ?? ''} ${description ?? ''} ${latinDesc ?? ''}".toLowerCase();
+    return text.contains("chat") ||
+        text.contains("message") ||
+        text.contains("محادثة") ||
+        text.contains("رسالة") ||
+        text.contains("شات");
   }
 }

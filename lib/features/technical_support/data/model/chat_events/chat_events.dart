@@ -4,23 +4,23 @@ import '../../../../../features/notifications/data/model/receive_message_notific
 class ChatEvents {
   ChatEvents._();
 
-  static final ChatEvents instance =
-  ChatEvents._();
+  static final ChatEvents instance = ChatEvents._();
 
-  final StreamController<ReceiveMessageData>
-  _controller =
-  StreamController<ReceiveMessageData>.broadcast();
+  int? activeChatUserId;
+  int? activeChatUserType;
 
-  Stream<ReceiveMessageData> get stream =>
-      _controller.stream;
+  final StreamController<ReceiveMessageData> _controller =
+      StreamController<ReceiveMessageData>.broadcast();
 
-  void add(
-      ReceiveMessageData data,
-      ) {
+  Stream<ReceiveMessageData> get stream => _controller.stream;
+
+  void add(ReceiveMessageData data) {
     _controller.add(data);
   }
 
   Future<void> dispose() async {
+    activeChatUserId = null;
+    activeChatUserType = null;
     await _controller.close();
   }
 }

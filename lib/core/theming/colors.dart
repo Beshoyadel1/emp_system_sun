@@ -50,4 +50,13 @@ class AppColors {
   static const Color partCyanColor = Color(0xffF2F4F8);
   static const Color brownColor = Color(0xffFF9865);
   static const Color darkBrownColor = Color(0xffD65718);
+
+  // Common aliases
+  static const Color mainColor = orangeColor;
+  static const Color textSecondary = darkGreyColor;
+  static const Color cardStroke = Color(0xffE4E5E6);
+  static const Color scaffoldBackground = scaffoldColor;
+  static const Color errorRedColor = redColor;
+  static const Color appBlackColor = darkColor;
+  static const Color appGrey = greyColor;
 }

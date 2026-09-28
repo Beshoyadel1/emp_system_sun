@@ -36,18 +36,34 @@ class ReceiveMessageHandler {
       }
       final context = navigatorKey.currentContext;
 
-      if (context != null) {
+      if (context != null && context.mounted) {
         final appCubit = AppCubit.get(context);
+        final isTechnicalSupportOpen =
+            appCubit.selectedPageIndex == PagesOfAllApp.technicalSupportPageNumber;
 
-        if (appCubit.selectedPageIndex ==
-            PagesOfAllApp.technicalSupportPageNumber) {
+        final incomingSenderId = model.data?.data?.fromUser;
+        final isActiveChatWithSameSender = isTechnicalSupportOpen &&
+            ChatEvents.instance.activeChatUserId != null &&
+            incomingSenderId != null &&
+            ChatEvents.instance.activeChatUserId.toString() == incomingSenderId;
+
+        // If the active conversation is open with the same sender, message is appended in real-time
+        // without showing an intrusive popup dialog.
+        if (isActiveChatWithSameSender) {
           return;
         }
       }
 
+      final title = (model.data?.data?.fromUserName?.isNotEmpty == true)
+          ? model.data!.data!.fromUserName!
+          : (model.data?.title?.isNotEmpty == true ? model.data!.title! : "رسالة جديدة");
+      final subtitle = (model.data?.data?.message?.isNotEmpty == true)
+          ? model.data!.data!.message!
+          : (model.data?.body ?? "");
+
       await _dialogService.show(
-        title: model.data?.data?.fromUserName ?? "",
-        subtitle: model.data?.data?.message  ?? "",
+        title: title,
+        subtitle: subtitle,
         onView: () async {
           _navigationService.openChat();
         },

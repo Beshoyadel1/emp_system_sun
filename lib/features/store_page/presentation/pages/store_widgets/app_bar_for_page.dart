@@ -1,4 +1,4 @@
-import 'package:emp_system_sun/features/notifications/presentation/pages/notification_popup/notification_popup.dart';
+import 'package:emp_system_sun/features/notifications/presentation/pages/notification_bell/notification_bell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../main.dart';
@@ -145,7 +145,7 @@ class _AppBarForPageState extends State<AppBarForPage> {
                 ),
               ),
 
-              const NotificationPopup(),
+              const NotificationBell(),
 
               const SizedBox(width: 10),
 

@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "emp_system_sun (Web Chrome - Port 3000)",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "chrome",
+            "args": [
+                "--web-port=3000"
+            ]
+        },
+        {
+            "name": "emp_system_sun (Auto - Port 3000)",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--web-port=3000"
+            ]
+        }
+    ]
+}

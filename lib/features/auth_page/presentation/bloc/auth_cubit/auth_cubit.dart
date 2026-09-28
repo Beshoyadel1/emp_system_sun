@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:emp_system_sun/core/api/dio_function/api_constants.dart';
 import 'package:emp_system_sun/core/language/language_constant.dart';
 import 'package:emp_system_sun/core/theming/auth_local_storage.dart';
+import 'package:emp_system_sun/core/services/fcm_service.dart';
 import 'package:emp_system_sun/features/auth_page/data/datasource/change_password_datasource/change_password_repository.dart';
 import 'package:emp_system_sun/features/auth_page/data/datasource/check_if_user_exist_or_not_datasource/check_if_user_exist_or_not_repository.dart';
 import 'package:emp_system_sun/features/auth_page/data/datasource/create_user_datasource/create_user_repository.dart';
@@ -17,13 +18,13 @@ import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/c
 import 'package:emp_system_sun/features/auth_page/data/request/login_request/login_request.dart';
 import 'package:emp_system_sun/features/auth_page/data/request/send_verification_code_request/send_verification_code_request.dart';
 import 'package:emp_system_sun/features/auth_page/domain/validate/facility_validator.dart';
-import 'package:emp_system_sun/features/notifications/data/datasource/signalr_datasource/signalr_service/signalr_service.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/branch_cubit/branch_cubit.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/work_time_cubit/work_time_cubit.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:emp_system_sun/features/notifications/presentation/bloc/notification_cubit/notification_cubit.dart';
+import 'package:emp_system_sun/features/notifications/presentation/bloc/notification_cubit/notification_state.dart';
+import 'package:emp_system_sun/main.dart';
 import 'auth_state.dart';
 
 enum OtpMessagePurpose {
@@ -74,6 +75,9 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> init() async {
     emit(AuthLoading());
 
+    // Prepare token in background
+    unawaited(FcmService.instance.getToken(vapidKey: FcmConfig.webVapidKey));
+
     final localUser = await AuthLocalStorage.getUser();
     final password = await AuthLocalStorage.getPassword();
 
@@ -82,11 +86,14 @@ class AuthCubit extends Cubit<AuthState> {
       return;
     }
 
+    final fcmToken = await FcmService.instance.getToken(vapidKey: FcmConfig.webVapidKey);
+
     final result = await loginFunction(
       loginRequest: LoginRequest(
         user: localUser.email!,
         password: password,
         type: UserType.employeeUser,
+        fcmToken: fcmToken.isNotEmpty ? fcmToken : null,
       ),
     );
 
@@ -98,30 +105,48 @@ class AuthCubit extends Cubit<AuthState> {
 
     final apiUser = result.user!;
 
-    // Local user must be exactly the same as API user
-    // if (!localUser.isSameData(apiUser)) {
-    //   await _forceLogout();
-    //   return;
-    // }
-
     print("INIT => Local user == API user");
 
-    // Connect SignalR
-    if (!SignalRService.instance.isConnected) {
-      await SignalRService.instance.connect(
-        hubUrl: ApiLink.notificationHub,
+    // Initialize and sync FCM for employee
+    try {
+      await FcmService.instance.init();
+      await FcmService.instance.syncCurrentToken(
+        userId: apiUser.userid,
+        userType: apiUser.type ?? UserType.employeeUser,
       );
+    } catch (e) {
+      debugPrint("FCM Init note: $e");
     }
+
+   
 
     // Check facility completion
     await _checkFacilityCompletion(apiUser);
+
+    final ctx = navigatorKey.currentContext;
+    if (ctx != null) {
+      try {
+        BlocProvider.of<NotificationCubit>(ctx, listen: false).getUserNotification();
+      } catch (_) {}
+    }
   }
 
   Future<void> _forceLogout() async {
     await AuthLocalStorage.clearUser();
     await AuthLocalStorage.clearPassword();
 
-    await SignalRService.instance.disconnect();
+    try {
+      await FcmService.instance.disconnect();
+    } catch (_) {}
+
+    final ctx = navigatorKey.currentContext;
+    if (ctx != null) {
+      try {
+        final notifCubit = BlocProvider.of<NotificationCubit>(ctx, listen: false);
+        notifCubit.notifications.clear();
+        notifCubit.safeEmit(NotificationSuccess(const []));
+      } catch (_) {}
+    }
 
     emit(AuthUnauthenticated());
   }
@@ -129,8 +154,22 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> login(LoginRequest request) async {
     emit(AuthLoginLoading());
 
+    final fcmToken = await FcmService.instance.getToken(vapidKey: FcmConfig.webVapidKey);
+    final String? tokenToSend = fcmToken.isNotEmpty
+        ? fcmToken
+        : ((request.fcmToken != null && request.fcmToken!.isNotEmpty)
+            ? request.fcmToken
+            : null);
+
+    final effectiveRequest = LoginRequest(
+      user: request.user,
+      password: request.password,
+      type: UserType.employeeUser,
+      fcmToken: tokenToSend,
+    );
+
     final result = await loginFunction(
-      loginRequest: request,
+      loginRequest: effectiveRequest,
     );
 
     if (!result.success || result.user == null) {
@@ -147,13 +186,19 @@ class AuthCubit extends Cubit<AuthState> {
     // First login → save API user
     await AuthLocalStorage.saveUser(apiUser);
     // Save password for auto-login after restart
-    await AuthLocalStorage.savePassword(request.password);
+    await AuthLocalStorage.savePassword(effectiveRequest.password);
 
-    if (!SignalRService.instance.isConnected) {
-      await SignalRService.instance.connect(
-        hubUrl: ApiLink.notificationHub,
+    try {
+      await FcmService.instance.init();
+      await FcmService.instance.syncCurrentToken(
+        userId: apiUser.userid,
+        userType: apiUser.type ?? UserType.employeeUser,
       );
+    } catch (e) {
+      debugPrint("FCM Init note: $e");
     }
+
+   
 
     emit(
       AuthLoginSuccess(
@@ -162,11 +207,18 @@ class AuthCubit extends Cubit<AuthState> {
     );
 
     await _checkFacilityCompletion(apiUser);
+
+    final ctx = navigatorKey.currentContext;
+    if (ctx != null) {
+      try {
+        BlocProvider.of<NotificationCubit>(ctx, listen: false).getUserNotification();
+      } catch (_) {}
+    }
   }
 
   Future<void> logout(BuildContext context) async {
     emit(AuthLoading());
-    _forceLogout();
+    await _forceLogout();
     if (context.mounted) {
       Navigator.pop(context);
     }

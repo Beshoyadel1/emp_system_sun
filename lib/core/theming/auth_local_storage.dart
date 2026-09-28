@@ -64,4 +64,21 @@ class AuthLocalStorage {
       key: passwordKey,
     );
   }
+
+  static const String fcmTokenKey = "fcm_token";
+
+  static Future<void> saveFcmToken(String token) async {
+    await _storage.write(
+      key: fcmTokenKey,
+      value: token,
+    );
+  }
+
+  static Future<String?> getFcmToken() async {
+    return await _storage.read(key: fcmTokenKey);
+  }
+
+  static Future<void> deleteFcmToken() async {
+    await _storage.delete(key: fcmTokenKey);
+  }
 }

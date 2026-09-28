@@ -1,4 +1,5 @@
 import '../../../../../../core/api/dio_function/api_constants.dart';
+import '../../../../../../core/services/fcm_service.dart';
 import '../../../../../../core/language/language_constant.dart';
 import '../../../../../../core/pages_widgets/general_widgets/navigate_to_page_widget.dart';
 import '../../../../../../core/pages_widgets/general_widgets/snakbar.dart';
@@ -81,13 +82,6 @@ class _LoginWidgetState extends State<LoginWidget> {
                 AppSnackBar.showSuccess(
                   AppLanguageKeys.success,
                 );
-
-                Navigator.pushReplacement(
-                  context,
-                  NavigateToPageWidget(
-                    const AuthGate(),
-                  ),
-                );
               }
 
               if (state is AuthLoginError) {
@@ -109,7 +103,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                 isLoading: isLoading,
                 onPressed: isLoading
                     ? null
-                    : () {
+                    : () async {
                   final email = userNameController.text.trim();
                   final password = passwordController.text.trim();
                   if (email.isEmpty||password.isEmpty) {
@@ -132,10 +126,17 @@ class _LoginWidgetState extends State<LoginWidget> {
 
                   if (!formKey.currentState!.validate()) return;
 
+                  final fcmToken = await FcmService.instance.getToken(
+                    vapidKey: FcmConfig.webVapidKey,
+                  );
+
+                  if (!context.mounted) return;
+
                   final loginRequest = LoginRequest(
                     user: userNameController.text.trim(),
                     password: passwordController.text.trim(),
                     type: UserType.employeeUser,
+                    fcmToken: fcmToken.isNotEmpty ? fcmToken : null,
                   );
 
                   context

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:emp_system_sun/core/api/dio_function/api_constants.dart';
+import 'package:flutter/foundation.dart';
 import '../../constants.dart';
 
 class Network {
@@ -57,19 +58,52 @@ class Network {
   }
   static Future<Response> getDataWithBodyAndParams(
       var jsonData, var jsonQuery, String url) async {
+    Map<String, dynamic>? query = jsonQuery is Map<String, dynamic>
+        ? Map<String, dynamic>.from(jsonQuery)
+        : (jsonQuery is Map ? Map<String, dynamic>.from(jsonQuery) : null);
+    dynamic effectiveData = jsonData;
+
+    if (kIsWeb) {
+      if (jsonData is Map && jsonData.isNotEmpty) {
+        query ??= <String, dynamic>{};
+        jsonData.forEach((key, value) {
+          query![key.toString()] = value;
+        });
+      }
+      effectiveData = null;
+    } else if (jsonData is Map && jsonData.isEmpty) {
+      effectiveData = null;
+    }
+
     return await dio.get(
       url,
-      data: jsonData,
+      data: effectiveData,
       options: Options(headers: myHeaders),
-      queryParameters: jsonQuery,
+      queryParameters: query ?? jsonQuery,
     );
   }
 
   static Future<Response> getDataWithBody(var jsonData, String url) async {
+    Map<String, dynamic>? query;
+    dynamic effectiveData = jsonData;
+
+    if (kIsWeb) {
+      if (jsonData is Map && jsonData.isNotEmpty) {
+        query = <String, dynamic>{};
+        jsonData.forEach((key, value) {
+          query![key.toString()] = value;
+        });
+      }
+      effectiveData = null;
+    } else if (jsonData is Map && jsonData.isEmpty) {
+      effectiveData = null;
+    }
+
     return await dio.get(
       url,
-      data: jsonData,
+      data: effectiveData,
       options: Options(headers: myHeaders),
+      queryParameters: query,
     );
   }
   static Future<Response> postDataWithBody(var jsonData, String url) async {

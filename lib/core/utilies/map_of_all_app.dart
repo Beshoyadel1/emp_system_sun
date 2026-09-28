@@ -17,7 +17,7 @@ import 'package:emp_system_sun/features/service_emp_view/presentation/pages/serv
 import 'package:emp_system_sun/features/spare_parts/presentation/pages/spare_parts_orders/first_screen_spare_parts_orders/first_screen_spare_parts_orders.dart';
 import 'package:emp_system_sun/features/spare_parts/presentation/pages/spare_parts_statistics/spare_parts_page/ui/spare_parts_statistics_page.dart';
 import 'package:emp_system_sun/features/store_page/presentation/pages/store_widgets/facility_account/facility_account.dart';
-import 'package:emp_system_sun/features/technical_support/presentation/pages/technical_support_emp/technical_support_admin_sun.dart';
+import 'package:emp_system_sun/features/technical_support/presentation/pages/employee_chat_page.dart';
 import 'package:flutter/cupertino.dart';
 import '../../../core/general_models/pages_model.dart';
 import '../../../core/language/language_constant.dart';
@@ -444,7 +444,7 @@ Future<void> getPages(BuildContext context) async {
       image: AppImageKeys.users,
       number:
       PagesOfAllApp.technicalSupportPageNumber,
-      page: TechnicalSupportAdminSun(),
+      page: EmployeeChatPage(),
     ),
 
     // ==========================================================
@@ -490,7 +490,7 @@ Future<List<PageNodeModel>> _getAllEmployeePages(
       image: AppImageKeys.users,
       number:
       PagesOfAllApp.technicalSupportPageNumber,
-      page: TechnicalSupportAdminSun(),
+      page: EmployeeChatPage(),
     ),
 
     const PageNodeModel(

@@ -1,4 +1,3 @@
-import 'package:emp_system_sun/features/notifications/presentation/pages/signalR_status_bar/signalR_status_bar.dart';
 import 'package:emp_system_sun/features/service_emp_view/presentation/cubit/employee_services_cubit/employee_services_cubit.dart';
 import 'package:emp_system_sun/features/service_emp_view/presentation/cubit/employee_services_cubit/employee_services_state.dart';
 import 'package:emp_system_sun/features/store_page/presentation/pages/store_widgets/app_bar_for_page.dart';
@@ -45,13 +44,16 @@ class _StorePageState extends State<StorePage> {
   }
 
   Future<void> _initialize() async {
-
     await _employeeServicesCubit.getEmployeeServices();
+
+    if (!mounted) return;
 
     await _initializePages();
   }
 
   Future<void> _initializePages() async {
+    if (!mounted) return;
+
     await getPages(context);
 
     if (!mounted) return;
@@ -97,6 +99,8 @@ class _StorePageState extends State<StorePage> {
   }
 
   Future<void> _refreshPages() async {
+    if (!mounted) return;
+
     await getPages(context);
 
     if (!mounted) return;

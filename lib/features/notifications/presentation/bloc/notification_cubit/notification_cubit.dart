@@ -40,8 +40,9 @@ class NotificationCubit extends Cubit<NotificationState> {
     try {
       final user = await AuthLocalStorage.getUser();
 
-      if (user == null) {
-        safeEmit(NotificationError("User not found"));
+      if (user == null || user.userid == null || user.userid == 0) {
+        notifications = [];
+        safeEmit(NotificationSuccess(notifications));
         return;
       }
 
@@ -49,41 +50,27 @@ class NotificationCubit extends Cubit<NotificationState> {
 
       final userResponse = await getUserNotificationFunction(
         request: GetUserNewNotificationRequest(
-          userId: user.userid ?? 0,
-          userType: user.type ?? 0,
+          userId: user.userid!,
+          userType: user.type ?? 5,
           pageNumber: _pageNumber,
           pageSize: _pageSize,
         ),
       );
 
-      final globalResponse = await getUserNotificationFunction(
-        request: GetUserNewNotificationRequest(
-          userId: 0,
-          userType: user.type ?? 0,
-          pageNumber: _pageNumber,
-          pageSize: _pageSize,
-        ),
-      );
-
-      notifications = [
-        ...userResponse.data,
-        ...globalResponse.data,
-      ];
+      notifications = List<NotificationModel>.from(userResponse.data);
 
       notifications = {
-        for (final item in notifications) item.id!: item,
+        for (final item in notifications)
+          if (item.id != null) item.id!: item,
       }.values.toList();
 
       notifications.sort(
-            (a, b) => b.date!.compareTo(a.date!),
+        (a, b) =>
+            (b.date ?? DateTime.now()).compareTo(a.date ?? DateTime.now()),
       );
 
-      totalCount = userResponse.totalCount + globalResponse.totalCount;
-
-      pageCount = userResponse.pageCount > globalResponse.pageCount
-          ? userResponse.pageCount
-          : globalResponse.pageCount;
-
+      totalCount = userResponse.totalCount;
+      pageCount = userResponse.pageCount;
       hasMore = _pageNumber < pageCount;
 
       safeEmit(NotificationSuccess(notifications));
@@ -100,21 +87,22 @@ class NotificationCubit extends Cubit<NotificationState> {
     try {
       final user = await AuthLocalStorage.getUser();
 
-      if (user == null) {
-        safeEmit(NotificationError("User not found"));
+      if (user == null || user.userid == null || user.userid == 0) {
         return;
       }
 
       newNotification = await getUserNewNotificationFunction(
         request: GetUserNewNotificationRequest(
-          userId: user.userid ?? 0,
-          userType: user.type ?? 0,
+          userId: user.userid!,
+          userType: user.type ?? 5,
         ),
       );
 
       if (isClosed) return;
 
-      safeEmit(NotificationNewSuccess(newNotification!));
+      if (newNotification != null) {
+        safeEmit(NotificationNewSuccess(newNotification!));
+      }
     } catch (e) {
       if (isClosed) return;
       safeEmit(NotificationError(e.toString()));
@@ -127,20 +115,26 @@ class NotificationCubit extends Cubit<NotificationState> {
     try {
       final user = await AuthLocalStorage.getUser();
 
-      if (user == null) {
-        safeEmit(NotificationError("User not found"));
+      if (user == null || user.userid == null || user.userid == 0) {
         return;
       }
 
+      // 1. Immediately update local data so unread badge clears instantly
+      notifications =
+          notifications.map((n) => n.copyWith(isViewed: true)).toList();
+      safeEmit(NotificationSuccess(notifications));
+
+      // 2. Notify backend
       await makeNotificationViewedFunction(
         request: GetUserNewNotificationRequest(
-          userId: user.userid ?? 0,
-          userType: user.type ?? 0,
+          userId: user.userid!,
+          userType: user.type ?? 5,
         ),
       );
 
       if (isClosed) return;
 
+      // 3. Re-sync with backend
       await getUserNotification();
     } catch (e) {
       if (isClosed) return;
@@ -156,42 +150,35 @@ class NotificationCubit extends Cubit<NotificationState> {
     try {
       final user = await AuthLocalStorage.getUser();
 
-      if (user == null) return;
+      if (user == null || user.userid == null || user.userid == 0) return;
 
       _pageNumber++;
 
       final userResponse = await getUserNotificationFunction(
         request: GetUserNewNotificationRequest(
-          userId: user.userid ?? 0,
-          userType: user.type ?? 0,
-          pageNumber: _pageNumber,
-          pageSize: _pageSize,
-        ),
-      );
-
-      final globalResponse = await getUserNotificationFunction(
-        request: GetUserNewNotificationRequest(
-          userId: 0,
-          userType: user.type ?? 0,
+          userId: user.userid!,
+          userType: user.type ?? 5,
           pageNumber: _pageNumber,
           pageSize: _pageSize,
         ),
       );
 
       notifications.addAll(userResponse.data);
-      notifications.addAll(globalResponse.data);
 
       notifications = {
-        for (final item in notifications) item.id!: item,
+        for (final item in notifications)
+          if (item.id != null) item.id!: item,
       }.values.toList();
 
       notifications.sort(
-            (a, b) => b.date!.compareTo(a.date!),
+        (a, b) =>
+            (b.date ?? DateTime.now()).compareTo(a.date ?? DateTime.now()),
       );
 
       hasMore = _pageNumber < pageCount;
 
       safeEmit(NotificationSuccess(notifications));
+    } catch (_) {
     } finally {
       isLoadingMore = false;
     }

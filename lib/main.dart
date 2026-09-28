@@ -1,22 +1,40 @@
-import 'dart:ui';
-import 'package:emp_system_sun/core/audio_service/audio_service.dart';
-import 'package:emp_system_sun/features/auth_page/presentation/auth_gate.dart';
-import 'package:emp_system_sun/features/auth_page/presentation/bloc/auth_cubit/auth_cubit.dart';
-import 'package:emp_system_sun/features/notifications/presentation/bloc/notification_cubit/notification_cubit.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import '../../../core/cubit/app_cubit/app_cubit.dart';
-import '../../../core/language/language_cubit/language_cubit.dart';
-import '../../../core/language/language_cubit/language_states.dart';
-import '../../../core/theming/colors.dart';
-import '../../../core/language/language.dart';
-import '../../../core/setup_git_it.dart';
+import 'package:emp_system_sun/core/audio_service/audio_service.dart';
+import 'package:emp_system_sun/core/services/fcm_service.dart';
+import 'package:emp_system_sun/firebase_options.dart';
+import 'package:emp_system_sun/features/auth_page/presentation/auth_gate.dart';
+import 'package:emp_system_sun/features/auth_page/presentation/bloc/auth_cubit/auth_cubit.dart';
+import 'package:emp_system_sun/features/notifications/presentation/bloc/notification_cubit/notification_cubit.dart';
+import 'core/cubit/app_cubit/app_cubit.dart';
+import 'core/language/language_cubit/language_cubit.dart';
+import 'core/language/language_cubit/language_states.dart';
+import 'core/language/language.dart';
+import 'core/setup_git_it.dart';
 
 final GlobalKey<ScaffoldState> scaffoldKeyDrawer = GlobalKey<ScaffoldState>();
 final GlobalKey<ScaffoldMessengerState> scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-void main() {
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    if (kIsWeb || (defaultTargetPlatform != TargetPlatform.windows && defaultTargetPlatform != TargetPlatform.linux)) {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      if (!kIsWeb) {
+        FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+      }
+    }
+  } catch (e) {
+    debugPrint("Firebase init note: $e");
+  }
+
   setupGetIt();
   runApp(
     MultiBlocProvider(
@@ -26,7 +44,7 @@ void main() {
         ),
         BlocProvider<LanguageCubit>(
           create: (_) =>
-          getIt<LanguageCubit>()..getLanguageFromSharedPreference(),
+              getIt<LanguageCubit>()..getLanguageFromSharedPreference(),
         ),
         BlocProvider<AuthCubit>(
           create: (_) => AuthCubit()..init(),
