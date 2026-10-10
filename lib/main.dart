@@ -36,6 +36,7 @@ void main() async {
   }
 
   setupGetIt();
+  await getIt<LanguageCubit>().getLanguageFromSharedPreference();
   runApp(
     MultiBlocProvider(
       providers: [
@@ -44,8 +45,7 @@ void main() async {
           create: (_) => NotificationCubit(),
         ),
         BlocProvider<LanguageCubit>(
-          create: (_) =>
-              getIt<LanguageCubit>()..getLanguageFromSharedPreference(),
+          create: (_) => getIt<LanguageCubit>(),
         ),
         BlocProvider<AuthCubit>(
           create: (_) => AuthCubit()..init(),

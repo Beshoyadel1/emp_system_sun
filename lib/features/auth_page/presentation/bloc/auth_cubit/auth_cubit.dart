@@ -21,6 +21,7 @@ import 'package:emp_system_sun/features/auth_page/domain/validate/facility_valid
 import 'package:emp_system_sun/features/store_page/presentation/bloc/branch_cubit/branch_cubit.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/work_time_cubit/work_time_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:emp_system_sun/features/notifications/presentation/bloc/notification_cubit/notification_cubit.dart';
 import 'package:emp_system_sun/main.dart';
@@ -567,6 +568,7 @@ class AuthCubit extends Cubit<AuthState> {
 
       if (result) {
         otpCode = newOtp;
+        if (kDebugMode) debugPrint('OTP (resend): $otpCode');
         _otpLanguageCode = currentLanguageCode;
         isOtpResending = false;
         startTimer();
@@ -635,6 +637,7 @@ class AuthCubit extends Cubit<AuthState> {
       }
 
       otpCode = newOtp;
+      if (kDebugMode) debugPrint('OTP (send): $otpCode');
       isOtpError = false;
       _otpMessagePurpose = purpose;
       _otpLanguageCode = languageCode;

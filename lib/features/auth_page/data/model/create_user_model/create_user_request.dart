@@ -4,7 +4,6 @@ import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/e
 
 import 'company_details_request.dart';
 import 'driver_details_request.dart';
-import 'employee_details_request.dart';
 import 'provider_details_request.dart';
 import 'admin_details_request.dart';
 

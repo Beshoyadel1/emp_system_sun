@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/utilies/map_of_all_app.dart';
 import '../../../../../core/theming/colors.dart';
-import 'sign_up_sizes_widget/sign_up_mobile_widget.dart';
 import 'sign_up_sizes_widget/sign_up_web_widget.dart';
 
 class SignUpPage extends StatelessWidget {

@@ -5,7 +5,6 @@ import '../../../../../../core/theming/colors.dart';
 import '../login_widgets/login_image.dart';
 import '../login_widgets/login_language_button_widget.dart';
 import '../login_widgets/login_widget.dart';
-import '../login_widgets/new_user_widget.dart';
 
 class LoginWebWidget extends StatelessWidget {
   const LoginWebWidget({super.key});

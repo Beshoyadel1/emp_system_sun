@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../core/language/language_cubit/language_cubit.dart';
-import '../../../core/cubit/app_cubit/app_cubit.dart';
 import '../../../core/theming/colors.dart';
 import '../button_widget.dart';
 

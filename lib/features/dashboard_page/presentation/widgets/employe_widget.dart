@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../../../../../features/dashboard_page/data/model/get_provider_total_rate_and_employee_and_balance_model/get_provider_total_rate_and_employee_and_balance_model.dart';
-import '../../../../../core/language/language_constant.dart';
 import '../../../../../core/theming/assets.dart';
 import '../../../../../core/theming/colors.dart';
 import '../../../../../core/theming/fonts.dart';

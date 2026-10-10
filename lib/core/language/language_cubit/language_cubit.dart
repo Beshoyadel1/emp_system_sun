@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../api/dio_function/dio_controller.dart';
 import '../language_model.dart';
 import 'language_states.dart';
 
@@ -24,9 +25,14 @@ class LanguageCubit extends Cubit<LanguageStates> {
       selectedLanguage = supportedLocales[1];
     }
 
+    Network.setLanguageCode(selectedLanguage!.languageCode);
+    languageDropDownValue = languageItemsDropDown.firstWhere(
+      (element) => element.number == language,
+    );
+    emit(ChangeAllAppLanguageState());
+
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt('language', language);
-    emit(ChangeAllAppLanguageState());
   }
 
   List<Locale> supportedLocales = [
@@ -44,16 +50,7 @@ class LanguageCubit extends Cubit<LanguageStates> {
 
   Future<void> getLanguageFromSharedPreference() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? languageFromSharedPreference = prefs.getInt('language');
-    if (languageFromSharedPreference != null) {
-      languageDropDownValue = languageItemsDropDown
-          .where((element) => element.number == languageFromSharedPreference)
-          .first;
-      changeAllAppLanguage(languageFromSharedPreference);
-    } else {
-      languageDropDownValue =
-          languageItemsDropDown.where((element) => element.number == 1).first;
-      changeAllAppLanguage(languageDropDownValue!.number!);
-    }
+    final language = prefs.getInt('language') == 2 ? 2 : 1;
+    await changeAllAppLanguage(language);
   }
 }

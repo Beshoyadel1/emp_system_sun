@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/utilies/map_of_all_app.dart';
 import '../../../../../core/theming/colors.dart';
-import 'login_devices_sizes_widget/login_mobile_widget.dart';
 import 'login_devices_sizes_widget/login_web_widget.dart';
 
 class LoginPage extends StatelessWidget {

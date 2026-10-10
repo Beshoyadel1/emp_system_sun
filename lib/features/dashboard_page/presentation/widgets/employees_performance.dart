@@ -5,7 +5,6 @@ import '../../../../../../../features/dashboard_page/presentation/cubit/get_prov
 import '../../../../../../../features/dashboard_page/presentation/cubit/get_provider_total_rate_and_employee_and_balance_cubit/get_provider_total_rate_and_employee_and_balance_state.dart';
 import '../../../../../core/language/language_constant.dart';
 import '../../../../../core/theming/colors.dart';
-import '../../../../../core/theming/fonts.dart';
 import '../../../../../core/pages_widgets/general_widgets/custom_container.dart';
 import '../../../../../core/theming/text_styles.dart';
 import 'employe_widget.dart';

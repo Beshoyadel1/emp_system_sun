@@ -9,7 +9,6 @@ import '../../../../../../../core/pages_widgets/general_widgets/custom_container
 import '../../../../../../../core/theming/colors.dart';
 import '../../../../../../../core/theming/fonts.dart';
 import '../../../../../../../core/theming/text_styles.dart';
-import '../../../../../../../features/cars_haraj_page/data/model/get_all_harage_model/chat_harag_model.dart';
 import '../../../../../../../features/cars_haraj_page/data/model/get_all_harage_model/harage_data.dart';
 
 class WidgetDesignChatsHarag extends StatefulWidget {
