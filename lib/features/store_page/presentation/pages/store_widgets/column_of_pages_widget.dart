@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../core/general_models/pages_model.dart';
 import '../../../../../core/cubit/app_cubit/app_cubit.dart';
 import 'expansion_tile_widget.dart';
+import 'technical_support_badge.dart';
 import 'general_widgets_in_store/function_add_to_opened_pages.dart';
 import '../../../../../core/theming/colors.dart';
 import '../../../../../core/theming/fonts.dart';
@@ -69,8 +70,7 @@ class ColumnOfPagesWidget extends StatelessWidget {
             // Normal Page
             // ============================
 
-            final keyForUpdate =
-                '${appCubit.selectedPageIndex}'
+            final keyForUpdate = '${appCubit.selectedPageIndex}'
                 '${appCubit.selectedPageFromOpenedPagesIndex}';
 
             final prefs = await SharedPreferences.getInstance();
@@ -84,6 +84,7 @@ class ColumnOfPagesWidget extends StatelessWidget {
               );
             } else {
               if (appCubit.data.isNotEmpty) {
+                if (!context.mounted) return;
                 await addToOpenedPages(
                   context: context,
                   appCubit: appCubit,
@@ -127,7 +128,8 @@ class ColumnOfPagesWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       spacing: 5,
                       children: [
-                        if (pageNode.image != null && pageNode.image!.isNotEmpty)
+                        if (pageNode.image != null &&
+                            pageNode.image!.isNotEmpty)
                           Image.asset(
                             pageNode.image!,
                             color: pageNode.number == appCubit.selectedPageIndex
@@ -136,7 +138,8 @@ class ColumnOfPagesWidget extends StatelessWidget {
                             height: 18,
                             width: 18,
                           ),
-                        if (pageNode.imageUint8List != null && pageNode.imageUint8List!.isNotEmpty)
+                        if (pageNode.imageUint8List != null &&
+                            pageNode.imageUint8List!.isNotEmpty)
                           Image.memory(
                             pageNode.imageUint8List!,
                             color: pageNode.number == appCubit.selectedPageIndex
@@ -157,6 +160,9 @@ class ColumnOfPagesWidget extends StatelessWidget {
                                 FontSelectionData.regularFontFamily,
                           ),
                         ),
+                        if (pageNode.number ==
+                            PagesOfAllApp.technicalSupportPageNumber)
+                          const TechnicalSupportBadge(),
                       ],
                     ),
                   ),

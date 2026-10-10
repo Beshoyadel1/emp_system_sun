@@ -43,6 +43,9 @@ class GetHarageChatSuccess extends HaragState {
     required super.currentPage,
     required super.pageCount,
   });
+
+  @override
+  List<Object?> get props => [...super.props, response];
 }
 
 class GetHarageChatError extends HaragState {
@@ -53,6 +56,9 @@ class GetHarageChatError extends HaragState {
     required super.currentPage,
     required super.pageCount,
   });
+
+  @override
+  List<Object?> get props => [...super.props, message];
 }
 
 class HaragInitial extends HaragState {

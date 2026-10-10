@@ -40,12 +40,18 @@ import '../../../data/request/get_harage_chat_request/get_harage_chat_request.da
 class HaragCubit extends Cubit<HaragState> {
   late final StreamSubscription _subscription;
 
-  HaragCubit()
+  final Future<GetHarageChatResponse?> Function(int)? chatLoader;
+  StreamSubscription<void>? _resumeSubscription;
+  int _chatRequest = 0;
+  bool _chatLoading = false;
+  final List<ReceiveMessageData> _pendingChatEvents = [];
+
+  HaragCubit({this.chatLoader})
       : super(
     const HaragInitial(),
   ) {
     // ============================================================
-    // LISTEN TO LIVE SIGNALR MESSAGES
+    // LISTEN TO LIVE FCM MESSAGES
     // ============================================================
 
     _subscription = ChatEvents.instance.stream.listen(
@@ -53,6 +59,11 @@ class HaragCubit extends Cubit<HaragState> {
         receiveHarageMessage(data);
       },
     );
+    _resumeSubscription = ChatEvents.instance.syncRequests.listen((_) {
+      if (selectedHarageId != null) {
+        unawaited(getHarageChat(harageId: selectedHarageId!));
+      }
+    });
   }
 
   // ============================================================
@@ -83,254 +94,113 @@ class HaragCubit extends Cubit<HaragState> {
   // GET HARAGE CHAT
   // ============================================================
 
-  Future<void> getHarageChat({
-    required int harageId,
-  }) async {
+  Future<void> getHarageChat({required int harageId}) async {
+    if (isClosed || (_chatLoading && selectedHarageId == harageId)) return;
+    if (selectedHarageId != harageId) harageChatResponse = null;
     selectedHarageId = harageId;
-
-    emit(
-      GetHarageChatLoading(
-        currentPage: state.currentPage,
-        pageCount: state.pageCount,
-      ),
-    );
-
+    ChatEvents.instance.activateHarage(this, harageId);
+    final request = ++_chatRequest;
+    _chatLoading = true;
+    _pendingChatEvents.clear();
+    emit(GetHarageChatLoading(
+        currentPage: state.currentPage, pageCount: state.pageCount));
     try {
       final user = await AuthLocalStorage.getUser();
-
-      if (user == null) {
-        emit(
-          GetHarageChatError(
-            message: 'User not found',
-            currentPage: state.currentPage,
-            pageCount: state.pageCount,
-          ),
-        );
-        return;
-      }
-
-      myUserId = user.userid;
+      if (isClosed || request != _chatRequest) return;
+      if (user?.userid == null) throw Exception('User not found');
+      myUserId = user!.userid;
       myUserType = user.type;
-
-      final response = await getHarageChatFunction(
-        getHarageChatRequest: GetHarageChatRequest(
-          harageId: harageId,
-        ),
+      final response = await (chatLoader != null
+          ? chatLoader!(harageId)
+          : getHarageChatFunction(
+              getHarageChatRequest: GetHarageChatRequest(harageId: harageId)));
+      if (isClosed || request != _chatRequest) return;
+      final messages = <GetHarageChatMessage>[...?response?.data?.messages];
+      for (final local
+          in harageChatResponse?.data?.messages ?? <GetHarageChatMessage>[]) {
+        if (!messages
+            .any((server) => _findExistingMessage([local], server) >= 0)) {
+          messages.add(local);
+        }
+      }
+      messages.sort((a, b) =>
+          (a.date ?? DateTime(1970)).compareTo(b.date ?? DateTime(1970)));
+      harageChatResponse = GetHarageChatResponse(
+        success: response?.success ?? false,
+        data: GetHarageChatData(
+            contributors: response?.data?.contributors ?? [],
+            messages: messages),
       );
-
-      harageChatResponse = response;
-
-      emit(
-        GetHarageChatSuccess(
-          response: response,
+      _chatLoading = false;
+      emit(GetHarageChatSuccess(
+          response: harageChatResponse,
           currentPage: state.currentPage,
-          pageCount: state.pageCount,
-        ),
-      );
+          pageCount: state.pageCount));
+      final pending = List<ReceiveMessageData>.of(_pendingChatEvents);
+      _pendingChatEvents.clear();
+      for (final event in pending) {
+        receiveHarageMessage(event);
+      }
     } catch (e) {
-      emit(
-        GetHarageChatError(
-          message: e.toString().replaceFirst(
-            'Exception: ',
-            '',
-          ),
+      if (isClosed || request != _chatRequest) return;
+      _chatLoading = false;
+      emit(GetHarageChatError(
+          message: e.toString().replaceFirst('Exception: ', ''),
           currentPage: state.currentPage,
-          pageCount: state.pageCount,
-        ),
-      );
+          pageCount: state.pageCount));
+      // Existing history can still receive events when a resume fetch fails.
+      final pending = List<ReceiveMessageData>.of(_pendingChatEvents);
+      _pendingChatEvents.clear();
+      for (final event in pending) {
+        receiveHarageMessage(event);
+      }
     }
   }
 
-  // ============================================================
-  // RECEIVE LIVE HARAGE MESSAGE
-  // ============================================================
-
-  // ============================================================
-// RECEIVE LIVE HARAG MESSAGE
-// ============================================================
-
-  void receiveHarageMessage(
-      ReceiveMessageData data,
-      ) {
-    // ==========================================================
-    // CHAT MUST BE OPEN
-    // ==========================================================
-
+  void receiveHarageMessage(ReceiveMessageData data) {
+    if (isClosed ||
+        selectedHarageId == null ||
+        int.tryParse(data.harageId ?? '') != selectedHarageId) return;
+    if (_chatLoading) {
+      _pendingChatEvents.add(data);
+      return;
+    }
     if (harageChatResponse?.data == null) {
-      print('❌ HARAG CHAT NOT OPEN');
       return;
     }
-
-    // ==========================================================
-    // HARAG MUST BE SELECTED
-    // ==========================================================
-
-    if (selectedHarageId == null) {
-      print('❌ NO SELECTED HARAGE');
-      return;
+    final fromUser = int.tryParse(data.fromUser ?? '') ?? 0;
+    final fromType = int.tryParse(data.fromUserType ?? '') ?? 0;
+    final toUser = int.tryParse(data.toUser ?? '') ?? 0;
+    final toType = int.tryParse(data.toUserType ?? '') ?? 0;
+    if (fromUser <= 0 || fromType <= 0) return;
+    final fromMe = fromUser == myUserId && fromType == myUserType;
+    if (!fromMe &&
+        ((toUser > 0 && toUser != myUserId) ||
+            (toType > 0 && toType != myUserType))) return;
+    final current = harageChatResponse!.data!;
+    if (!current.contributors
+        .any((c) => c.userId == fromUser && c.userType == fromType)) {
+      harageChatResponse = GetHarageChatResponse(
+          success: harageChatResponse!.success,
+          data: GetHarageChatData(messages: current.messages, contributors: [
+            ...current.contributors,
+            GetHarageChatContributor(
+                userId: fromUser, userType: fromType, name: data.fromUserName),
+          ]));
     }
-
-    // ==========================================================
-    // PARSE DATA
-    // ==========================================================
-
-    final fromUser = int.tryParse(
-      data.fromUser ?? '',
-    );
-
-    final fromUserType = int.tryParse(
-      data.fromUserType ?? '',
-    );
-
-    // ----------------------------------------------------------
-    // TO USER IS OPTIONAL FOR HARAG
-    // ----------------------------------------------------------
-
-    final toUser =
-        int.tryParse(
-          data.toUser ?? '',
-        ) ??
-            0;
-
-    final toUserType =
-        int.tryParse(
-          data.toUserType ?? '',
-        ) ??
-            0;
-
-    final harageId = int.tryParse(
-      data.harageId ?? '',
-    );
-
-    final orderId =
-        int.tryParse(
-          data.orderId ?? '',
-        ) ??
-            0;
-
-
-    if (fromUser == null ||
-        fromUserType == null ||
-        harageId == null) {
-      print(
-        '❌ INVALID HARAG SIGNALR DATA',
-      );
-      return;
-    }
-
-    // ==========================================================
-    // HARAGE MUST MATCH
-    // ==========================================================
-
-    if (harageId != selectedHarageId) {
-      print(
-        '❌ HARAGE ID MISMATCH',
-      );
-
-      print(
-        'CURRENT: $selectedHarageId',
-      );
-
-      print(
-        'RECEIVED: $harageId',
-      );
-
-      return;
-    }
-
-    // ==========================================================
-    // CHECK SENDER
-    // ==========================================================
-    //
-    // We only need to make sure the sender belongs to this
-    // Harag conversation.
-    //
-    // TOUSER / TOUSERTYPE are NOT required.
-    //
-    // ==========================================================
-
-    final isMyMessage =
-        fromUser == myUserId &&
-            fromUserType == myUserType;
-
-    final isKnownContributor =
-    harageChatResponse!
-        .data!
-        .contributors
-        .any(
-          (contributor) =>
-      contributor.userId ==
-          fromUser &&
-          contributor.userType ==
-              fromUserType,
-    );
-
-    if (!isMyMessage &&
-        !isKnownContributor) {
-      print(
-        '❌ UNKNOWN HARAG CONTRIBUTOR',
-      );
-      return;
-    }
-
-    // ==========================================================
-    // CREATE LIVE MESSAGE
-    // ==========================================================
-
-    final liveMessage =
-    GetHarageChatMessage(
-      id: int.tryParse(
-        data.id ?? '0',
-      ),
-
-      fromUser:
-      fromUser,
-
-      toUser:
-      toUser,
-
-      fromUserType:
-      fromUserType,
-
-      toUserType:
-      toUserType,
-
-      message:
-      data.message ?? '',
-
-      date:
-      _parseDate(
-        data.date,
-      ),
-
-      viewed:
-      _parseBool(
-        data.viewed,
-      ),
-
-      isClosed:
-      _parseBool(
-        data.isClosed,
-      ),
-
-      harageId:
-      harageId,
-
-      orderId:
-      orderId,
-    );
-
-    print(
-      '🟢 HARAG LIVE MESSAGE ACCEPTED',
-    );
-
-    // ==========================================================
-    // ADD / REPLACE OPTIMISTIC MESSAGE
-    // ==========================================================
-
-    _appendMessage(
-      liveMessage,
-    );
+    _appendMessage(GetHarageChatMessage(
+      id: int.tryParse(data.id ?? '0'),
+      fromUser: fromUser,
+      fromUserType: fromType,
+      toUser: toUser,
+      toUserType: toType,
+      message: data.message ?? '',
+      date: _parseDate(data.date),
+      viewed: _parseBool(data.viewed),
+      isClosed: _parseBool(data.isClosed),
+      harageId: selectedHarageId,
+      orderId: int.tryParse(data.orderId ?? '0'),
+    ));
   }
 
 // ============================================================
@@ -340,6 +210,7 @@ class HaragCubit extends Cubit<HaragState> {
   void _appendMessage(
       GetHarageChatMessage message,
       ) {
+    if (isClosed || message.harageId != selectedHarageId) return;
     if (harageChatResponse?.data == null) {
       return;
     }
@@ -523,6 +394,9 @@ class HaragCubit extends Cubit<HaragState> {
     i++) {
       final oldMessage =
       messages[i];
+      if ((oldMessage.id ?? 0) > 0) continue;
+      if (oldMessage.toUser != newMessage.toUser ||
+          oldMessage.toUserType != newMessage.toUserType) continue;
 
       // --------------------------------------------------------
       // SAME HARAGE
@@ -587,6 +461,7 @@ class HaragCubit extends Cubit<HaragState> {
     required String message,
     required int harageId,
   }) async {
+    if (isClosed) return;
     final text =
     message.trim();
 
@@ -612,6 +487,7 @@ class HaragCubit extends Cubit<HaragState> {
 
       final user =
       await AuthLocalStorage.getUser();
+      if (isClosed || (selectedHarageId != null && selectedHarageId != harageId)) return;
 
       if (user == null) {
         emit(
@@ -715,8 +591,7 @@ class HaragCubit extends Cubit<HaragState> {
       // ========================================================
 
       final tempId =
-          DateTime.now()
-              .millisecondsSinceEpoch;
+          -DateTime.now().microsecondsSinceEpoch;
 
       // ========================================================
       // OPTIMISTIC MESSAGE
@@ -809,6 +684,7 @@ class HaragCubit extends Cubit<HaragState> {
           '✅ HARAG MESSAGE SENT SUCCESSFULLY',
         );
       } catch (e) {
+        if (isClosed || selectedHarageId != harageId) return;
         // ======================================================
         // API FAILED
         // ======================================================
@@ -839,12 +715,13 @@ class HaragCubit extends Cubit<HaragState> {
       // DON'T RELOAD
       // ========================================================
       //
-      // SignalR will send the real message.
+      // FCM will send the real message.
       //
       // _findExistingMessage()
       // will replace the optimistic message.
       //
     } catch (e) {
+      if (isClosed || selectedHarageId != harageId) return;
       print(
         '❌ HARAG SEND ERROR: $e',
       );
@@ -1820,7 +1697,10 @@ class HaragCubit extends Cubit<HaragState> {
 
   @override
   Future<void> close() {
+    _chatRequest++;
+    ChatEvents.instance.deactivateHarage(this);
     _subscription.cancel();
+    _resumeSubscription?.cancel();
     return super.close();
   }
 }

@@ -40,7 +40,8 @@ void main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => NotificationCubit()..getUserNotification(),
+          lazy: false,
+          create: (_) => NotificationCubit(),
         ),
         BlocProvider<LanguageCubit>(
           create: (_) =>

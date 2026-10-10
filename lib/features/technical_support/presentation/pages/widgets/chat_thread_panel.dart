@@ -43,6 +43,8 @@ class ChatThreadPanel extends StatelessWidget {
               ),
               Expanded(
                 child: ChatMessagesScrollView(
+                  key:
+                      ValueKey('${activeChat.touser}:${activeChat.tousertype}'),
                   messages: activeChat.messages ?? [],
                   noOldMessages: activeChat.noOldMessages,
                   isLoadingOlder: state.isLoadingOlder,
@@ -51,10 +53,19 @@ class ChatThreadPanel extends StatelessWidget {
                   currentUserType: cubit.currentUserType,
                 ),
               ),
-              ChatComposeBar(
-                isSending: state.isSendingMessage,
-                onSend: (text) => cubit.sendMessage(text),
-              ),
+              if (activeChat.isClosed)
+                Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      Localizations.localeOf(context).languageCode == 'ar'
+                          ? 'المحادثة مغلقة'
+                          : 'Conversation closed',
+                    ))
+              else
+                ChatComposeBar(
+                  isSending: state.isSendingMessage,
+                  onSend: (text) => cubit.sendMessage(text),
+                ),
             ],
           ),
         );

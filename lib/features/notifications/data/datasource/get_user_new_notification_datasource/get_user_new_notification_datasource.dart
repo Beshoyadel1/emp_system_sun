@@ -5,7 +5,7 @@ import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';
 import '../../../../../core/api/dio_function/failures.dart';
 
-Future<NotificationModel> getUserNewNotificationFunction({
+Future<List<NotificationModel>> getUserNewNotificationFunction({
   required GetUserNewNotificationRequest request,
 }) async {
   try {
@@ -15,9 +15,22 @@ Future<NotificationModel> getUserNewNotificationFunction({
       ApiLink.getUserNewNotification,
     );
 
-    return NotificationModel.fromJson(
-      response.data,
-    );
+    dynamic raw = response.data;
+    if (raw is Map && (raw['success'] == false || raw['status'] == false)) {
+      throw Exception('Failed to load unread notifications');
+    }
+    if (raw is Map && raw.containsKey('data')) raw = raw['data'];
+    if (raw is Map && raw.containsKey('data')) raw = raw['data'];
+    final items = raw is List
+        ? raw
+        : raw is Map && raw['id'] != null
+            ? [raw]
+            : [];
+    return items
+        .whereType<Map>()
+        .map((item) =>
+            NotificationModel.fromJson(Map<String, dynamic>.from(item)))
+        .toList();
   } catch (e) {
     throw Exception(
       e is DioException

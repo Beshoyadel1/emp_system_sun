@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import '../notification_payload.dart';
 
 class GetUserNotificationResponse {
   final List<NotificationModel> data;
@@ -14,20 +15,23 @@ class GetUserNotificationResponse {
     required this.currentPage,
   });
 
-  factory GetUserNotificationResponse.fromJson(
-      Map<String, dynamic> json) {
-    final body = json["data"] ?? {};
+  factory GetUserNotificationResponse.fromJson(Map<String, dynamic> json) {
+    final raw = json["data"] ?? {};
+    final body = raw is Map ? raw : json;
+    final items = raw is List ? raw : body['data'] as List? ?? [];
 
     return GetUserNotificationResponse(
-      data: (body["data"] as List? ?? [])
-          .map((e) => NotificationModel.fromJson(e))
+      data: items
+          .whereType<Map>()
+          .map((e) => NotificationModel.fromJson(Map<String, dynamic>.from(e)))
           .toList(),
-      pageCount: body["pageCount"] ?? 0,
-      totalCount: body["totalCount"] ?? 0,
+      pageCount: body["pageCount"] ?? (items.isEmpty ? 0 : 1),
+      totalCount: body["totalCount"] ?? items.length,
       currentPage: body["currentPage"] ?? 1,
     );
   }
 }
+
 class NotificationModel {
   final int? id;
   final String? title;
@@ -40,6 +44,7 @@ class NotificationModel {
   final int? fromUserType;
   final bool? isViewed;
   final DateTime? date;
+  final NotificationPayload? payload;
 
   NotificationModel({
     this.id,
@@ -53,6 +58,7 @@ class NotificationModel {
     this.fromUserType,
     this.isViewed,
     this.date,
+    this.payload,
   });
 
   NotificationModel copyWith({
@@ -67,6 +73,7 @@ class NotificationModel {
     int? fromUserType,
     bool? isViewed,
     DateTime? date,
+    NotificationPayload? payload,
   }) {
     return NotificationModel(
       id: id ?? this.id,
@@ -80,6 +87,7 @@ class NotificationModel {
       fromUserType: fromUserType ?? this.fromUserType,
       isViewed: isViewed ?? this.isViewed,
       date: date ?? this.date,
+      payload: payload ?? this.payload,
     );
   }
 
@@ -114,6 +122,9 @@ class NotificationModel {
       fromUserType: json["fromusertype"],
       isViewed: json["isviewed"],
       date: parseDate(json["date"]),
+      payload: NotificationPayload.value(json, 'type') == null
+          ? null
+          : NotificationPayload(json),
     );
   }
 
@@ -147,7 +158,9 @@ class NotificationModel {
   }
 
   bool get isOrderRelated {
-    final text = "${title ?? ''} ${latinTitle ?? ''} ${description ?? ''} ${latinDesc ?? ''}".toLowerCase();
+    final text =
+        "${title ?? ''} ${latinTitle ?? ''} ${description ?? ''} ${latinDesc ?? ''}"
+            .toLowerCase();
     return text.contains("order") ||
         text.contains("طلب") ||
         text.contains("خدمة") ||
@@ -156,7 +169,13 @@ class NotificationModel {
   }
 
   bool get isChatRelated {
-    final text = "${title ?? ''} ${latinTitle ?? ''} ${description ?? ''} ${latinDesc ?? ''}".toLowerCase();
+    if (payload?.type.isNotEmpty == true) {
+      return payload!.kind == NotificationKind.chat ||
+          payload!.kind == NotificationKind.chatStatus;
+    }
+    final text =
+        "${title ?? ''} ${latinTitle ?? ''} ${description ?? ''} ${latinDesc ?? ''}"
+            .toLowerCase();
     return text.contains("chat") ||
         text.contains("message") ||
         text.contains("محادثة") ||

@@ -16,12 +16,8 @@ class LoginRequest {
     return {
       "USER": user,
       "PASSWORD": password,
-      "type": type,
-      if (cleanToken != null && cleanToken.isNotEmpty) ...{
-        "fcmtoken": cleanToken,
-        "fcmToken": cleanToken,
-        "FCMTOKEN": cleanToken,
-      },
+      "TYPE": type,
+      "FCMTOKEN": cleanToken ?? '',
     };
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import '../notification_payload.dart';
 
 import '../../../../../../core/theming/auth_local_storage.dart';
 
@@ -44,8 +45,8 @@ class ReceiveMessageNotificationModel {
   });
 
   factory ReceiveMessageNotificationModel.fromJson(
-      Map<String, dynamic> json,
-      ) {
+    Map<String, dynamic> json,
+  ) {
     return ReceiveMessageNotificationModel(
       userId: _parseInt(
         json['userId'],
@@ -55,10 +56,10 @@ class ReceiveMessageNotificationModel {
       ),
       data: json['data'] is Map
           ? ReceiveMessageNotificationData.fromJson(
-        Map<String, dynamic>.from(
-          json['data'] as Map,
-        ),
-      )
+              Map<String, dynamic>.from(
+                json['data'] as Map,
+              ),
+            )
           : null,
     );
   }
@@ -68,21 +69,17 @@ class ReceiveMessageNotificationModel {
   // ==========================================================
 
   Future<bool> canView() async {
-    final currentUser =
-    await AuthLocalStorage.getUser();
+    final currentUser = await AuthLocalStorage.getUser();
 
     if (currentUser == null) {
-
       return false;
     }
-
 
     // ========================================================
     // USER TYPE
     // ========================================================
 
-    if (userType != null &&
-        userType != currentUser.type) {
+    if (userType != null && userType != currentUser.type) {
       debugPrint(
         '❌ UserType Not Match',
       );
@@ -90,14 +87,9 @@ class ReceiveMessageNotificationModel {
       return false;
     }
 
-
-    if (userId != null &&
-        userId != 0 &&
-        userId != currentUser.userid) {
-
+    if (userId != null && userId != 0 && userId != currentUser.userid) {
       return false;
     }
-
 
     return true;
   }
@@ -115,21 +107,17 @@ class ReceiveMessageNotificationData {
   });
 
   factory ReceiveMessageNotificationData.fromJson(
-      Map<String, dynamic> json,
-      ) {
+    Map<String, dynamic> json,
+  ) {
     return ReceiveMessageNotificationData(
-      title:
-      json['title']?.toString(),
-
-      body:
-      json['body']?.toString(),
-
+      title: json['title']?.toString(),
+      body: json['body']?.toString(),
       data: json['data'] is Map
           ? ReceiveMessageData.fromJson(
-        Map<String, dynamic>.from(
-          json['data'] as Map,
-        ),
-      )
+              Map<String, dynamic>.from(
+                json['data'] as Map,
+              ),
+            )
           : null,
     );
   }
@@ -172,91 +160,62 @@ class ReceiveMessageData {
   });
 
   factory ReceiveMessageData.fromJson(
-      Map<String, dynamic> json,
-      ) {
+    Map<String, dynamic> json,
+  ) {
     return ReceiveMessageData(
-      type:
-      _getJsonValue(json, 'type')
-          ?.toString(),
-
-      id:
-      _getJsonValue(json, 'id')
-          ?.toString(),
-
+      type: _getJsonValue(json, 'type')?.toString(),
+      id: _getJsonValue(json, 'id')?.toString(),
       fromUser:
-      _getJsonValue(json, 'fromuser')
+          (_getJsonValue(json, 'fromuser') ?? _getJsonValue(json, 'fromuserid'))
+              ?.toString(),
+      toUser: (_getJsonValue(json, 'touser') ?? _getJsonValue(json, 'touserid'))
           ?.toString(),
-
-      toUser:
-      _getJsonValue(json, 'touser')
-          ?.toString(),
-
-      message:
-      decodeArabic(
+      message: decodeArabic(
         _getJsonValue(
           json,
           'message',
         )?.toString(),
       ),
-
-      date:
-      _getJsonValue(json, 'date')
-          ?.toString(),
-
-      viewed:
-      _getJsonValue(json, 'viewed')
-          ?.toString(),
-
-      fromUserType:
-      _getJsonValue(
+      date: _getJsonValue(json, 'date')?.toString(),
+      viewed: _getJsonValue(json, 'viewed')?.toString(),
+      fromUserType: _getJsonValue(
         json,
         'fromusertype',
       )?.toString(),
-
-      toUserType:
-      _getJsonValue(
+      toUserType: _getJsonValue(
         json,
         'tousertype',
       )?.toString(),
-
-      isClosed:
-      _getJsonValue(
+      isClosed: _getJsonValue(
         json,
         'isclosed',
       )?.toString(),
-
-      fromUserName:
-      decodeArabic(
+      fromUserName: decodeArabic(
         _getJsonValue(
           json,
           'fromusername',
         )?.toString(),
       ),
-
-      harageId:
-      _getJsonValue(
+      harageId: _getJsonValue(
         json,
         'harageid',
       )?.toString(),
-
-      orderId:
-      _getJsonValue(
+      orderId: _getJsonValue(
         json,
         'orderid',
       )?.toString(),
     );
   }
 }
+
 dynamic _getJsonValue(
-    Map<String, dynamic> json,
-    String key,
-    ) {
-  final target =
-  key.toLowerCase();
+  Map<String, dynamic> json,
+  String key,
+) {
+  final target = NotificationPayload.normalize(key);
 
   for (final entry in json.entries) {
-    if (entry.key.toLowerCase() ==
-        target) {
+    if (NotificationPayload.normalize(entry.key) == target) {
       return entry.value;
     }
   }

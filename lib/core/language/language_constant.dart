@@ -324,6 +324,7 @@ class AppLanguageKeys {
 
   //End//
   //api_functions//
+  static const String changePassword = 'changePassword';
   static const String changePasswordSuccessfully = 'changePasswordSuccessfully';
   static const String checkIfUserExistSuccessfully =
       'checkIfUserExistSuccessfully';

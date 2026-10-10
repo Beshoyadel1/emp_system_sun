@@ -40,22 +40,26 @@
       });
     }
 
-    window.showBrowserNotification = function(title, body) {
-      if (!('Notification' in window)) return;
-      if (Notification.permission === 'granted') {
+    window.showBrowserNotification = function(title, body, onClick) {
+      const show = function() {
         try {
-          new Notification(title, { body: body, icon: '/favicon.png' });
+          const notification = new Notification(title, { body: body, icon: '/favicon.png' });
+          notification.onclick = function() {
+            notification.close();
+            window.focus();
+            if (onClick) onClick();
+          };
         } catch (e) {
           console.warn('Notification display failed: ', e);
         }
+      };
+      if (!('Notification' in window)) return;
+      if (Notification.permission === 'granted') {
+        show();
       } else if (Notification.permission !== 'denied') {
         Notification.requestPermission().then(function(permission) {
           if (permission === 'granted') {
-            try {
-              new Notification(title, { body: body, icon: '/favicon.png' });
-            } catch (e) {
-              console.warn('Notification display failed: ', e);
-            }
+            show();
           }
         });
       }
@@ -63,6 +67,7 @@
   </script>
 </head>
 <body>
+  <script src="notification-clicks.js"></script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

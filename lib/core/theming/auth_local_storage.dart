@@ -37,12 +37,6 @@ class AuthLocalStorage {
       key: passwordKey,
       value: password,
     );
-
-    final savedPassword = await _storage.read(
-      key: passwordKey,
-    );
-
-    print("Saved Password: $savedPassword");
   }
 
   static Future<String?> getPassword() async {

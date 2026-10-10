@@ -11,6 +11,8 @@ class GetAllMessagesModel {
   Uint8List? image;
   int unViewedMessagesCount;
   ChatMessageModel? directLastMessage;
+  bool? closed;
+  bool get isClosed => closed ?? lastMessage?.isClosed ?? false;
 
   GetAllMessagesModel({
     this.touser,
@@ -21,6 +23,7 @@ class GetAllMessagesModel {
     this.image,
     this.unViewedMessagesCount = 0,
     this.directLastMessage,
+    this.closed,
   });
 
   factory GetAllMessagesModel.fromJson(Map<String, dynamic> json) {
@@ -97,6 +100,7 @@ class GetAllMessagesModel {
           ? unviewedCount.toInt()
           : (int.tryParse('$unviewedCount') ?? 0),
       directLastMessage: directLastMsg,
+      closed: json['isclosed'] is bool ? json['isclosed'] : null,
     );
   }
 

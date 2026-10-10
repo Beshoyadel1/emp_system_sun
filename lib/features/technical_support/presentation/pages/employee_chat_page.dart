@@ -18,6 +18,12 @@ class EmployeeChatPage extends StatefulWidget {
 
 class _EmployeeChatPageState extends State<EmployeeChatPage> {
   @override
+  void dispose() {
+    getIt<EmployeeChatCubit>().clearSelectedChat();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     final cubit = getIt<EmployeeChatCubit>();
@@ -108,8 +114,11 @@ class _MobileChatLayout extends StatelessWidget {
   const _MobileChatLayout();
 
   void _navigateToMobileChat(BuildContext context) {
+    final cubit = context.read<EmployeeChatCubit>();
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const MobileChatPage()),
+      MaterialPageRoute(builder: (_) => BlocProvider.value(
+        value: cubit, child: const MobileChatPage(),
+      )),
     );
   }
 

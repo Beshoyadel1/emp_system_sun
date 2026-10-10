@@ -37,6 +37,7 @@ class _WidgetDesignChatsHaragState
     // ============================================================
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
       final harageId = widget.harage.id;
 
       if (harageId != null) {
@@ -45,6 +46,14 @@ class _WidgetDesignChatsHaragState
         );
       }
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant WidgetDesignChatsHarag oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.harage.id != oldWidget.harage.id && widget.harage.id != null) {
+      context.read<HaragCubit>().getHarageChat(harageId: widget.harage.id!);
+    }
   }
 
   @override

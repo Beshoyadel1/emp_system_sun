@@ -23,8 +23,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
   void initState() {
     super.initState();
     final cubit = context.read<NotificationCubit>();
-    cubit.getUserNotification();
-    cubit.makeNotificationViewed();
+    cubit.ensureLoaded().then((_) {
+      if (mounted) cubit.makeNotificationViewed();
+    });
 
     _scrollController.addListener(_onScroll);
   }
@@ -211,7 +212,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         return _NotificationCard(
                           item: item,
                           onTap: () {
-                            if (item.isChatRelated) {
+                            if (item.payload != null) {
+                              NotificationModule.instance.navigationService
+                                  .openPayload(item.payload!);
+                            } else if (item.isChatRelated) {
                               NotificationModule.instance.navigationService
                                   .openChat();
                             } else {

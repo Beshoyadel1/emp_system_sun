@@ -8,11 +8,16 @@ Future<void> makeNotificationViewedFunction({
   required GetUserNewNotificationRequest request,
 }) async {
   try {
-    await Network.postDataWithBodyAndParams(
+    final response = await Network.postDataWithBodyAndParams(
       {},
       request.toJson(),
       ApiLink.makeNotificationViewed,
     );
+    final body = response.data;
+    if ((response.statusCode ?? 500) >= 400 ||
+        (body is Map && (body['success'] == false || body['status'] == false))) {
+      throw Exception(body is Map ? body['message'] ?? 'Failed to mark notifications viewed' : 'Failed to mark notifications viewed');
+    }
   } catch (e) {
     throw Exception(
       e is DioException

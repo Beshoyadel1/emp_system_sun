@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:emp_system_sun/features/notifications/data/model/notification_payload.dart';
 
 OrderDetailsModel orderModelFromJson(String str) => OrderDetailsModel.fromJson(json.decode(str));
 
@@ -44,17 +45,26 @@ class OrderDetailsModel {
   int? id;
   int? provid;
   double? lat;
-  int? totalprice;
+  num? totalprice;
   List<dynamic>? rates;
   int? usertype;
   List<Service>? services;
   List<Car>? cars;
   List<StatusHistory>? statusHistory;
-  int? taxamount;
+  num? taxamount;
   User? user;
   int? paymentmethod;
   ProviderInfo? providerInfo;
   int? status;
+
+  OrderDetailsModel applyNotificationPatch(Map<String, dynamic> patch) {
+    final normalized = Map<String, dynamic>.from(patch);
+    if (normalized.containsKey('orderstatus')) normalized['status'] = normalized.remove('orderstatus');
+    if (normalized.containsKey('orderdate')) normalized['date'] = normalized.remove('orderdate');
+    return OrderDetailsModel.fromJson(NotificationPayload.mergeJson(
+      NotificationPayload.serializable(toJson()), normalized,
+    ));
+  }
 
   factory OrderDetailsModel.fromJson(Map<dynamic, dynamic> json) => OrderDetailsModel(
     date: json["date"] == null
@@ -173,7 +183,7 @@ class Car {
   });
 
   Uint8List? image;
-  int? totalprice;
+  num? totalprice;
   List<dynamic>? products;
   List<ProvService>? provServices;
   List<dynamic>? servicePackages;
@@ -336,12 +346,12 @@ class ProvService {
     this.carid,
   });
 
-  int? quantity;
-  int? cost;
+  num? quantity;
+  num? cost;
   int? orderid;
-  int? taxpercentage;
-  int? price;
-  int? totalprice;
+  num? taxpercentage;
+  num? price;
+  num? totalprice;
   String? name;
   int? provserviceid;
   int? id;
@@ -461,7 +471,7 @@ class ProviderInfo {
   String? description;
   List<Servicesname>? servicesnames;
   String? phone;
-  int? averagerate;
+  num? averagerate;
   String? name;
   String? latindesc;
   int? id;

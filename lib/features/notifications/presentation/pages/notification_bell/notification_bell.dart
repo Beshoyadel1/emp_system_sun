@@ -27,7 +27,7 @@ class _NotificationBellState extends State<NotificationBell> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        context.read<NotificationCubit>().getUserNotification();
+        context.read<NotificationCubit>().ensureLoaded();
       }
     });
   }
@@ -54,7 +54,7 @@ class _NotificationBellState extends State<NotificationBell> {
     } else {
       _overlayEntry = _createOverlayEntry();
       Overlay.of(context).insert(_overlayEntry!);
-      context.read<NotificationCubit>().getUserNotification();
+      context.read<NotificationCubit>().ensureLoaded();
     }
   }
 
@@ -316,10 +316,15 @@ class _NotificationDropdownContent extends StatelessWidget {
                       item: item,
                       onTap: () {
                         onClose();
-                        if (item.isChatRelated) {
-                          NotificationModule.instance.navigationService.openChat();
+                        if (item.payload != null) {
+                          NotificationModule.instance.navigationService
+                              .openPayload(item.payload!);
+                        } else if (item.isChatRelated) {
+                          NotificationModule.instance.navigationService
+                              .openChat();
                         } else {
-                          NotificationModule.instance.navigationService.openDashboardOrders();
+                          NotificationModule.instance.navigationService
+                              .openDashboardOrders();
                         }
                       },
                     );

@@ -23,7 +23,6 @@ import 'package:emp_system_sun/features/store_page/presentation/bloc/work_time_c
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:emp_system_sun/features/notifications/presentation/bloc/notification_cubit/notification_cubit.dart';
-import 'package:emp_system_sun/features/notifications/presentation/bloc/notification_cubit/notification_state.dart';
 import 'package:emp_system_sun/main.dart';
 import 'auth_state.dart';
 
@@ -75,9 +74,6 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> init() async {
     emit(AuthLoading());
 
-    // Prepare token in background
-    unawaited(FcmService.instance.getToken(vapidKey: FcmConfig.webVapidKey));
-
     final localUser = await AuthLocalStorage.getUser();
     final password = await AuthLocalStorage.getPassword();
 
@@ -107,11 +103,10 @@ class AuthCubit extends Cubit<AuthState> {
 
     print("INIT => Local user == API user");
 
-    // Initialize and sync FCM for employee
+    // Login already registered the device token with the backend.
     try {
-      await FcmService.instance.init();
-      await FcmService.instance.syncCurrentToken(
-        userId: apiUser.userid,
+      await FcmService.instance.init(
+        userId: apiUser.userid ?? 0,
         userType: apiUser.type ?? UserType.employeeUser,
       );
     } catch (e) {
@@ -143,8 +138,7 @@ class AuthCubit extends Cubit<AuthState> {
     if (ctx != null) {
       try {
         final notifCubit = BlocProvider.of<NotificationCubit>(ctx, listen: false);
-        notifCubit.notifications.clear();
-        notifCubit.safeEmit(NotificationSuccess(const []));
+        notifCubit.reset();
       } catch (_) {}
     }
 
@@ -155,17 +149,12 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoginLoading());
 
     final fcmToken = await FcmService.instance.getToken(vapidKey: FcmConfig.webVapidKey);
-    final String? tokenToSend = fcmToken.isNotEmpty
-        ? fcmToken
-        : ((request.fcmToken != null && request.fcmToken!.isNotEmpty)
-            ? request.fcmToken
-            : null);
 
     final effectiveRequest = LoginRequest(
       user: request.user,
       password: request.password,
       type: UserType.employeeUser,
-      fcmToken: tokenToSend,
+      fcmToken: fcmToken,
     );
 
     final result = await loginFunction(
@@ -189,9 +178,8 @@ class AuthCubit extends Cubit<AuthState> {
     await AuthLocalStorage.savePassword(effectiveRequest.password);
 
     try {
-      await FcmService.instance.init();
-      await FcmService.instance.syncCurrentToken(
-        userId: apiUser.userid,
+      await FcmService.instance.init(
+        userId: apiUser.userid ?? 0,
         userType: apiUser.type ?? UserType.employeeUser,
       );
     } catch (e) {
@@ -795,12 +783,16 @@ class AuthCubit extends Cubit<AuthState> {
     return false;
   }
 
+  bool _isChangingPassword = false;
+
   Future<void> changePassword({
     required String user,
     required String password,
+    bool updateStoredPassword = false,
   }) async {
-    if (isClosed) return;
+    if (isClosed || _isChangingPassword) return;
 
+    _isChangingPassword = true;
     emit(ChangePasswordLoading());
 
     try {
@@ -811,6 +803,15 @@ class AuthCubit extends Cubit<AuthState> {
           type: UserType.employeeUser,
         ),
       );
+
+      // The API may finish after the user leaves the account page. Keep the
+      // current employee's auto-login credential in sync if the flow closes.
+      if (result.success && updateStoredPassword) {
+        final savedUser = await AuthLocalStorage.getUser();
+        if (savedUser?.email?.trim() == user.trim()) {
+          await AuthLocalStorage.savePassword(password);
+        }
+      }
 
       if (isClosed) return;
 
@@ -835,6 +836,8 @@ class AuthCubit extends Cubit<AuthState> {
           e.toString(),
         ),
       );
+    } finally {
+      _isChangingPassword = false;
     }
   }
 

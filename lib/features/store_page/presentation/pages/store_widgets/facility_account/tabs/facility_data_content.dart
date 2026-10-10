@@ -1,11 +1,7 @@
-import 'dart:convert';
-
 import 'package:emp_system_sun/core/theming/auth_local_storage.dart';
-import 'package:emp_system_sun/features/auth_page/data/datasource/login_datasource/login_repository.dart';
 import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/create_user_request.dart';
 import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/employee_details_request.dart';
 import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/employee_wrapper_request.dart';
-import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/provider_details_request.dart';
 import 'package:emp_system_sun/features/auth_page/presentation/bloc/auth_cubit/auth_cubit.dart';
 import 'package:emp_system_sun/features/auth_page/presentation/bloc/auth_cubit/auth_state.dart';
 import 'package:emp_system_sun/features/auth_page/presentation/pages/login_page/login_widgets/user_text_field_widget.dart';
@@ -18,6 +14,7 @@ import 'package:emp_system_sun/core/language/language_constant.dart';
 import 'package:emp_system_sun/core/theming/colors.dart';
 import 'package:emp_system_sun/core/theming/text_styles.dart';
 import '../../general_widgets_in_store/attach_file.dart';
+import 'account_change_password_button.dart';
 
 class FacilityDataContent extends StatefulWidget {
   const FacilityDataContent({super.key});
@@ -39,6 +36,25 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
 
   bool isEditMode = false;
   bool isLoaded = false;
+  CreateUserRequest? _savedUser;
+
+  @override
+  void dispose() {
+    for (final controller in [
+      jobNameController,
+      jobLatinNameController,
+      phoneController,
+      emailController,
+      genderController,
+      ageController,
+      dateController,
+      idController,
+      userNameController,
+    ]) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   void didChangeDependencies() {
@@ -57,73 +73,55 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
 
   Future<void> _loadUser() async {
     final user = await AuthLocalStorage.getUser();
+    if (!mounted) return;
+    _savedUser = user;
 
     if (user != null) {
-      jobNameController.text = user.employeeDetails?.employeeDetails?.jobname ?? "";
-      jobLatinNameController.text = user.employeeDetails?.employeeDetails?.joblatinname ?? "";
+      jobNameController.text =
+          user.employeeDetails?.employeeDetails?.jobname ?? "";
+      jobLatinNameController.text =
+          user.employeeDetails?.employeeDetails?.joblatinname ?? "";
       phoneController.text = user.phone ?? "";
       emailController.text = user.email ?? "";
       ageController.text = user.age?.toString() ?? "";
       genderController.text = user.gander?.toString() ?? "";
-      dateController.text = OrderFunctions.formatDateFromDateTime(user.joinDate);
-      idController.text=user.userid.toString();
-      userNameController.text=user.username.toString();
+      dateController.text =
+          OrderFunctions.formatDateFromDateTime(user.joinDate);
+      idController.text = user.userid.toString();
+      userNameController.text = user.username.toString();
       setState(() {});
     }
   }
+
   void _onUpdate() async {
-
     final user = await AuthLocalStorage.getUser();
-    final facilityCubit =
-    context.read<FacilityTabCubit>();
+    if (!mounted) return;
+    final facilityCubit = context.read<FacilityTabCubit>();
 
-    final oldEmployee =
-        user?.employeeDetails?.employeeDetails;
+    final oldEmployee = user?.employeeDetails?.employeeDetails;
 
     final request = CreateUserRequest(
-
       userid: user?.userid ?? 0,
-
       username: safe(userNameController.text),
-
       type: user?.type,
-
       phone: safe(phoneController.text),
-
       email: safe(emailController.text),
-
       age: ageController.text.isNotEmpty
           ? int.tryParse(ageController.text)
           : null,
-
       gander: genderController.text.isNotEmpty
           ? int.tryParse(genderController.text)
           : null,
-
-      image:
-      facilityCubit.images['image'] ??
-          user?.image,
-
+      image: facilityCubit.images['image'] ?? user?.image,
       employeeDetails: EmployeeWrapperRequest(
-        employeeDetails:
-        EmployeeDetailsRequest(
-
+        employeeDetails: EmployeeDetailsRequest(
           id: oldEmployee?.id,
-
           provid: oldEmployee?.provid,
-
           jobname: safe(jobNameController.text),
-
-          joblatinname:
-          safe(jobLatinNameController.text),
-
-          branchid:
-          oldEmployee?.branchid,
+          joblatinname: safe(jobLatinNameController.text),
+          branchid: oldEmployee?.branchid,
         ),
-        serviceIds:
-        user?.employeeDetails
-            ?.serviceIds ??
-            [],
+        serviceIds: user?.employeeDetails?.serviceIds ?? [],
       ),
     );
 
@@ -133,9 +131,7 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
     // debugPrint(
     //     jsonEncode(request.toJson()));
 
-    context
-        .read<AuthCubit>()
-        .updateUser(request);
+    context.read<AuthCubit>().updateUser(request);
   }
 
   @override
@@ -144,7 +140,6 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 20),
-
         Wrap(
           spacing: 10,
           runSpacing: 10,
@@ -153,7 +148,7 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
               controller: idController,
               text: AppLanguageKeys.identity,
               type: UserFieldType.name,
-              readOnly:true,
+              readOnly: true,
               width: 250,
             ),
             UserTextFieldWidget(
@@ -212,9 +207,7 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
             ),
           ],
         ),
-
         const SizedBox(height: 20),
-
         Wrap(
           spacing: 20,
           runSpacing: 20,
@@ -226,14 +219,10 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
             ),
           ],
         ),
-
         const SizedBox(height: 20),
-
         BlocConsumer<AuthCubit, AuthState>(
           listener: (context, state) {
-
             if (state is AuthUpdateSuccess) {
-
               print("✅ UPDATE SUCCESS");
 
               setState(() => isEditMode = false);
@@ -246,7 +235,6 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
             }
 
             if (state is AuthUpdateError) {
-
               print("❌ UPDATE ERROR => ${state.error}");
 
               ScaffoldMessenger.of(context).showSnackBar(
@@ -259,7 +247,9 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
           builder: (context, state) {
             final isLoading = state is AuthUpdateLoading;
 
-            return Row(
+            return Wrap(
+              spacing: 10,
+              runSpacing: 10,
               children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -288,7 +278,10 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
                           textSize: 13,
                         ),
                 ),
-                const SizedBox(width: 10),
+                AccountChangePasswordButton(
+                  user: _savedUser,
+                  enabled: !isLoading,
+                ),
                 if (isEditMode)
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(

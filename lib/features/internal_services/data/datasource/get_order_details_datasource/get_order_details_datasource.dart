@@ -17,7 +17,7 @@ Future<OrderDetailsModel> getOrderDetailsFunction({
 
     final responseData = response.data;
 
-    final bool success = responseData["success"] ?? false;
+    final bool success = responseData["success"] ?? responseData["status"] ?? false;
 
     if (!success) {
       throw Exception(

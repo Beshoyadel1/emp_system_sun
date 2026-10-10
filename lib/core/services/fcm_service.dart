@@ -1,109 +1,121 @@
-import 'dart:convert';
-import 'dart:math';
+import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/widgets.dart';
 import 'package:emp_system_sun/core/api/dio_function/api_constants.dart';
-import 'package:emp_system_sun/core/api/dio_function/dio_controller.dart';
 import 'package:emp_system_sun/core/services/browser_notification.dart';
+import 'package:emp_system_sun/core/setup_git_it.dart';
 import 'package:emp_system_sun/core/theming/auth_local_storage.dart';
-import 'package:emp_system_sun/features/notifications/presentation/bloc/notification_cubit/notification_cubit.dart';
+import 'package:emp_system_sun/firebase_options.dart';
+import 'package:emp_system_sun/features/notifications/data/model/notification_payload.dart';
+import 'package:emp_system_sun/features/notifications/data/model/receive_message_notification_model/receive_message_notification_model.dart';
+import 'package:emp_system_sun/features/notifications/data/notification_updates.dart';
 import 'package:emp_system_sun/features/notifications/presentation/module/notification_module/notification_module.dart';
-import 'package:emp_system_sun/main.dart';
+import 'package:emp_system_sun/features/technical_support/data/model/chat_events/chat_events.dart';
+import 'package:emp_system_sun/features/technical_support/presentation/bloc/employee_chat_cubit/employee_chat_cubit.dart';
+import 'notification_clicks.dart';
+import 'package:emp_system_sun/features/notifications/presentation/services/notification_alert_service.dart';
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  if (kDebugMode) {
-    print('FCM: Background message received: ${message.messageId}');
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
   }
+  debugPrint('FCM background: ${message.messageId}');
 }
 
 class FcmService {
   FcmService._();
-
   static final FcmService instance = FcmService._();
-
   String? _fcmToken;
   String? get fcmToken => _fcmToken;
-
-  bool _isInitialized = false;
+  bool _isInitialized = false, _uiReady = false;
   bool get isInitialized => _isInitialized;
+  int _userId = 0, _userType = 0, _session = 0;
+  StreamSubscription<String>? _tokenSubscription;
+  StreamSubscription<RemoteMessage>? _messageSubscription, _openSubscription;
+  void Function()? _stopWebClicks;
+  AppLifecycleListener? _lifecycleListener;
+  bool _wasInBackground = false;
+  final Set<String> _opened = {};
+  final List<({NotificationPayload payload, bool opened})> _pendingDisplay = [];
 
-  static bool get isSupported {
-    if (kIsWeb) return true;
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.android:
-      case TargetPlatform.iOS:
-      case TargetPlatform.macOS:
-        return true;
-      default:
-        return false;
+  static bool get isSupported =>
+      kIsWeb ||
+      const {
+        TargetPlatform.android,
+        TargetPlatform.iOS,
+        TargetPlatform.macOS,
+      }.contains(defaultTargetPlatform);
+
+  /// Login registers the current token and topics on the backend.
+  Future<void> init({required int userId, required int userType}) async {
+    if (_userId != userId || _userType != userType) {
+      await disconnect();
+      _userId = userId;
+      _userType = userType;
     }
-  }
-
-  Future<void> init() async {
-    if (!isSupported) {
-      if (kDebugMode) {
-        print('FCM: Platform not supported. Skipping init.');
+    getIt<EmployeeChatCubit>().configureUser(userId, userType);
+    _lifecycleListener ??= AppLifecycleListener(onStateChange: (state) {
+      if (state == AppLifecycleState.paused ||
+          state == AppLifecycleState.hidden) {
+        _wasInBackground = true;
+      } else if (state == AppLifecycleState.resumed && _wasInBackground) {
+        _wasInBackground = false;
+        if (_userId > 0) ChatEvents.instance.requestSync();
       }
-      return;
-    }
-
-    if (_isInitialized) return;
-
+    });
+    if (!isSupported || _isInitialized) return;
+    _isInitialized = true;
+    final session = _session;
     try {
       final messaging = FirebaseMessaging.instance;
-
-      // Request permissions
-      NotificationSettings settings = await messaging.requestPermission(
-        alert: true,
-        announcement: false,
-        badge: true,
-        carPlay: false,
-        criticalAlert: false,
-        provisional: false,
-        sound: true,
-      );
-
-      if (kDebugMode) {
-        print('FCM: Authorization status: ${settings.authorizationStatus}');
-      }
-
-      // Fetch Token
-      _fcmToken = await getToken(vapidKey: FcmConfig.webVapidKey);
-      if (_fcmToken != null && _fcmToken!.isNotEmpty) {
-        await _syncTokenIfUserAvailable(_fcmToken!);
-      }
-
-      // Listen for token refresh
-      messaging.onTokenRefresh.listen((newToken) {
-        _fcmToken = newToken;
-        _syncTokenIfUserAvailable(newToken);
+      _stopWebClicks = listenForNotificationClicks((raw) {
+        if (session != _session) return;
+        final notification = NotificationPayload.object(raw['notification']);
+        _handlePayload(
+            NotificationPayload(
+              NotificationPayload.object(raw['data']),
+              title: notification['title']?.toString(),
+              body: notification['body']?.toString(),
+              messageId: (raw['messageId'] ?? raw['fcmMessageId'])?.toString(),
+              sentAt: raw['sentTime'] is num
+                  ? DateTime.fromMillisecondsSinceEpoch(
+                      (raw['sentTime'] as num).toInt())
+                  : DateTime.tryParse('${raw['sentAt'] ?? ''}'),
+            ),
+            opened: true);
       });
-
-      // Foreground message listener
-      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        _handleRemoteMessage(message);
+      _tokenSubscription = messaging.onTokenRefresh.listen((token) {
+        if (session != _session) return;
+        _fcmToken = token;
+        // Submit the latest device token at the next login.
+        unawaited(AuthLocalStorage.saveFcmToken(token));
       });
-
-      // Opened from notification listener
-      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-        _handleRemoteMessage(message);
+      _messageSubscription = FirebaseMessaging.onMessage.listen((message) {
+        if (session == _session) handleRemoteMessage(message, opened: false);
       });
-
-      _isInitialized = true;
-    } catch (e, stack) {
-      if (kDebugMode) {
-        print('FCM: Initialization error: $e\n$stack');
+      _openSubscription =
+          FirebaseMessaging.onMessageOpenedApp.listen((message) {
+        if (session == _session) handleRemoteMessage(message, opened: true);
+      });
+      final initial = await messaging.getInitialMessage();
+      if (session == _session && initial != null) {
+        handleRemoteMessage(initial, opened: true);
       }
+    } catch (e) {
+      debugPrint('FCM init: $e');
+      if (session == _session) await _cancelListeners();
     }
   }
 
   Future<String>? _pendingGetToken;
-
   Future<String> getToken({String? vapidKey}) async {
+    if (!isSupported) return '';
     if (_pendingGetToken != null) return _pendingGetToken!;
-    _pendingGetToken = _internalGetToken(vapidKey: vapidKey);
+    _pendingGetToken = _getDeviceToken(vapidKey: vapidKey);
     try {
       return await _pendingGetToken!;
     } finally {
@@ -111,279 +123,166 @@ class FcmService {
     }
   }
 
-  Future<String> _internalGetToken({String? vapidKey}) async {
-    if (isSupported) {
-      try {
-        final effectiveVapidKey = (vapidKey != null && vapidKey.trim().isNotEmpty)
-            ? vapidKey.trim()
-            : FcmConfig.webVapidKey.trim();
-
-        if (kIsWeb) {
-          try {
-            final settings =
-                await FirebaseMessaging.instance.getNotificationSettings();
-            if (settings.authorizationStatus ==
-                AuthorizationStatus.notDetermined) {
-              final newSettings =
-                  await FirebaseMessaging.instance.requestPermission();
-              if (kDebugMode) {
-                print(
-                    'FCM Web: Requested notification permission => ${newSettings.authorizationStatus}');
-              }
-            } else if (settings.authorizationStatus ==
-                AuthorizationStatus.denied) {
-              if (kDebugMode) {
-                print(
-                    'FCM Web: Notification permission is DENIED by the user/browser.');
-              }
-            }
-          } catch (e) {
-            if (kDebugMode) {
-              print('FCM Web: Permission check note: $e');
-            }
-          }
-        }
-
-        final token = await FirebaseMessaging.instance
-            .getToken(
-          vapidKey:
-              (kIsWeb && effectiveVapidKey.isNotEmpty) ? effectiveVapidKey : null,
-        )
-            .timeout(
-          const Duration(seconds: 10),
-          onTimeout: () => null,
-        );
-
-        if (token != null && token.trim().isNotEmpty) {
-          _fcmToken = token.trim();
-          await AuthLocalStorage.saveFcmToken(_fcmToken!);
-          if (kDebugMode) {
-            print('FCM: Successfully obtained new token: $_fcmToken');
-          }
-          return _fcmToken!;
-        }
-      } catch (e) {
-        if (kDebugMode) print('FCM getToken note: $e');
-      }
-    }
-
-    if (_fcmToken != null && _fcmToken!.trim().isNotEmpty) return _fcmToken!;
-
-    final savedToken = await AuthLocalStorage.getFcmToken();
-    if (savedToken != null && savedToken.trim().isNotEmpty) {
-      _fcmToken = savedToken.trim();
-      return _fcmToken!;
-    }
-
-    final user = await AuthLocalStorage.getUser();
-    if (user != null &&
-        user.fcmToken != null &&
-        user.fcmToken!.trim().isNotEmpty) {
-      _fcmToken = user.fcmToken!.trim();
-      await AuthLocalStorage.saveFcmToken(_fcmToken!);
-      return _fcmToken!;
-    }
-
-    // Fallback persistent token for desktop / testing
-    final fallbackToken = await _getOrCreateFallbackToken();
-    _fcmToken = fallbackToken;
-    return fallbackToken;
-  }
-
-  Future<String> _getOrCreateFallbackToken() async {
+  Future<String> _getDeviceToken({String? vapidKey}) async {
     try {
-      final saved = await AuthLocalStorage.getFcmToken();
-      if (saved != null && saved.trim().isNotEmpty) {
-        return saved.trim();
-      }
-    } catch (_) {}
-
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final randomSuffix = (Random().nextInt(900000) + 100000).toString();
-    final platformTag =
-        kIsWeb ? 'web' : defaultTargetPlatform.name.toLowerCase();
-    final generated = 'fcm_${platformTag}_${timestamp}_$randomSuffix';
-    await AuthLocalStorage.saveFcmToken(generated);
-    return generated;
-  }
-
-  Future<void> syncCurrentToken({int? userId, int? userType}) async {
-    final user = await AuthLocalStorage.getUser();
-    final effectiveUserId = userId ?? user?.userid;
-    // Employee UserType: 5
-    final effectiveUserType = userType ?? user?.type ?? UserType.employeeUser;
-
-    if (effectiveUserId != null && effectiveUserId > 0) {
-      final token = await getToken(vapidKey: FcmConfig.webVapidKey);
-      if (token.isNotEmpty) {
-        await _syncTokenWithBackend(
-          userId: effectiveUserId,
-          userType: effectiveUserType,
-          token: token,
-        );
-
-        final ctx = navigatorKey.currentContext;
-        if (ctx != null) {
-          try {
-            BlocProvider.of<NotificationCubit>(ctx, listen: false).getUserNotification();
-          } catch (_) {}
-        }
-      }
-    }
-  }
-
-  Future<void> _syncTokenIfUserAvailable(String token) async {
-    if (token.trim().isEmpty) return;
-    final user = await AuthLocalStorage.getUser();
-    if (user != null && user.userid != null && user.userid! > 0) {
-      await _syncTokenWithBackend(
-        userId: user.userid!,
-        userType: user.type ?? UserType.employeeUser,
-        token: token,
-      );
-
-      final ctx = navigatorKey.currentContext;
-      if (ctx != null) {
-        try {
-          BlocProvider.of<NotificationCubit>(ctx, listen: false).getUserNotification();
-        } catch (_) {}
-      }
-    }
-  }
-
-  Future<void> _syncTokenWithBackend({
-    required int userId,
-    required int userType,
-    required String token,
-  }) async {
-    final cleanToken = token.trim();
-    if (cleanToken.isEmpty) return;
-
-    try {
-      final payload = {
-        'userId': userId,
-        'UserId': userId,
-        'userType': userType,
-        'UserType': userType,
-        'fcmToken': cleanToken,
-        'FcmToken': cleanToken,
-        'FCMTOKEN': cleanToken,
-      };
-
-      await Network.postDataWithBodyAndParams(
-        payload,
-        payload,
-        ApiLink.updateFcmToken,
-      );
-      await AuthLocalStorage.saveFcmToken(cleanToken);
-
-      if (kDebugMode) {
-        print(
-            'FCM: Successfully synced token with backend for Employee $userId (type $userType)');
-      }
-
-      // Automatically subscribe to employee topics if real FCM token
-      if (isSupported && !cleanToken.startsWith('fcm_')) {
-        await subscribeToTopic(NotificationTopic.employee, userType: userType);
-        await subscribeToTopic('all', userType: userType);
+      final messaging = FirebaseMessaging.instance;
+      final settings = await messaging.requestPermission(
+          alert: true, badge: true, sound: true);
+      if (settings.authorizationStatus == AuthorizationStatus.denied) return '';
+      final key = vapidKey?.trim() ?? FcmConfig.webVapidKey;
+      final token = await messaging
+          .getToken(
+            vapidKey: kIsWeb && key.isNotEmpty ? key : null,
+          )
+          .timeout(const Duration(seconds: 10), onTimeout: () => null);
+      if (token?.trim().isNotEmpty == true) {
+        _fcmToken = token!.trim();
+        await AuthLocalStorage.saveFcmToken(_fcmToken!);
+        return _fcmToken!;
       }
     } catch (e) {
-      if (kDebugMode) print('FCM sync error: $e');
+      debugPrint('FCM token unavailable: $e');
     }
+    // Never submit a fabricated token or one belonging to a different device.
+    return '';
   }
 
-  Future<void> subscribeToTopic(String topic, {int? userType}) async {
-    final token = _fcmToken ?? await AuthLocalStorage.getFcmToken();
-    if (token == null || token.isEmpty || token.startsWith('fcm_')) return;
-
-    if (!kIsWeb) {
-      try {
-        await FirebaseMessaging.instance.subscribeToTopic(topic);
-      } catch (_) {}
-    }
-
-    try {
-      final body = jsonEncode({
-        'fcmToken': token,
-        'topic': topic,
-        if (userType != null) 'userType': userType,
-      });
-      await Network.postDataWithBody(body, ApiLink.subscribeToTopic);
-    } catch (_) {}
+  void handleRemoteMessage(RemoteMessage message, {bool opened = false}) {
+    _handlePayload(
+        NotificationPayload(
+          message.data,
+          title: message.notification?.title,
+          body: message.notification?.body,
+          messageId: message.messageId,
+          sentAt: message.sentTime,
+        ),
+        opened: opened);
   }
 
-  void _handleRemoteMessage(RemoteMessage message) {
+  void _handlePayload(NotificationPayload payload, {required bool opened}) {
+    if (_userId <= 0 || !payload.isFor(_userId, _userType)) return;
     try {
-      final data = Map<String, dynamic>.from(message.data);
-      final rawType = (data['type'] ?? data['eventType'] ?? '').toString();
-      final normType = rawType.toLowerCase().replaceAll('_', '');
-
-      final title = message.notification?.title ??
-          data['title'] ??
-          data['latintitle'] ??
-          data['ar_title'] ??
-          data['en_title'] ??
-          data['fromusername'] ??
-          data['sender'] ??
-          'إشعار جديد للموظف';
-      final body = message.notification?.body ??
-          data['body'] ??
-          data['description'] ??
-          data['latindesc'] ??
-          data['ar_body'] ??
-          data['en_body'] ??
-          data['message'] ??
-          data['text'] ??
-          '';
-
-      try {
-        showBrowserNotification(title.toString(), body.toString());
-      } catch (_) {}
-
-      final adaptedPayload = <String, dynamic>{
-        'type': rawType,
-        'title': title.toString(),
-        'body': body.toString(),
-        'data': data,
-        ...data,
-      };
-
-      final isChatPayload = normType == 'chat' ||
-          normType == 'receivemessage' ||
-          data.containsKey('fromuser') ||
-          data.containsKey('fromUser');
-
-      final isNewOrderPayload = normType == 'neworder' ||
-          data.containsKey('orderinfo') ||
-          data.containsKey('orderInfo');
-
-      final isUpdateOrderStatusPayload = normType == 'updateorderstatus' ||
-          normType == 'orderstatus';
-
-      if (isNewOrderPayload) {
-        NotificationModule.instance.newOrderHandler.handle([adaptedPayload]);
-      } else if (isUpdateOrderStatusPayload) {
-        NotificationModule.instance.updateOrderStatusHandler.handle([adaptedPayload]);
-        NotificationModule.instance.receiveNotificationHandler.handle([adaptedPayload]);
-      } else if (isChatPayload) {
-        NotificationModule.instance.receiveMessageHandler.handle([adaptedPayload]);
-      } else {
-        NotificationModule.instance.receiveNotificationHandler.handle([adaptedPayload]);
+      final fresh = NotificationUpdates.instance.add(payload);
+      if (fresh && payload.kind == NotificationKind.chat) {
+        final data = Map<String, dynamic>.from(payload.data);
+        data['message'] ??= payload.body;
+        if (NotificationPayload.value(data, 'date') == null) {
+          data['date'] = payload.sentAt.toIso8601String();
+        }
+        ChatEvents.instance.add(ReceiveMessageData.fromJson(data));
+      } else if (fresh && payload.kind == NotificationKind.chatStatus) {
+        getIt<EmployeeChatCubit>().updateChatStatus(payload);
       }
-
-      // Refresh global NotificationCubit if mounted
-      final ctx = navigatorKey.currentContext;
-      if (ctx != null) {
-        BlocProvider.of<NotificationCubit>(ctx, listen: false).getUserNotification();
+      if (opened) {
+        if (!_opened.add(payload.key)) return;
+        if (_opened.length > 500) _opened.remove(_opened.first);
+      } else if (!fresh) {
+        return;
       }
+      if (!_uiReady) {
+        _pendingDisplay.add((payload: payload, opened: opened));
+        if (_pendingDisplay.length > 20) _pendingDisplay.removeAt(0);
+        return;
+      }
+      _display(payload, opened: opened);
     } catch (e, stack) {
-      if (kDebugMode) print('FCM processing error: $e\n$stack');
+      debugPrint('FCM processing: $e\n$stack');
     }
+  }
+
+  void markUiReady() {
+    _uiReady = true;
+    final pending = List.of(_pendingDisplay);
+    _pendingDisplay.clear();
+    final taps = pending.where((item) => item.opened);
+    if (taps.isNotEmpty) {
+      _display(taps.last.payload, opened: true);
+    } else if (pending.isNotEmpty) {
+      for (final item in pending) {
+        _display(item.payload, opened: false);
+      }
+    }
+  }
+
+  void _display(NotificationPayload payload, {required bool opened}) {
+    final module = NotificationModule.instance;
+    final session = _session;
+    if (opened) {
+      unawaited(() async {
+        await module.dialogService.dismiss();
+        await module.alertService.stopChat().catchError((Object error) {
+          debugPrint('Chat sound: $error');
+        });
+        if (session != _session || !_uiReady) return;
+        module.navigationService.openPayload(payload);
+      }()
+          .catchError((Object error) {
+        debugPrint('Notification click: $error');
+      }));
+      return;
+    }
+    final alert = module.alertService
+        .alertFor(payload, userId: _userId, userType: _userType);
+    if (alert == NotificationAlert.silent) return;
+    if (alert == NotificationAlert.chat) {
+      unawaited(module.alertService.playChat().catchError((Object error) {
+        debugPrint('Chat sound: $error');
+      }));
+      return;
+    }
+    final title = payload.title.isEmpty ? 'إشعار جديد' : payload.title;
+    showBrowserNotification(title, payload.body, onClick: () {
+      if (session == _session) _handlePayload(payload, opened: true);
+    });
+    unawaited(module.dialogService
+        .show(
+      title: title,
+      subtitle: payload.body,
+      onView: () async {
+        if (session == _session && _uiReady) {
+          module.navigationService.openPayload(payload);
+        }
+      },
+    )
+        .catchError((Object error) {
+      debugPrint('Notification display: $error');
+    }));
+  }
+
+  Future<void> _cancelListeners() async {
+    _stopWebClicks?.call();
+    _stopWebClicks = null;
+    await _tokenSubscription?.cancel();
+    await _messageSubscription?.cancel();
+    await _openSubscription?.cancel();
+    _tokenSubscription = null;
+    _messageSubscription = null;
+    _openSubscription = null;
+    _isInitialized = false;
   }
 
   Future<void> disconnect() async {
-    _isInitialized = false;
-    _fcmToken = null;
-    await AuthLocalStorage.deleteFcmToken();
+    _session++;
+    _lifecycleListener?.dispose();
+    _lifecycleListener = null;
+    _wasInBackground = false;
+    ChatEvents.instance.clearActiveHarages();
+    await NotificationModule.instance.dialogService.dismiss();
+    await NotificationModule.instance.alertService
+        .stopChat()
+        .catchError((Object error) {
+      debugPrint('Chat sound: $error');
+    });
+    _userId = 0;
+    _userType = 0;
+    _uiReady = false;
+    await _cancelListeners();
+    _opened.clear();
+    _pendingDisplay.clear();
+    NotificationUpdates.instance.reset();
+    if (getIt.isRegistered<EmployeeChatCubit>()) {
+      getIt<EmployeeChatCubit>().reset();
+    }
+    // Keep the device registration; login binds it to the next account.
   }
 }

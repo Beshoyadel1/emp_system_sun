@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:emp_system_sun/core/theming/auth_local_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';
 import '../../../../../core/api/dio_function/failures.dart';
@@ -28,7 +27,7 @@ Future<LoginResult> loginFunction({
         response.data;
 
     final bool success =
-        body["success"] ?? false;
+        body["success"] ?? body["status"] ?? false;
 
     final String message =
         body["message"] ??
@@ -46,8 +45,8 @@ Future<LoginResult> loginFunction({
       );
     }
 
-    final List data =
-        body["data"] ?? [];
+    final rawData = body["data"];
+    final List data = rawData is List ? rawData : (rawData is Map ? [rawData] : []);
 
     if (data.isEmpty) {
 

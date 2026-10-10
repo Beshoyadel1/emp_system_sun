@@ -1,5 +1,4 @@
 import '../../../../../../core/api/dio_function/api_constants.dart';
-import '../../../../../../core/services/fcm_service.dart';
 import '../../../../../../core/language/language_constant.dart';
 import '../../../../../../core/pages_widgets/general_widgets/navigate_to_page_widget.dart';
 import '../../../../../../core/pages_widgets/general_widgets/snakbar.dart';
@@ -7,7 +6,6 @@ import '../../../../../../core/theming/colors.dart';
 import '../../../../../../core/theming/fonts.dart';
 import '../../../../../../core/theming/text_styles.dart';
 import '../../../../../../features/auth_page/data/request/login_request/login_request.dart';
-import '../../../../../../features/auth_page/presentation/auth_gate.dart';
 import '../../../../../../features/auth_page/presentation/bloc/auth_cubit/auth_cubit.dart';
 import '../../../../../../features/auth_page/presentation/bloc/auth_cubit/auth_state.dart';
 import '../../../../../../features/auth_page/presentation/pages/check_email_exist/check_email_exist_page.dart';
@@ -126,17 +124,10 @@ class _LoginWidgetState extends State<LoginWidget> {
 
                   if (!formKey.currentState!.validate()) return;
 
-                  final fcmToken = await FcmService.instance.getToken(
-                    vapidKey: FcmConfig.webVapidKey,
-                  );
-
-                  if (!context.mounted) return;
-
                   final loginRequest = LoginRequest(
                     user: userNameController.text.trim(),
                     password: passwordController.text.trim(),
                     type: UserType.employeeUser,
-                    fcmToken: fcmToken.isNotEmpty ? fcmToken : null,
                   );
 
                   context

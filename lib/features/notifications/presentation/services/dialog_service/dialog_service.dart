@@ -1,80 +1,87 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import '../../../../../../features/notifications/presentation/custom_widget/notification_dialog_helper.dart';
-import '../../../../../../features/notifications/presentation/services/navigation_service/navigation_service.dart';
-import '../../../../../../features/notifications/presentation/services/notification_audio_service/notification_audio_service.dart';
+import '../../pages/notification_dialog/notification_dialog.dart';
+import '../notification_audio_service/notification_audio_service.dart';
 import '../../../../../../main.dart';
 
 class NotificationDialogService {
-  BuildContext get context => navigatorKey.currentContext!;
-
-  NotificationDialogService({
-    NotificationAudioService? audioService,
-    NotificationNavigationService? navigationService,
-  })  : _audio = audioService ?? const NotificationAudioService(),
-        _navigation =
-            navigationService ?? const NotificationNavigationService();
-
+  NotificationDialogService({NotificationAudioService? audioService})
+      : _audio = audioService ?? const NotificationAudioService();
   final NotificationAudioService _audio;
-  final NotificationNavigationService _navigation;
+  DialogRoute<void>? _route;
+  int _generation = 0;
+  Future<void> _tail = Future.value();
+  bool get isShowing => _route?.isActive ?? false;
 
-  bool _isShowing = false;
+  Future<void> _stop() async {
+    try {
+      await _audio.stop();
+    } catch (error) {
+      debugPrint('Notification sound: $error');
+    }
+  }
 
-  bool get isShowing => _isShowing;
+  /// Cancel the current popup and all requests queued before this call.
+  Future<void> dismiss() async {
+    _generation++;
+    final route = _route;
+    _route = null;
+    if (route?.isActive == true) route!.navigator?.removeRoute(route);
+    final stopping = _stop();
+    _tail = Future.wait([_tail, stopping]).then((_) {});
+    await stopping;
+  }
 
-  Future<void> show({
-    required String title,
-    required String subtitle,
-    required Future<void> Function() onView,
-  }) async {
+  Future<void> show(
+      {required String title,
+      required String subtitle,
+      required Future<void> Function() onView}) {
+    final generation = _generation;
+    final pending =
+        _tail.then((_) => _present(generation, title, subtitle, onView));
+    _tail = pending.catchError((Object error) {
+      debugPrint('Notification popup: $error');
+    });
+    return pending;
+  }
+
+  Future<void> _present(int generation, String title, String subtitle,
+      Future<void> Function() onView) async {
     final context = navigatorKey.currentContext;
-
-    if (context == null) {
+    if (generation != _generation || context == null || !context.mounted) {
       return;
     }
-
-    await _audio.play();
-
-    if (_isShowing) {
-      Navigator.of(
-        context,
-        rootNavigator: true,
-      ).pop();
-
-      _isShowing = false;
-
-      await Future.delayed(
-        const Duration(milliseconds: 150),
-      );
+    try {
+      try {
+        await _audio.play();
+      } catch (error) {
+        debugPrint('Notification sound: $error');
+      }
+      if (generation != _generation || !context.mounted) return;
+      late final DialogRoute<void> route;
+      route = DialogRoute<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => NotificationDialog(
+                title: title,
+                subTitle: subtitle,
+                onClose: () async {
+                  if (identical(_route, route) && route.isActive) {
+                    route.navigator?.removeRoute(route);
+                  }
+                },
+                onView: () async {
+                  if (!identical(_route, route)) return;
+                  await dismiss();
+                  await onView();
+                },
+              ));
+      _route = route;
+      await Navigator.of(context, rootNavigator: true).push(route);
+      if (identical(_route, route)) _route = null;
+    } finally {
+      // Back/system navigation also completes the route and stops its loop.
+      await _stop();
     }
-
-    _isShowing = true;
-
-    await NotificationDialogHelper.show(
-      context: context,
-      title: title,
-      subTitle: subtitle,
-      onClose: () async {
-        await _audio.stop();
-
-        _isShowing = false;
-
-        Navigator.pop(context);
-      },
-      onView: () async {
-        await _audio.stop();
-
-        _isShowing = false;
-
-        Navigator.of(
-          context,
-          rootNavigator: true,
-        ).pop();
-
-        // استدعاء الـ Action القادم من الـ Handler
-        await onView();
-      },
-    );
-
-    _isShowing = false;
   }
 }

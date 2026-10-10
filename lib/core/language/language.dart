@@ -342,6 +342,7 @@ class AppLocalizations {
       //End//
 
       //Model Messages//
+      AppLanguageKeys.changePassword: 'تغيير كلمة المرور',
       AppLanguageKeys.changePasswordSuccessfully: 'تم تغيير كلمة المرور بنجاح',
       AppLanguageKeys.checkIfUserExistSuccessfully:
           'تم التحقق من وجود المستخدم بنجاح',
@@ -1762,6 +1763,7 @@ class AppLocalizations {
       //End//
 
       //Model Messages//
+      AppLanguageKeys.changePassword: 'Change password',
       AppLanguageKeys.changePasswordSuccessfully:
           'Change Password successfully',
       AppLanguageKeys.checkIfUserExistSuccessfully:

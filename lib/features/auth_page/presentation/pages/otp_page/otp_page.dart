@@ -18,11 +18,13 @@ enum OtpPurpose {
 class OtpPage extends StatefulWidget {
   final String email;
   final OtpPurpose purpose;
+  final bool returnToAccount;
 
   const OtpPage({
     super.key,
     required this.email,
     required this.purpose,
+    this.returnToAccount = false,
   });
 
   @override
@@ -30,6 +32,7 @@ class OtpPage extends StatefulWidget {
 }
 
 class _OtpPageState extends State<OtpPage> {
+  bool _hasNavigated = false;
   final List<TextEditingController> controllers = List.generate(
     4,
     (_) => TextEditingController(),
@@ -108,6 +111,10 @@ class _OtpPageState extends State<OtpPage> {
 // =========================================================
 
   void _verifyOtp() {
+    if (widget.returnToAccount &&
+        (_hasNavigated || context.read<AuthCubit>().isOtpResending)) {
+      return;
+    }
     final code = getOtp();
 
     if (code.length != 4) {
@@ -126,6 +133,7 @@ class _OtpPageState extends State<OtpPage> {
 // =========================================================
 
   Future<void> _handleOtpSuccess() async {
+    if (widget.returnToAccount && _hasNavigated) return;
     final cubit = context.read<AuthCubit>();
 
     if (widget.purpose == OtpPurpose.signup) {
@@ -144,6 +152,21 @@ class _OtpPageState extends State<OtpPage> {
 
     if (!mounted) return;
 
+    if (widget.returnToAccount) {
+      _hasNavigated = true;
+      // Keep the OTP route pending until the entire account flow finishes.
+      // Its button owns the cubit and closes it when this route is popped.
+      await Navigator.of(context).push(
+        NavigateToPageWidget<void>(
+          BlocProvider.value(
+            value: cubit,
+            child: ChangePasswordPage(email: email, returnToAccount: true),
+          ),
+        ),
+      );
+      return;
+    }
+
     Navigator.pushReplacement(
       context,
       NavigateToPageWidget(
@@ -160,6 +183,26 @@ class _OtpPageState extends State<OtpPage> {
 // =========================================================
 // BUILD
 // =========================================================
+
+  Widget _wrapAccountContent(Widget child) {
+    if (!widget.returnToAccount) return child;
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: child,
+      ),
+    );
+  }
+
+  Widget _wrapOtpInput(Widget child) {
+    if (!widget.returnToAccount) return child;
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        child: child,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -207,7 +250,7 @@ class _OtpPageState extends State<OtpPage> {
       child: Scaffold(
         appBar: AppBar(),
         backgroundColor: AppColors.scaffoldColor,
-        body: Center(
+        body: _wrapAccountContent(Center(
           child: Container(
             width: 400,
             padding: const EdgeInsets.all(25),
@@ -229,9 +272,11 @@ class _OtpPageState extends State<OtpPage> {
 // =================================================
 
                 TextInAppWidget(
-                  text: widget.purpose == OtpPurpose.signup
-                      ? AppLanguageKeys.signUpTitleKey
-                      : AppLanguageKeys.forgotPasswordKey,
+                  text: widget.returnToAccount
+                      ? AppLanguageKeys.changePassword
+                      : widget.purpose == OtpPurpose.signup
+                          ? AppLanguageKeys.signUpTitleKey
+                          : AppLanguageKeys.forgotPasswordKey,
                   textSize: 22,
                   fontWeightIndex: FontSelectionData.boldFontFamily,
                 ),
@@ -300,7 +345,7 @@ class _OtpPageState extends State<OtpPage> {
                     children: List.generate(
                       4,
                       (index) {
-                        return SizedBox(
+                        return _wrapOtpInput(SizedBox(
                           width: 65,
                           height: 65,
                           child: BlocBuilder<AuthCubit, AuthState>(
@@ -398,7 +443,7 @@ class _OtpPageState extends State<OtpPage> {
                               );
                             },
                           ),
-                        );
+                        ));
                       },
                     ),
                   ),
@@ -542,7 +587,7 @@ class _OtpPageState extends State<OtpPage> {
               ],
             ),
           ),
-        ),
+        )),
       ),
     );
   }

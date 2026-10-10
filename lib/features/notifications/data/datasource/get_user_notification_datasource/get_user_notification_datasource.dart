@@ -15,7 +15,11 @@ Future<GetUserNotificationResponse> getUserNotificationFunction({
       ApiLink.getUserNotification,
     );
 
-    return GetUserNotificationResponse.fromJson(response.data);
+    final body = response.data;
+    if (body is Map && (body['success'] == false || body['status'] == false)) {
+      throw Exception(body['message'] ?? 'Failed to load notifications');
+    }
+    return GetUserNotificationResponse.fromJson(body is List ? {'data': body} : Map<String, dynamic>.from(body));
   } catch (e) {
     throw Exception(
       e is DioException
