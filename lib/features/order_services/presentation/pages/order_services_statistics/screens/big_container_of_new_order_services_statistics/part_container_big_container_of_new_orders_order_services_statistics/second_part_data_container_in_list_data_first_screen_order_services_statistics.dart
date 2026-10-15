@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/language/language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../../../../core/api/dio_function/api_constants.dart';
@@ -111,7 +112,7 @@ class _SecondPartDataContainerInListDataFirstScreenOrderServicesStatisticsState 
               }
 
               if (state is GetProviderInternalOrderError) {
-                return Center(child: Text(state.message));
+                return Center(child: Text(AppLocalizations.of(context).translate(state.message)));
               }
 
               return const SizedBox();

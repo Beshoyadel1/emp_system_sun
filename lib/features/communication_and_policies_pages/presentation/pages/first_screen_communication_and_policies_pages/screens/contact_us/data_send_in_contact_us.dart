@@ -38,6 +38,7 @@ class _DataSendInContactUsState extends State<DataSendInContactUs> {
         ),
         FirstNameTextfieldPersonalDataWidget(
           name: AppLanguageKeys.phoneNumber,
+          isPhone: true,
           isRegular: true,
           textFormController: textFormControllerPhoneNumber,
           textFormWidth: 500,
@@ -59,5 +60,14 @@ class _DataSendInContactUsState extends State<DataSendInContactUs> {
         ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    textFormControllerName.dispose();
+    textFormControllerPhoneNumber.dispose();
+    textFormControllerEmail.dispose();
+    textFormControllerMessage.dispose();
+    super.dispose();
   }
 }

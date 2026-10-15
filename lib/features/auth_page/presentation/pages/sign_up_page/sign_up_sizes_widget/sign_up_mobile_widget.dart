@@ -1,4 +1,5 @@
 import 'package:emp_system_sun/core/theming/assets.dart';
+import 'package:emp_system_sun/core/pages_widgets/birth_date_field.dart';
 import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/create_user_request.dart';
 import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/employee_wrapper_request.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ class SignUpMobileWidget extends StatefulWidget {
 
 class _SignUpMobileWidgetState extends State<SignUpMobileWidget> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  DateTime? _birthDate;
 
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
@@ -87,6 +89,12 @@ class _SignUpMobileWidgetState extends State<SignUpMobileWidget> {
                       type: UserFieldType.email,
                       controller: emailController,
                       text: AppLanguageKeys.emailKey,
+                    ),
+                    BirthDateField(
+                      value: _birthDate,
+                      onChanged: (value) => setState(() => _birthDate = value),
+                      readOnly: context.watch<AuthCubit>().state
+                          is AuthSignupLoading,
                     ),
                     UserTextFieldWidget(
                       type: UserFieldType.password,
@@ -156,6 +164,7 @@ class _SignUpMobileWidgetState extends State<SignUpMobileWidget> {
                                             phone: phoneController.text.trim(),
                                             email: emailController.text.trim(),
                                             password: password,
+                                            birthDate: _birthDate,
                                             type: UserType.employeeUser,
                                             employeeDetails: const EmployeeWrapperRequest(),
                                           ),

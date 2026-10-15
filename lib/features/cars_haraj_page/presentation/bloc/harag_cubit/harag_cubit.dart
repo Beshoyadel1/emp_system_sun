@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/language/language_constant.dart';
 import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -472,8 +473,7 @@ class HaragCubit extends Cubit<HaragState> {
     if (harageId == 0) {
       emit(
         const SendMessageError(
-          message:
-          'Invalid Harage ID',
+          message: AppLanguageKeys.invalidHarageId,
         ),
       );
 
@@ -492,8 +492,7 @@ class HaragCubit extends Cubit<HaragState> {
       if (user == null) {
         emit(
           const SendMessageError(
-            message:
-            'User not found',
+            message: AppLanguageKeys.userNotFound,
           ),
         );
 
@@ -514,8 +513,7 @@ class HaragCubit extends Cubit<HaragState> {
           fromUserType == 0) {
         emit(
           const SendMessageError(
-            message:
-            'Invalid user information',
+            message: AppLanguageKeys.invalidUserInformation,
           ),
         );
 
@@ -1126,8 +1124,7 @@ class HaragCubit extends Cubit<HaragState> {
       if (user == null) {
         emit(
           UserHaragesError(
-            message:
-            'User not found',
+            message: AppLanguageKeys.userNotFound,
             currentPage:
             currentPage,
             pageCount:
@@ -1370,8 +1367,7 @@ class HaragCubit extends Cubit<HaragState> {
       if (user == null) {
         emit(
           const CreateHarageError(
-            message:
-            'User not found',
+            message: AppLanguageKeys.userNotFound,
           ),
         );
         return;
@@ -1604,8 +1600,7 @@ class HaragCubit extends Cubit<HaragState> {
       if (validBrands.isEmpty) {
         emit(
           const HaragBrandsError(
-            message:
-            'No brands with models found',
+            message: AppLanguageKeys.noBrandsWithModels,
           ),
         );
         return;
@@ -1654,8 +1649,7 @@ class HaragCubit extends Cubit<HaragState> {
       if (models.isEmpty) {
         emit(
           const HaragModelsError(
-            message:
-            'No models found',
+            message: AppLanguageKeys.noModelsFound,
           ),
         );
         return;

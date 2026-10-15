@@ -59,7 +59,7 @@ class DesignBillOrderWidget extends StatelessWidget {
                     textColor: AppColors.blackColor,
                   ),
                   const TextInAppWidget(
-                    text: AppLanguageKeys.dirham,
+                    text: AppLanguageKeys.sar,
                     textSize: 16,
                     fontWeightIndex: FontSelectionData.regularFontFamily,
                     textColor: AppColors.blackColor,
@@ -110,7 +110,7 @@ class DesignBillOrderWidget extends StatelessWidget {
                     textColor: AppColors.orangeColor,
                   ),
                   const TextInAppWidget(
-                    text: AppLanguageKeys.dirham,
+                    text: AppLanguageKeys.sar,
                     textSize: 16,
                     fontWeightIndex: FontSelectionData.regularFontFamily,
                     textColor: AppColors.orangeColor,

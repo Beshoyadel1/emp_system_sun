@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
-import '../../../../../core/language/language_cubit/language_cubit.dart';
 
 class EmployeeServiceModel {
   final int? id;
@@ -33,7 +32,7 @@ class EmployeeServiceModel {
   }
   String getName(BuildContext context) {
     final isArabic =
-        LanguageCubit.get(context).isAllAppLanguageArabic;
+        (Localizations.localeOf(context).languageCode == 'ar');
 
     return isArabic
         ? (name ?? "")

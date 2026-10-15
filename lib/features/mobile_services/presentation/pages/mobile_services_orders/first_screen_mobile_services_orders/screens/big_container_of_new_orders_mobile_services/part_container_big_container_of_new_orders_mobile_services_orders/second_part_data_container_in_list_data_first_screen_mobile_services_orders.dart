@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/language/language.dart';
 import 'package:emp_system_sun/core/api/dio_function/api_constants.dart';
 import 'package:emp_system_sun/core/language/language_constant.dart';
 import 'package:emp_system_sun/core/theming/assets.dart';
@@ -109,7 +110,7 @@ class _SecondPartDataContainerInListDataFirstScreenMobileServicesOrdersState ext
               }
 
               if (state is GetProviderInternalOrderError) {
-                return Center(child: Text(state.message));
+                return Center(child: Text(AppLocalizations.of(context).translate(state.message)));
               }
 
               return const SizedBox();

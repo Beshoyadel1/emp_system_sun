@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:emp_system_sun/core/language/language_constant.dart';
 import '../../../../../../../core/theming/assets.dart';
 import '../../../../../../../core/theming/colors.dart';
 import '../../../../../../../core/theming/fonts.dart';
@@ -35,13 +36,13 @@ class RowMemberTeamWorkWidget extends StatelessWidget {
               spacing: 5,
               children: [
                 TextInAppWidget(
-                  text: title ?? 'المدير التنفيذي',
+                  text: title ?? AppLanguageKeys.jobTitle,
                   textSize: 15,
                   fontWeightIndex: FontSelectionData.regularFontFamily,
                   textColor: AppColors.blackColor,
                 ),
                 TextInAppWidget(
-                  text: subTitle ?? 'الاسم',
+                  text: subTitle ?? AppLanguageKeys.name,
                   textSize: 11,
                   fontWeightIndex: FontSelectionData.regularFontFamily,
                   textColor: AppColors.greyColor,

@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/theming/app_currency.dart';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import '../../../../../../../../../features/internal_services/presentation/pages/internal_orders/custom_widget/text_with_container_status_car.dart';
@@ -72,7 +73,7 @@ class AvailableCars extends StatelessWidget {
                       fit: BoxFit.contain,
                     ),
               TextInAppWidget(
-                  text: brandName ?? 'نيسان',
+                  text: brandName ?? AppLanguageKeys.unknown,
                   textSize: 14,
                   textColor: AppColors.darkColor),
             ],
@@ -89,7 +90,7 @@ class AvailableCars extends StatelessWidget {
                   textSize: 14,
                   textColor: AppColors.darkColor),
               TextInAppWidget(
-                  text: price ?? '',
+                  text: AppCurrency.format(context, num.tryParse(price ?? '')),
                   textSize: 14,
                   textColor: AppColors.darkColor),
             ],

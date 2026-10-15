@@ -14,6 +14,7 @@ import 'core/cubit/app_cubit/app_cubit.dart';
 import 'core/language/language_cubit/language_cubit.dart';
 import 'core/language/language_cubit/language_states.dart';
 import 'core/language/language.dart';
+import 'core/language/language_constant.dart';
 import 'core/setup_git_it.dart';
 
 final GlobalKey<ScaffoldState> scaffoldKeyDrawer = GlobalKey<ScaffoldState>();
@@ -93,7 +94,7 @@ class _MyAppState extends State<MyApp> {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            title: 'San Employee System',
+            onGenerateTitle: (context) => AppLocalizations.of(context).translate(AppLanguageKeys.appTitle),
             debugShowCheckedModeBanner: false,
             home: const AuthGate(),
           );

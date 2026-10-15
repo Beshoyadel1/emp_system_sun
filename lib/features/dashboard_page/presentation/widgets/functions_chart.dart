@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/theming/app_currency.dart';
 import 'dart:ui';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
@@ -52,14 +53,14 @@ void showTooltipOverlay(
               children: [
                 TextInAppWidget(
                   text:
-                      '${spot.x.toInt() > 0 ? formatDateFromMilliseconds(spot.x.toInt()) : ''}',
+                      spot.x.toInt() > 0 ? formatDateFromMilliseconds(spot.x.toInt(), languageCode: Localizations.localeOf(context).languageCode) : '',
                   textColor: AppColors.darkColor,
                   fontWeightIndex: FontSelectionData.regularFontFamily,
                   textSize: 14,
                 ),
                 const SizedBox(height: 4),
                 TextInAppWidget(
-                  text: '${spot.y.toInt()} ريال',
+                  text: AppCurrency.format(context, spot.y, decimalDigits: 0),
                   textColor: AppColors.seaBlueColor,
                   fontWeightIndex: FontSelectionData.regularFontFamily,
                   textSize: 14,
@@ -82,7 +83,7 @@ void removeOverlay() {
   }
 }
 
-String formatDateFromMilliseconds(int ms) {
+String formatDateFromMilliseconds(int ms, {String languageCode = 'en'}) {
   final date = DateTime.fromMillisecondsSinceEpoch(ms);
-  return '${date.day} ${getMonthName(date.month)}';
+  return '${date.day} ${getMonthName(date.month, languageCode: languageCode)}';
 }

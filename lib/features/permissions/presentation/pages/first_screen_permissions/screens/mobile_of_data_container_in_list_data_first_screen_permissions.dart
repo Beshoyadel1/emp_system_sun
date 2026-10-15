@@ -49,6 +49,7 @@ class MobileOfDataContainerInListDataFirstScreenPermissions
             TextWithTextFormFieldAsColumnWidget(
               text: AppLanguageKeys.phoneNumber,
               hint: AppLanguageKeys.phoneNumber,
+              isPhone: true,
             ),
           ],
         ),

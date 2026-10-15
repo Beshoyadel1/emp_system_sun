@@ -98,6 +98,11 @@ class AuthAuthenticated extends AuthState {}
 
 class AuthUnauthenticated extends AuthState {}
 
+class AuthLogoutError extends AuthState {
+  AuthLogoutError(this.message);
+  final String message;
+}
+
 class AuthOtpVerifying extends AuthState {}
 
 class AuthOtpResendLoading extends AuthState {}

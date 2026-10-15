@@ -1,7 +1,7 @@
+import 'package:emp_system_sun/core/language/language.dart';
 import 'package:emp_system_sun/features/cars_haraj_page/presentation/custom_widget/button_edit_delete_setting_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../../../../../core/language/language_cubit/language_cubit.dart';
 import '../../../../../../../../../core/pages_widgets/general_widgets/show_delete_confirmation_dialog_in_app.dart';
 import '../../../../../../../../../core/pages_widgets/general_widgets/snakbar.dart';
 import '../../../../../../../../../features/cars_haraj_page/data/model/get_all_harage_model/harage_data.dart';
@@ -55,8 +55,7 @@ class ListViewPageDetailsHarag extends StatelessWidget {
 
         if (state is HaragDetailsError) {
           return Center(
-            child: Text(
-              state.message,
+            child: Text(AppLocalizations.of(context).translate(state.message),
             ),
           );
         }
@@ -113,7 +112,7 @@ class ListViewPageDetailsHarag extends StatelessWidget {
       GetCarDetailsModel? carDetails,
       ) {
     final isArabic =
-        LanguageCubit.get(context).isAllAppLanguageArabic;
+        Localizations.localeOf(context).languageCode == 'ar';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -360,7 +359,7 @@ class ListViewPageDetailsHarag extends StatelessWidget {
       GetCarDetailsModel? carDetails,
       ) {
     final isArabic =
-        LanguageCubit.get(context).isAllAppLanguageArabic;
+        Localizations.localeOf(context).languageCode == 'ar';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

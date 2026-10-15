@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/language/language.dart';
 import 'package:emp_system_sun/core/pages_widgets/general_widgets/snakbar.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/work_time_cubit/work_time_cubit.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/work_time_cubit/work_time_state.dart';
@@ -43,7 +44,7 @@ class _WorkingHoursContentState extends State<WorkingHoursContent> {
 
         if (state is WorkTimeError) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
+            SnackBar(content: Text(AppLocalizations.of(context).translate(state.message))),
           );
         }
       },

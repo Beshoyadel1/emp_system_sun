@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:emp_system_sun/core/services/auth_session.dart';
 import '../../../../../../core/general_models/pages_model.dart';
 import '../../../../../../core/cubit/app_cubit/app_cubit.dart';
 import '../../../../../../core/utilies/map_of_all_app.dart';
@@ -8,7 +8,9 @@ import '../page_name_function.dart';
 
 Future<void> addToOpenedPages(
     {required BuildContext context, required AppCubit appCubit}) async {
+  final version = AuthSession.version;
   final bool shouldPop = await showBackDialog(context: context) ?? false;
+  if (!context.mounted || !AuthSession.isCurrent(version)) return;
   if (shouldPop) {
     PageNodeWithIDModel pageNodeWithID = PageNodeWithIDModel(
       name: findPageByNumber(appCubit.selectedPageIndex, appPages)?.name ?? '',
@@ -28,10 +30,8 @@ Future<void> addToOpenedPages(
 
     final key = '${pageNodeWithID.number}${pageNodeWithID.id}';
 
-    await SharedPreferences.getInstance().then((prefs) async {
-      await prefs.setStringList(
-          key, appCubit.data.map((e) => e.toString()).toList());
-      appCubit.data.clear();
-    });
+    await appCubit.savePageData(
+        key, appCubit.data.map((e) => e.toString()).toList(), version);
+    if (AuthSession.isCurrent(version)) appCubit.data.clear();
   }
 }

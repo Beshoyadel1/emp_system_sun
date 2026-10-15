@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/theming/app_currency.dart';
 import 'package:flutter/material.dart';
 import '../../../../../../../features/cars_haraj_page/presentation/custom_widget/text_with_harage_container_status.dart';
 import '../../../../../../../core/api/dio_function/api_constants.dart';
@@ -78,7 +79,7 @@ class WidgetDesignDetailsDataHaragCar extends StatelessWidget {
 
                   _buildInfoItem(
                     AppLanguageKeys.price,
-                    '${harage.price ?? 0}',
+                    AppCurrency.format(context, harage.price),
                   ),
 
                   _buildInfoItem(

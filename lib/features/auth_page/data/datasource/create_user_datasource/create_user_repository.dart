@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:emp_system_sun/core/language/language_constant.dart';
 import '../../model/create_user_model/create_user_request.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';
@@ -41,7 +42,7 @@ Future<CreateUserResult> createUserFunction({
 
   } on DioException catch (e) {
 
-    String errorMessage = "حدث خطأ ما";
+    String errorMessage = AppLanguageKeys.genericError;
 
     if (e.response?.data != null) {
 

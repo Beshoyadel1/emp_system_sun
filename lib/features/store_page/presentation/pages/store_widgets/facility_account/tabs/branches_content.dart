@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/language/language.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/branch_cubit/branch_cubit.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/branch_cubit/branch_state.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/location_cubit/location_cubit.dart';
@@ -20,7 +21,7 @@ class BranchesContent extends StatelessWidget {
           }
 
           if (state is BranchError) {
-            return Center(child: Text(state.message));
+            return Center(child: Text(AppLocalizations.of(context).translate(state.message)));
           }
 
           if (state is BranchSuccess) {

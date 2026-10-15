@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/theming/app_currency.dart';
 import 'package:flutter/material.dart';
 import '../../../../../../../core/language/language_constant.dart';
 import '../../../../../../../core/pages_widgets/general_widgets/custom_container.dart';
@@ -127,7 +128,7 @@ class _InvoiceItem extends StatelessWidget {
 
               TextInAppWidget(
                 text:
-                '${invoice.amount?.toStringAsFixed(2) ?? '0.00'} ر.س',
+                AppCurrency.format(context, invoice.amount),
                 textSize: 13,
                 fontWeightIndex:
                 FontSelectionData.boldFontFamily,

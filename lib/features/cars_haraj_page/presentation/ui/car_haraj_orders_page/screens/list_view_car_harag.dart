@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/language/language.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../../../../features/spare_parts/presentation/custom_widget/app_pagination.dart';
@@ -25,7 +26,7 @@ class ListViewCarHarag extends StatelessWidget {
 
         if (state is UserHaragesError) {
           return Center(
-            child: Text(state.message),
+            child: Text(AppLocalizations.of(context).translate(state.message)),
           );
         }
 

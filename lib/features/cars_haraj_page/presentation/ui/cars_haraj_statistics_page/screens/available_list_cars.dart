@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/language/language.dart';
 import 'package:emp_system_sun/features/cars_haraj_page/presentation/bloc/harag_cubit/harag_cubit.dart';
 import 'package:emp_system_sun/features/cars_haraj_page/presentation/bloc/harag_cubit/harag_state.dart';
 import 'package:emp_system_sun/features/cars_haraj_page/presentation/ui/page_details_harag/page_details_harag.dart';
@@ -25,7 +26,7 @@ class AvailableListCars extends StatelessWidget {
 
         if (state is UserHaragesError) {
           return Center(
-            child: Text(state.message),
+            child: Text(AppLocalizations.of(context).translate(state.message)),
           );
         }
 

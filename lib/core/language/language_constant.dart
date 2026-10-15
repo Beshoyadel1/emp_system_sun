@@ -1,6 +1,22 @@
 import '../../../../core/utilies/map_of_all_app.dart';
 
 class AppLanguageKeys {
+  static const String fieldRequired = 'fieldRequired';
+  static const String invalidEmail = 'invalid_email';
+  static const String invalidNumber = 'invalid_number';
+  static const String invalidPhoneNumber = 'invalidPhoneNumber';
+  static const String searchCountry = 'searchCountry';
+  static const String confirmExit = 'confirmExit';
+  static const String confirmLeave = 'confirmLeave';
+  static const String ok = 'ok';
+  static const String genericError = 'genericError';
+  static const String noPagesAvailable = 'noPagesAvailable';
+  static const String invalidHarageId = 'invalidHarageId';
+  static const String invalidUserInformation = 'invalidUserInformation';
+  static const String noBrandsWithModels = 'noBrandsWithModels';
+  static const String noModelsFound = 'noModelsFound';
+  static const String noUserData = 'noUserData';
+  static const String appTitle = 'appTitle';
   //status//
   static const String notSold = 'notSold';
   static const String sold = 'sold';
@@ -71,7 +87,8 @@ class AppLanguageKeys {
   static const String warranty = 'warranty';
   static const String durationType = 'durationType';
   static const String durationValue = 'durationValue';
-  static const String employeeAvailablePermissions = 'employeeAvailablePermissions';
+  static const String employeeAvailablePermissions =
+      'employeeAvailablePermissions';
   static const String employeePermissions = 'employeePermissions';
   static const String acceptAllOrders = 'acceptAllOrders';
   static const String changeOrderStatus = 'changeOrderStatus';
@@ -158,8 +175,7 @@ class AppLanguageKeys {
   static const String searchTheMap = 'searchTheMap';
   static const String branchNationalAddress = 'branchNationalAddress';
   static const String jobLatinName = 'jobLatinName';
-  static const String pleaseEnterValidEmail =
-      'pleaseEnterValidEmail';
+  static const String pleaseEnterValidEmail = 'pleaseEnterValidEmail';
   static const String enterSystem = 'enterSystem';
   static const String check = 'check';
   static const String addAtLeastOneBranch = 'addAtLeastOneBranch';
@@ -264,7 +280,7 @@ class AppLanguageKeys {
       'authEnterCorrectPhoneNumber';
   static const String createNewPassword = 'createNewPassword';
   static const String gender = 'gender';
-  static const String age = 'age';
+  static const String birthDate = 'birthDate';
 
   //end//
 
@@ -272,6 +288,8 @@ class AppLanguageKeys {
   static const String passwordsDoNotMatch = 'passwordsDoNotMatch';
   static const String wrongUsername = 'wrongUsername';
   static const String somethingWentWrong = 'somethingWentWrong';
+  static const String logoutFailed = 'logoutFailed';
+  static const String retry = 'retry';
   static const String emailExist = 'emailExist';
   static const String emailNotExist = 'emailNotExist';
   static const String phoneExist = 'phoneExist';
@@ -1164,7 +1182,7 @@ class AppLanguageKeys {
 
   ////Insurance////
   static const String insuranceOffers = 'insuranceOffers';
-  static const String insuranceOffersOnly = 'insuranceOffers';
+  static const String insuranceOffersOnly = 'insuranceOffersOnly';
   static const String comprehensiveInsurance = 'comprehensiveInsurance';
   static const String thirdPartyInsurance = 'thirdPartyInsurance';
   static const String bestOffer = 'bestOffer';

@@ -48,7 +48,7 @@ class EmployeesPerformance extends StatelessWidget {
                 }
 
                 if (state is GetProviderTotalRateAndEmployeeAndBalanceError) {
-                  return const Text("Error");
+                  return const TextInAppWidget(text: AppLanguageKeys.genericError, textSize: 14);
                 }
 
                 if (state is GetProviderTotalRateAndEmployeeAndBalanceSuccess) {

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'auth_session.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -34,6 +35,7 @@ class FcmService {
   bool _isInitialized = false, _uiReady = false;
   bool get isInitialized => _isInitialized;
   int _userId = 0, _userType = 0, _session = 0;
+  int _authVersion = 0;
   StreamSubscription<String>? _tokenSubscription;
   StreamSubscription<RemoteMessage>? _messageSubscription, _openSubscription;
   void Function()? _stopWebClicks;
@@ -52,11 +54,16 @@ class FcmService {
 
   /// Login registers the current token and topics on the backend.
   Future<void> init({required int userId, required int userType}) async {
-    if (_userId != userId || _userType != userType) {
+    final version = AuthSession.version;
+    if (_userId != userId || _userType != userType || _authVersion != version) {
+      final deviceToken = _fcmToken;
       await disconnect();
+      if (!AuthSession.isCurrent(version)) return;
+      _fcmToken = deviceToken;
       _userId = userId;
       _userType = userType;
     }
+    _authVersion = version;
     getIt<EmployeeChatCubit>().configureUser(userId, userType);
     _lifecycleListener ??= AppLifecycleListener(onStateChange: (state) {
       if (state == AppLifecycleState.paused ||
@@ -89,10 +96,10 @@ class FcmService {
             opened: true);
       });
       _tokenSubscription = messaging.onTokenRefresh.listen((token) {
-        if (session != _session) return;
+        if (session != _session || !AuthSession.isCurrent(version)) return;
         _fcmToken = token;
         // Submit the latest device token at the next login.
-        unawaited(AuthLocalStorage.saveFcmToken(token));
+        unawaited(AuthLocalStorage.saveFcmToken(token, version: version));
       });
       _messageSubscription = FirebaseMessaging.onMessage.listen((message) {
         if (session == _session) handleRemoteMessage(message, opened: false);
@@ -115,15 +122,17 @@ class FcmService {
   Future<String> getToken({String? vapidKey}) async {
     if (!isSupported) return '';
     if (_pendingGetToken != null) return _pendingGetToken!;
-    _pendingGetToken = _getDeviceToken(vapidKey: vapidKey);
+    final pending = _getDeviceToken(vapidKey: vapidKey);
+    _pendingGetToken = pending;
     try {
-      return await _pendingGetToken!;
+      return await pending;
     } finally {
-      _pendingGetToken = null;
+      if (identical(_pendingGetToken, pending)) _pendingGetToken = null;
     }
   }
 
   Future<String> _getDeviceToken({String? vapidKey}) async {
+    final version = AuthSession.version;
     try {
       final messaging = FirebaseMessaging.instance;
       final settings = await messaging.requestPermission(
@@ -136,9 +145,10 @@ class FcmService {
           )
           .timeout(const Duration(seconds: 10), onTimeout: () => null);
       if (token?.trim().isNotEmpty == true) {
+        if (!AuthSession.isCurrent(version)) return '';
         _fcmToken = token!.trim();
-        await AuthLocalStorage.saveFcmToken(_fcmToken!);
-        return _fcmToken!;
+        await AuthLocalStorage.saveFcmToken(_fcmToken!, version: version);
+        return AuthSession.isCurrent(version) ? token.trim() : '';
       }
     } catch (e) {
       debugPrint('FCM token unavailable: $e');
@@ -160,7 +170,11 @@ class FcmService {
   }
 
   void _handlePayload(NotificationPayload payload, {required bool opened}) {
-    if (_userId <= 0 || !payload.isFor(_userId, _userType)) return;
+    if (!AuthSession.isCurrent(_authVersion) ||
+        _userId <= 0 ||
+        !payload.isFor(_userId, _userType)) {
+      return;
+    }
     try {
       final fresh = NotificationUpdates.instance.add(payload);
       if (fresh && payload.kind == NotificationKind.chat) {
@@ -191,6 +205,7 @@ class FcmService {
   }
 
   void markUiReady() {
+    if (_userId <= 0 || !AuthSession.isCurrent(_authVersion)) return;
     _uiReady = true;
     final pending = List.of(_pendingDisplay);
     _pendingDisplay.clear();
@@ -263,6 +278,17 @@ class FcmService {
 
   Future<void> disconnect() async {
     _session++;
+    _userId = 0;
+    _userType = 0;
+    _uiReady = false;
+    _fcmToken = null;
+    _pendingGetToken = null;
+    _opened.clear();
+    _pendingDisplay.clear();
+    NotificationUpdates.instance.reset();
+    if (getIt.isRegistered<EmployeeChatCubit>()) {
+      getIt<EmployeeChatCubit>().reset();
+    }
     _lifecycleListener?.dispose();
     _lifecycleListener = null;
     _wasInBackground = false;
@@ -273,16 +299,7 @@ class FcmService {
         .catchError((Object error) {
       debugPrint('Chat sound: $error');
     });
-    _userId = 0;
-    _userType = 0;
-    _uiReady = false;
     await _cancelListeners();
-    _opened.clear();
-    _pendingDisplay.clear();
-    NotificationUpdates.instance.reset();
-    if (getIt.isRegistered<EmployeeChatCubit>()) {
-      getIt<EmployeeChatCubit>().reset();
-    }
     // Keep the device registration; login binds it to the next account.
   }
 }

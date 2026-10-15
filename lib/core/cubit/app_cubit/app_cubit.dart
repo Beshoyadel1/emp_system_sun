@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:emp_system_sun/core/services/auth_session.dart';
+import 'package:emp_system_sun/core/language/language_cubit/language_cubit.dart';
+import 'package:emp_system_sun/core/language/language.dart' as app_language;
+import 'package:emp_system_sun/core/setup_git_it.dart';
 import '../../../../core/general_models/general_model.dart';
 import '../../../../core/general_models/pages_model.dart';
 import 'app_states.dart';
@@ -59,28 +63,19 @@ class AppCubit extends Cubit<AppStates> {
 
   List<String> data = [];
 
-  bool isAllAppLanguageArabic = true;
+  bool get isAllAppLanguageArabic => getIt<LanguageCubit>().isAllAppLanguageArabic;
 
-  Locale? selectedLanguage;
+  Locale get selectedLanguage => getIt<LanguageCubit>().selectedLanguage;
 
   Future<void> changeAllAppLanguage(int language) async {
-    if (language == 1) {
-      isAllAppLanguageArabic = true;
-      selectedLanguage = supportedLocales[0];
-    } else {
-      isAllAppLanguageArabic = false;
-      selectedLanguage = supportedLocales[1];
-    }
-
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('language', language);
+    await getIt<LanguageCubit>().changeAllAppLanguage(language);
+    languageDropDownValue = languageItemsDropDown.firstWhere(
+      (element) => element.number == (isAllAppLanguageArabic ? 1 : 2),
+    );
     emit(ChangeAllAppLanguageState());
   }
 
-  List<Locale> supportedLocales = [
-    const Locale('ar', 'EG'),
-    const Locale('en', 'US'),
-  ];
+  List<Locale> get supportedLocales => app_language.supportedLocales;
 
   List<String> languageItems = ['English', 'عربي'];
 
@@ -106,12 +101,44 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   List<PageNodeWithIDModel> openedPages = [];
+  Future<void> _pageWrites = Future.value();
+
+  Future<void> savePageData(String key, List<String> values, int version) {
+    final next = _pageWrites.then((_) async {
+      if (!AuthSession.isCurrent(version)) return;
+      final prefs = await SharedPreferences.getInstance();
+      if (!AuthSession.isCurrent(version)) return;
+      await prefs.setStringList(key, values);
+    });
+    _pageWrites =
+        next.then<void>((_) {}, onError: (Object _, StackTrace __) {});
+    return next;
+  }
+
+  Future<void> resetSession() async {
+    openedPages.clear();
+    data.clear();
+    selectedPageIndex = 1;
+    selectedPageFromOpenedPagesIndex = -1;
+    isMenuOpen = true;
+    if (!isClosed) emit(ChangeOpenedPagesState());
+    // Wait for old page saves, then remove their numeric keys. Language and
+    // other general preferences are deliberately preserved.
+    await _pageWrites;
+    final prefs = await SharedPreferences.getInstance();
+    for (final key in prefs.getKeys()) {
+      if (RegExp(r'^\d+-?\d*$').hasMatch(key) && prefs.get(key) is List) {
+        await prefs.remove(key);
+      }
+    }
+  }
 
   void navigateToPage(int pageNumber) {
     selectedPageIndex = pageNumber;
     selectedPageFromOpenedPagesIndex = -1;
     changeSelectedPageIndex();
   }
+
   void changeOpenedPages() {
     emit(ChangeOpenedPagesState());
   }

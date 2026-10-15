@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/language/language.dart';
 import 'package:emp_system_sun/features/internal_services/presentation/pages/internal_orders/custom_widget/text_empty_view_data.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +47,7 @@ class _CustomLineChartState extends State<CustomLineChart> {
         if (state is GetProviderOrdersSalesError) {
           return SizedBox(
             height: 300,
-            child: Center(child: Text(state.message)),
+            child: Center(child: Text(AppLocalizations.of(context).translate(state.message))),
           );
         }
 
@@ -104,7 +105,7 @@ class _CustomLineChartState extends State<CustomLineChart> {
                                 .fromMillisecondsSinceEpoch(
                                 value.toInt());
                             final formattedDate =
-                                '${getMonthName(date.month)} ${date.year}';
+                                '${getMonthName(date.month, languageCode: Localizations.localeOf(context).languageCode)} ${date.year}';
 
                             return Padding(
                               padding: const EdgeInsets.only(top: 42.0),

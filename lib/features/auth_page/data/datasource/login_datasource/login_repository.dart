@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:emp_system_sun/core/theming/auth_local_storage.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../core/api/dio_function/dio_controller.dart';
 import '../../../../../core/api/dio_function/failures.dart';
@@ -52,20 +51,13 @@ Future<LoginResult> loginFunction({
 
       return LoginResult(
         success: false,
-        message: "لا يوجد بيانات مستخدم",
+        message: AppLanguageKeys.noUserData,
       );
     }
 
     final user =
     CreateUserRequest.fromJson(
       data.first,
-    );
-
-    await AuthLocalStorage.saveUser(
-      user,
-    );
-    await AuthLocalStorage.savePassword(
-      loginRequest.password,
     );
 
     return LoginResult(

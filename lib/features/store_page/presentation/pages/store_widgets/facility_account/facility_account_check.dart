@@ -1,9 +1,7 @@
 import 'package:emp_system_sun/features/auth_page/presentation/bloc/auth_cubit/auth_cubit.dart';
 import 'package:emp_system_sun/features/auth_page/presentation/bloc/auth_cubit/auth_state.dart';
-import 'package:emp_system_sun/features/store_page/data/model/facility_model/facility_model.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/facility_cubit/facility_tab_cubit/facility_tab_cubit.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/facility_cubit/facility_tab_cubit/facility_tab_state.dart';
-import 'package:emp_system_sun/features/store_page/presentation/pages/store_widgets/car_model_widget/widgets/tabs_widget.dart';
 import 'package:emp_system_sun/features/store_page/presentation/pages/store_widgets/facility_account/tabs/facility_data_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,8 +35,7 @@ class FacilityAccountCheck extends StatelessWidget {
           },
           builder: (context, authState) {
             return BlocBuilder<FacilityTabCubit, FacilityTabState>(
-              buildWhen: (previous, current) =>
-              current is ChangeIndexState,
+              buildWhen: (previous, current) => current is ChangeIndexState,
               builder: (context, state) {
                 return Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -56,64 +53,54 @@ class FacilityAccountCheck extends StatelessWidget {
                                 text: AppLanguageKeys.continueFacilityDataKey,
                                 textSize: 22,
                                 fontWeightIndex:
-                                FontSelectionData.mediumFontFamily,
+                                    FontSelectionData.mediumFontFamily,
                               ),
                               const FacilityDataContent(),
-                              Row(
+                              Wrap(
+                                spacing: 10,
+                                runSpacing: 10,
                                 children: [
-                                  Expanded(
-                                    child: CustomContainer(
-                                      isSelected: false,
-                                      onTap: () {
-                                        print("🔘 CHECK BUTTON CLICKED");
-                                          context.read<AuthCubit>().reCheckFacility();
-                                      },
-                                      containerColor:
-                                      AppColors.orangeColor,
-                                      containerHeight: 45,
-                                      typeWidget: const Center(
-                                        child: TextInAppWidget(
-                                          text: AppLanguageKeys.enterSystem,
-                                          textSize: 16,
-                                          textColor: Colors.white,
-                                        ),
+                                  CustomContainer(
+                                    isSelected: false,
+                                    onTap: () {
+                                      context
+                                          .read<AuthCubit>()
+                                          .reCheckFacility();
+                                    },
+                                    containerColor: AppColors.orangeColor,
+                                    containerWidth: 170,
+                                    containerHeight: 40,
+                                    typeWidget: const Center(
+                                      child: TextInAppWidget(
+                                        text: AppLanguageKeys.enterSystem,
+                                        textSize: 14,
+                                        textColor: Colors.white,
                                       ),
                                     ),
                                   ),
-
-                                  const SizedBox(width: 10),
-
-                                  Expanded(
-                                    child: CustomContainer(
-                                      isSelected: false,
-                                      onTap: () {
-                                        print("🚪 LOGOUT CLICKED");
-
-                                        context
-                                            .read<AuthCubit>()
-                                            .logout(context);
-                                      },
-                                      containerColor:
-                                      AppColors.redColor,
-                                      containerHeight: 45,
-                                      typeWidget: const Center(
-                                        child: TextInAppWidget(
-                                          text: AppLanguageKeys.logout,
-                                          textSize: 16,
-                                          textColor: Colors.white,
-                                        ),
+                                  CustomContainer(
+                                    isSelected: false,
+                                    onTap: () {
+                                      context.read<AuthCubit>().logout(context);
+                                    },
+                                    containerColor: AppColors.redColor,
+                                    containerWidth: 170,
+                                    containerHeight: 40,
+                                    typeWidget: const Center(
+                                      child: TextInAppWidget(
+                                        text: AppLanguageKeys.logout,
+                                        textSize: 14,
+                                        textColor: Colors.white,
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
-
                               const SizedBox(height: 40),
                             ],
                           ),
                           onTap: () {},
                         ),
-
                         const SizedBox(height: 20),
                       ],
                     ),

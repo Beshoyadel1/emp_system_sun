@@ -1,3 +1,5 @@
+import 'package:emp_system_sun/core/language/language_constant.dart';
+import 'package:emp_system_sun/core/theming/text_styles.dart';
 import 'package:emp_system_sun/features/service_emp_view/presentation/cubit/employee_services_cubit/employee_services_cubit.dart';
 import 'package:emp_system_sun/features/service_emp_view/presentation/cubit/employee_services_cubit/employee_services_state.dart';
 import 'package:emp_system_sun/features/store_page/presentation/pages/store_widgets/app_bar_for_page.dart';
@@ -139,9 +141,7 @@ class _StorePageState extends State<StorePage> {
     if (appPages.isEmpty) {
       return const Scaffold(
         body: Center(
-          child: Text(
-            'No pages available',
-          ),
+          child: TextInAppWidget(text: AppLanguageKeys.noPagesAvailable, textSize: 16),
         ),
       );
     }

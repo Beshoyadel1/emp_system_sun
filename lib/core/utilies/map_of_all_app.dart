@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/services/auth_session.dart';
 import 'package:emp_system_sun/core/api/dio_function/api_constants.dart';
 import 'package:emp_system_sun/core/setup_git_it.dart';
 import 'package:emp_system_sun/core/theming/auth_local_storage.dart';
@@ -214,9 +215,11 @@ class PagesOfAllApp {
 List<PageNodeModel> appPages = [];
 
 Future<void> getPages(BuildContext context) async {
+  final version = AuthSession.version;
   appPages.clear();
 
   final user = await AuthLocalStorage.getUser();
+  if (!context.mounted || !AuthSession.isCurrent(version)) return;
 
   final employee = user?.employeeDetails;
 
@@ -225,7 +228,8 @@ Future<void> getPages(BuildContext context) async {
   // ============================================================
 
   if (employee == null) {
-    appPages = await _getAllEmployeePages(context);
+    final pages = await _getAllEmployeePages(context);
+    if (context.mounted && AuthSession.isCurrent(version)) appPages = pages;
     return;
   }
 
@@ -253,7 +257,8 @@ Future<void> getPages(BuildContext context) async {
   // ============================================================
 
   if (allPermissionsAreNull) {
-    appPages = await _getAllEmployeePages(context);
+    final pages = await _getAllEmployeePages(context);
+    if (context.mounted && AuthSession.isCurrent(version)) appPages = pages;
     return;
   }
 

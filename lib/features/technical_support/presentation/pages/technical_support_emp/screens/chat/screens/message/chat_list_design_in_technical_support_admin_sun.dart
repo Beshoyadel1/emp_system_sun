@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/language/language.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +22,7 @@ class ChatListDesignInTechnicalSupportAdminSun extends StatelessWidget {
           }
 
           if (state is ChatDetailsError) {
-            return Center(child: Text(state.message));
+            return Center(child: Text(AppLocalizations.of(context).translate(state.message)));
           }
 
           if (state is ChatDetailsSuccess) {

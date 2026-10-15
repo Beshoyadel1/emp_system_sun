@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/theming/app_currency.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../../../../../../../core/pages_widgets/general_widgets/custom_container.dart';
@@ -81,7 +82,7 @@ class WidgetDesignFuelConsumptionCar extends StatelessWidget {
           _ValueRow(
             title: AppLanguageKeys.totalConsumption,
             value:
-            '${fuelConsumption?.totalConsumption?.toStringAsFixed(2) ?? '0.00'} ر.س',
+            AppCurrency.format(context, fuelConsumption?.totalConsumption),
           ),
 
           const SizedBox(height: 12),
@@ -89,7 +90,7 @@ class WidgetDesignFuelConsumptionCar extends StatelessWidget {
           _ValueRow(
             title: AppLanguageKeys.expectedSpend,
             value:
-            '${fuelConsumption?.expectedSpend?.toStringAsFixed(2) ?? '0.00'} ر.س',
+            AppCurrency.format(context, fuelConsumption?.expectedSpend),
           ),
         ],
       ),

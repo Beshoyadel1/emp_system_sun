@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/theming/app_currency.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/language/language_constant.dart';
 import '../../../../../core/theming/colors.dart';
@@ -54,7 +55,7 @@ class DataAccountBalance extends StatelessWidget {
         ),
 
         trailing: TextInAppWidget(
-          text: "${item.amount ?? 0}",
+          text: AppCurrency.format(context, item.amount),
           textSize: 16,
           fontWeightIndex: FontSelectionData.regularFontFamily,
           textColor: AppColors.greenColor,

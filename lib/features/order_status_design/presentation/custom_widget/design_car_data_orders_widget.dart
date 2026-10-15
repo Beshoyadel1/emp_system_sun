@@ -141,7 +141,7 @@ class DesignCarDataOrdersWidget extends StatelessWidget {
                       ),
 
                       const TextInAppWidget(
-                        text: AppLanguageKeys.dirham,
+                        text: AppLanguageKeys.sar,
                         textSize: 16,
                         fontWeightIndex:
                         FontSelectionData.mediumFontFamily,
@@ -359,7 +359,7 @@ class DesignCarDataOrdersWidget extends StatelessWidget {
 
                         const TextInAppWidget(
                           text:
-                          AppLanguageKeys.dirham,
+                          AppLanguageKeys.sar,
                           textSize: 16,
                           fontWeightIndex:
                           FontSelectionData

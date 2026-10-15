@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/language/language.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../../../../features/internal_services/presentation/pages/internal_orders/custom_widget/text_empty_view_data.dart';
@@ -42,7 +43,7 @@ class _SearchWithListDataChatAdminSunState
         if (state is MessageError) {
           return SizedBox(
             height: 300,
-            child: Center(child: Text(state.message)),
+            child: Center(child: Text(AppLocalizations.of(context).translate(state.message))),
           );
         }
 

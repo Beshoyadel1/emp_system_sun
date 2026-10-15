@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/language/language.dart';
 import 'package:emp_system_sun/core/theming/auth_local_storage.dart';
 import 'package:emp_system_sun/features/auth_page/data/datasource/login_datasource/login_repository.dart';
 import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/create_user_request.dart';
@@ -62,7 +63,7 @@ class _BankAccountContentState extends State<BankAccountContent> {
       username: user?.username,
       phone: user?.phone,
       email: user?.email,
-      age: user?.age,
+      birthDate: user?.birthDate,
       gander: user?.gander,
       image: user?.image,
       providerDetails: ProviderDetailsRequest(
@@ -138,7 +139,7 @@ class _BankAccountContentState extends State<BankAccountContent> {
 
             if (state is AuthUpdateError) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error)),
+                SnackBar(content: Text(AppLocalizations.of(context).translate(state.error))),
               );
             }
           },

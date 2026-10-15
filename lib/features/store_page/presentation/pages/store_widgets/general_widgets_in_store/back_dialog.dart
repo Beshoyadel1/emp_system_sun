@@ -1,3 +1,5 @@
+import 'package:emp_system_sun/core/theming/text_styles.dart';
+import 'package:emp_system_sun/core/language/language_constant.dart';
 import 'package:flutter/material.dart';
 
 Future<bool?> showBackDialog({required BuildContext context}) {
@@ -9,9 +11,9 @@ Future<bool?> showBackDialog({required BuildContext context}) {
         title: const SizedBox(
           width: 300,
           child: Center(
-            child: Text(
-              "Confirm_Exit",
-              softWrap: true,
+            child: TextInAppWidget(
+              text: AppLanguageKeys.confirmExit,
+              textSize: 14,
               textAlign: TextAlign.center,
             ),
           ),
@@ -20,13 +22,11 @@ Future<bool?> showBackDialog({required BuildContext context}) {
           height: 50,
           width: 300,
           child: Center(
-            child: Text(
-              "Are_You_Sure_To_Leave",
-              softWrap: true,
+            child: TextInAppWidget(
+              text: AppLanguageKeys.confirmLeave,
+              textSize: 14,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.black,
-              ),
+              textColor: Colors.black,
             ),
           ),
         ),
@@ -37,11 +37,13 @@ Future<bool?> showBackDialog({required BuildContext context}) {
               children: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: Text("OK"),
+                  child:
+                      TextInAppWidget(text: AppLanguageKeys.ok, textSize: 14),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: Text("Cancel"),
+                  child: TextInAppWidget(
+                      text: AppLanguageKeys.cancel, textSize: 14),
                 ),
               ]),
         ],

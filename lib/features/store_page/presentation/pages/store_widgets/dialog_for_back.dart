@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/language/language_constant.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/utilies/map_of_all_app.dart';
 import '../../../../../core/theming/fonts.dart';
@@ -16,7 +17,7 @@ Future<bool?> showBackDialog({required BuildContext context}) {
           width: isMobile ? size.width : 300,
           child: const Center(
               child: TextInAppWidget(
-                  text: 'Confirm_Exit',
+                  text: AppLanguageKeys.confirmExit,
                   textAlign: TextAlign.center,
                   fontWeightIndex: FontSelectionData.semiBoldFontFamily,
                   textSize: 20)),
@@ -26,7 +27,7 @@ Future<bool?> showBackDialog({required BuildContext context}) {
           width: isMobile ? size.width : 300,
           child: const Center(
               child: TextInAppWidget(
-                  text: 'Are_You_Sure_To_Leave',
+                  text: AppLanguageKeys.confirmLeave,
                   textAlign: TextAlign.center,
                   fontWeightIndex: FontSelectionData.semiBoldFontFamily,
                   textSize: 20)),
@@ -39,7 +40,7 @@ Future<bool?> showBackDialog({required BuildContext context}) {
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   child: const TextInAppWidget(
-                      text: 'OK',
+                      text: AppLanguageKeys.ok,
                       textAlign: TextAlign.center,
                       fontWeightIndex: FontSelectionData.semiBoldFontFamily,
                       textSize: 15),
@@ -47,7 +48,7 @@ Future<bool?> showBackDialog({required BuildContext context}) {
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
                   child: const TextInAppWidget(
-                      text: 'Cancel',
+                      text: AppLanguageKeys.cancel,
                       textAlign: TextAlign.center,
                       fontWeightIndex: FontSelectionData.semiBoldFontFamily,
                       textSize: 15),

@@ -72,7 +72,7 @@ class DesignViewOtherServiceWidget extends StatelessWidget {
                          textColor:subTitleColor?? AppColors.greyColor,
                        ),
                        TextInAppWidget(
-                         text: AppLanguageKeys.dirham,
+                         text: AppLanguageKeys.sar,
                          textSize: 12,
                          fontWeightIndex:
                          FontSelectionData.boldFontFamily,

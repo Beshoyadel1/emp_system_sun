@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/language/language.dart';
 import 'package:emp_system_sun/features/store_page/data/request/add_branch_request/add_branch_request.dart';
 import 'package:emp_system_sun/features/store_page/data/model/get_provider_branches_model/provider_branch_model.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/branch_cubit/branch_cubit.dart';
@@ -51,7 +52,7 @@ class _AddBranchUIState extends State<AddBranchUI> {
 
         if (state is BranchError) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
+            SnackBar(content: Text(AppLocalizations.of(context).translate(state.message))),
           );
         }
       },

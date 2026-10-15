@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:emp_system_sun/core/pages_widgets/phone_text_field.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/language/language_cubit/language_cubit.dart';
 import '../../../../../core/language/language_cubit/language_states.dart';
@@ -13,6 +14,7 @@ class FirstNameTextfieldPersonalDataWidget extends StatefulWidget {
   final String name;
   final String? hint;
   final bool isLanguage;
+  final bool isPhone;
   final bool isCard;
   final bool? isRegular;
   final int? maxLines;
@@ -24,6 +26,7 @@ class FirstNameTextfieldPersonalDataWidget extends StatefulWidget {
       required this.name,
       this.hint,
       this.isLanguage = false,
+      this.isPhone = false,
       this.isCard = false,
       this.isRegular = false,
       this.maxLines,
@@ -46,6 +49,12 @@ class _FirstNameTextfieldPersonalDataWidgetState
     super.initState();
     cubit = LanguageCubit.get(context);
     textFormController2 = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    textFormController2.dispose();
+    super.dispose();
   }
 
   @override
@@ -101,6 +110,14 @@ class _FirstNameTextfieldPersonalDataWidgetState
                 ),
               );
             },
+          )
+        else if (widget.isPhone)
+          PhoneTextField(
+            controller: widget.textFormController ?? textFormController2,
+            hintText: widget.hint,
+            width: widget.textFormWidth ?? 500,
+            fillColor: AppColors.transparent,
+            borderColor: AppColors.darkColor.withValues(alpha: 0.2),
           )
         else
           Container(

@@ -46,7 +46,7 @@ dependencies:
 
   latlong2:
   location:
-  intl_phone_field:
+  intl_phone_field: 3.2.0
   easy_localization:
   http:
   geolocator: ^14.0.2

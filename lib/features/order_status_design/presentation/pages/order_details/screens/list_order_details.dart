@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/language/language.dart';
 import 'package:flutter/material.dart';
 import '../../../../../../../../../features/order_status_design/presentation/cubit/order_status_cubit/order_status_cubit.dart';
 import '../../../../../../../../../features/order_status_design/presentation/cubit/order_status_cubit/order_status_state.dart';
@@ -50,7 +51,7 @@ class ListOrderDetails extends StatelessWidget {
           if (state is OrderStatusError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
+                content: Text(AppLocalizations.of(context).translate(state.message)),
               ),
             );
           }
@@ -70,8 +71,7 @@ class ListOrderDetails extends StatelessWidget {
               return Center(
                 child: Padding(
                   padding: const EdgeInsets.all(40),
-                  child: Text(
-                    state.message,
+                  child: Text(AppLocalizations.of(context).translate(state.message),
                     textAlign: TextAlign.center,
                   ),
                 ),

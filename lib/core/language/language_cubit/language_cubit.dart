@@ -1,9 +1,9 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api/dio_function/dio_controller.dart';
+import '../language.dart' as app_language;
 import '../language_model.dart';
 import 'language_states.dart';
 
@@ -14,7 +14,7 @@ class LanguageCubit extends Cubit<LanguageStates> {
 
   bool isAllAppLanguageArabic = true;
 
-  Locale? selectedLanguage;
+  Locale selectedLanguage = app_language.supportedLocales.first;
 
   Future<void> changeAllAppLanguage(int language) async {
     if (language == 1) {
@@ -25,7 +25,7 @@ class LanguageCubit extends Cubit<LanguageStates> {
       selectedLanguage = supportedLocales[1];
     }
 
-    Network.setLanguageCode(selectedLanguage!.languageCode);
+    Network.setLanguageCode(selectedLanguage.languageCode);
     languageDropDownValue = languageItemsDropDown.firstWhere(
       (element) => element.number == language,
     );
@@ -35,10 +35,7 @@ class LanguageCubit extends Cubit<LanguageStates> {
     await prefs.setInt('language', language);
   }
 
-  List<Locale> supportedLocales = [
-    const Locale('ar', 'EG'),
-    const Locale('en', 'US'),
-  ];
+  List<Locale> get supportedLocales => app_language.supportedLocales;
 
   List<String> languageItems = ['English', 'عربي'];
 

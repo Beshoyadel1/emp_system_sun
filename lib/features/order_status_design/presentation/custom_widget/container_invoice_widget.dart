@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:emp_system_sun/core/theming/app_currency.dart';
 import '../../../../../core/language/language_constant.dart';
 import '../../../../../core/theming/assets.dart';
 import '../../../../../core/theming/colors.dart';
@@ -65,7 +66,7 @@ class ContainerInvoiceWidget extends StatelessWidget {
                     Row(
                       children: [
                         TextInAppWidget(
-                          text: priceInsuranceInstallment,
+                          text: AppCurrency.format(context, num.tryParse(priceInsuranceInstallment)),
                           textSize: 10,
                           fontWeightIndex: FontSelectionData.regularFontFamily,
                           textColor: AppColors.darkColor,
@@ -89,7 +90,7 @@ class ContainerInvoiceWidget extends StatelessWidget {
                     Row(
                       children: [
                         TextInAppWidget(
-                          text: priceTaxes,
+                          text: AppCurrency.format(context, num.tryParse(priceTaxes)),
                           textSize: 10,
                           fontWeightIndex: FontSelectionData.regularFontFamily,
                           textColor: AppColors.darkColor,
@@ -118,7 +119,7 @@ class ContainerInvoiceWidget extends StatelessWidget {
                     Row(
                       children: [
                         TextInAppWidget(
-                          text: priceTotal,
+                          text: AppCurrency.format(context, num.tryParse(priceTotal)),
                           textSize: 14,
                           fontWeightIndex: FontSelectionData.mediumFontFamily,
                           textColor: AppColors.orangeColor,

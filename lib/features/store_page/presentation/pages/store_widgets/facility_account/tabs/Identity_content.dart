@@ -38,7 +38,7 @@ class IdentityContent extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Center(
-                    child: Text("Upload"),
+                    child: TextInAppWidget(text: AppLanguageKeys.uploadImage, textSize: 14),
                   ),
                 ),
               )

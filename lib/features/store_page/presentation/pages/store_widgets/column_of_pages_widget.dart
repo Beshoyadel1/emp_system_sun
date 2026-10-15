@@ -2,6 +2,7 @@ import 'package:emp_system_sun/core/utilies/map_of_all_app.dart';
 import 'package:emp_system_sun/features/logout_dashboard/presentation/first_screen_logout_dashboard/logout_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:emp_system_sun/core/services/auth_session.dart';
 import '../../../../../core/general_models/pages_model.dart';
 import '../../../../../core/cubit/app_cubit/app_cubit.dart';
 import 'expansion_tile_widget.dart';
@@ -41,6 +42,7 @@ class ColumnOfPagesWidget extends StatelessWidget {
     } else {
       return InkWell(
           onTap: () async {
+            final version = AuthSession.version;
             // ============================
             // Logout
             // ============================
@@ -74,13 +76,15 @@ class ColumnOfPagesWidget extends StatelessWidget {
                 '${appCubit.selectedPageFromOpenedPagesIndex}';
 
             final prefs = await SharedPreferences.getInstance();
+            if (!context.mounted || !AuthSession.isCurrent(version)) return;
 
             final getData = prefs.getStringList(keyForUpdate);
 
             if (getData != null && appCubit.data.isNotEmpty) {
-              await prefs.setStringList(
+              await appCubit.savePageData(
                 keyForUpdate,
                 appCubit.data.map((e) => e.toString()).toList(),
+                version,
               );
             } else {
               if (appCubit.data.isNotEmpty) {
@@ -92,6 +96,7 @@ class ColumnOfPagesWidget extends StatelessWidget {
               }
             }
 
+            if (!context.mounted || !AuthSession.isCurrent(version)) return;
             appCubit.selectedPageIndex = pageNode.number;
             appCubit.selectedPageFromOpenedPagesIndex = -1;
 

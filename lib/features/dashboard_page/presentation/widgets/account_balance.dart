@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/theming/app_currency.dart';
 import 'package:emp_system_sun/features/internal_services/presentation/pages/internal_orders/custom_widget/text_empty_view_data.dart';
 import 'package:flutter/material.dart';
 import '../../../../../../../features/dashboard_page/presentation/cubit/get_provider_total_rate_and_employee_and_balance_cubit/get_provider_total_rate_and_employee_and_balance_cubit.dart';
@@ -70,7 +71,7 @@ class AccountBalance extends StatelessWidget {
                                 }
 
                                 return TextInAppWidget(
-                                  text: ': ${total.toStringAsFixed(0)}',
+                                  text: ': ${AppCurrency.format(context, total, decimalDigits: 0)}',
                                   textSize: 20,
                                   textColor: AppColors.orangeColor,
                                 );

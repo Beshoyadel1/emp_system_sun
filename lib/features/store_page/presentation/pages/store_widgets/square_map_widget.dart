@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/language/language.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/location_cubit/location_cubit.dart';
 import 'package:emp_system_sun/features/store_page/presentation/bloc/location_cubit/location_state.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class SquareMapWidget extends StatelessWidget {
             context,
           ).showSnackBar(
             SnackBar(
-              content: Text(state.message),
+              content: Text(AppLocalizations.of(context).translate(state.message)),
             ),
           );
         }
@@ -56,7 +57,7 @@ class SquareMapWidget extends StatelessWidget {
         }
         if (state is LocationError) {
           return Center(
-            child: Text(state.message),
+            child: Text(AppLocalizations.of(context).translate(state.message)),
           );
         }
         return const SizedBox.shrink();

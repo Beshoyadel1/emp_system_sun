@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../../core/language/language_cubit/language_cubit.dart';
 
 class GetProviderTotalRateAndEmployeeAndBalanceModel {
   final double averageRate;
@@ -63,7 +62,7 @@ class TopEmployee {
 
   String getName(BuildContext context) {
     final isArabic =
-        LanguageCubit.get(context).isAllAppLanguageArabic;
+        (Localizations.localeOf(context).languageCode == 'ar');
 
     return isArabic
         ? (employeeName ?? "")
@@ -72,7 +71,7 @@ class TopEmployee {
 
   String getJobName(BuildContext context) {
     final isArabic =
-        LanguageCubit.get(context).isAllAppLanguageArabic;
+        (Localizations.localeOf(context).languageCode == 'ar');
 
     return isArabic
         ? (jobName ?? "")
@@ -104,7 +103,7 @@ class AccountBalance {
 
   String getName(BuildContext context) {
     final isArabic =
-        LanguageCubit.get(context).isAllAppLanguageArabic;
+        (Localizations.localeOf(context).languageCode == 'ar');
 
     return isArabic
         ? (serviceName ?? "")

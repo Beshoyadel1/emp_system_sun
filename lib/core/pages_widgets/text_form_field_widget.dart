@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../language/language.dart';
+import '../language/language_constant.dart';
 import '../language/language_cubit/language_cubit.dart';
 import '../setup_git_it.dart';
 import '../theming/colors.dart';
@@ -117,6 +118,22 @@ class TextFormFieldWidget extends StatefulWidget {
 class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
   final FocusNode internalFocusNode = FocusNode();
   final LanguageCubit _languageCubit = getIt<LanguageCubit>();
+  final _fieldKey = GlobalKey<FormFieldState<String>>();
+  String? _languageCode;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final code = Localizations.localeOf(context).languageCode;
+    if (_languageCode != null && code != _languageCode) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _fieldKey.currentState?.hasError == true) {
+          _fieldKey.currentState!.validate();
+        }
+      });
+    }
+    _languageCode = code;
+  }
 
   @override
   void dispose() {
@@ -176,6 +193,8 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
       width: widget.textFormWidth,
       height: widget.textFormHeight,
       child: TextFormField(
+        key: _fieldKey,
+        onTap: widget.isDatePicker == true ? widget.onPressedDate : null,
         onChanged: widget.onChanged,
         controller: widget.textFormController,
         focusNode: widget.focusNode ?? internalFocusNode,
@@ -207,7 +226,7 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
           if (widget.isValidator == true) {
             if (value == null || value.trim().isEmpty) {
               return AppLocalizations.of(context)
-                  .translate('this Field Required');
+                  .translate(AppLanguageKeys.fieldRequired);
             }
           }
 

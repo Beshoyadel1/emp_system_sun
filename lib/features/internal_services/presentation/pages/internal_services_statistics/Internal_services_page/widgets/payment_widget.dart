@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:emp_system_sun/core/theming/app_currency.dart';
 import '../../../../../../../core/language/language_constant.dart';
 import '../../../../../../../core/theming/assets.dart';
 import '../../../../../../../core/theming/colors.dart';
@@ -76,7 +77,7 @@ class CustomRow extends StatelessWidget {
               textColor: AppColors.darkColor,
             ),
             TextInAppWidget(
-              text: value,
+              text: AppCurrency.format(context, num.tryParse(value)),
               textSize: 16,
               textColor: AppColors.orangeColor,
             ),

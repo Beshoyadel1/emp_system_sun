@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/theming/app_currency.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/language/language_constant.dart';
 import '../../../../../core/theming/fonts.dart';
@@ -97,7 +98,7 @@ class CustomChart extends StatelessWidget {
                 textColor: imageBackground,
               ),
               TextInAppWidget(
-                text: ":${totalAmount ?? 0}",
+                text: ': ${AppCurrency.format(context, totalAmount)}',
                 textSize: 18,
                 fontWeightIndex: FontSelectionData.boldFontFamily,
                 textColor: imageBackground,

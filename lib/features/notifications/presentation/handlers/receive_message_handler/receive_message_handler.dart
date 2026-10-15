@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/language/language_constant.dart';
 import 'package:flutter/foundation.dart';
 import '../../../../../../core/cubit/app_cubit/app_cubit.dart';
 import '../../../../../../core/utilies/map_of_all_app.dart';
@@ -56,7 +57,7 @@ class ReceiveMessageHandler {
 
       final title = (model.data?.data?.fromUserName?.isNotEmpty == true)
           ? model.data!.data!.fromUserName!
-          : (model.data?.title?.isNotEmpty == true ? model.data!.title! : "رسالة جديدة");
+          : (model.data?.title?.isNotEmpty == true ? model.data!.title! : AppLanguageKeys.newMessage);
       final subtitle = (model.data?.data?.message?.isNotEmpty == true)
           ? model.data!.data!.message!
           : (model.data?.body ?? "");

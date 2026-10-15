@@ -1,3 +1,4 @@
+import 'package:emp_system_sun/core/theming/app_currency.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../../../../../../../core/language/language_constant.dart';
@@ -58,7 +59,7 @@ class WidgetDesignServiceStatsCar extends StatelessWidget {
 
                     TextInAppWidget(
                       text:
-                      '${summary?.totalInvoices?.toStringAsFixed(2) ?? '0.00'} ر.س',
+                      AppCurrency.format(context, summary?.totalInvoices),
                       textSize: 18,
                       fontWeightIndex:
                       FontSelectionData.boldFontFamily,

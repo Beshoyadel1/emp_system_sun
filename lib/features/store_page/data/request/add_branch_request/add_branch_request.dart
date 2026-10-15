@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:emp_system_sun/core/language/language_cubit/language_cubit.dart';
 
 class AddBranchRequest {
   final int? branchId;
@@ -35,14 +34,14 @@ class AddBranchRequest {
 
   String? getBranchName(BuildContext context) {
     final isArabic =
-        LanguageCubit.get(context).isAllAppLanguageArabic;
+        (Localizations.localeOf(context).languageCode == 'ar');
 
     return isArabic ? branchName : branchLatinName;
   }
 
   String? getAddressText(BuildContext context) {
     final isArabic =
-        LanguageCubit.get(context).isAllAppLanguageArabic;
+        (Localizations.localeOf(context).languageCode == 'ar');
 
     return isArabic ? addressText : addressLatinText;
   }

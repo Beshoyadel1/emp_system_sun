@@ -14,7 +14,7 @@ class CreateUserRequest {
   final String? email;
   final String? password;
   final int? gander;
-  final int? age;
+  final DateTime? birthDate;
   final int? type;
   final String? nationality;
   final bool? isActive;
@@ -37,7 +37,7 @@ class CreateUserRequest {
     this.email,
     this.password,
     this.gander,
-    this.age,
+    this.birthDate,
     this.type,
     this.nationality,
     this.isActive,
@@ -75,7 +75,7 @@ class CreateUserRequest {
       json["gender"] ??
           json["gander"],
 
-      age: json["age"],
+      birthDate: _parseBirthDate(json["birthdate"]),
 
       type: json["type"],
 
@@ -143,6 +143,22 @@ class CreateUserRequest {
           : null,
     );
   }
+  // A birthday is a calendar date, so keep its day regardless of timezone.
+  static DateTime? _parseBirthDate(dynamic value) {
+    if (value is! String || value.trim().isEmpty) return null;
+    final date = DateTime.tryParse(value.trim().split('T').first);
+    return date == null ? null : DateTime(date.year, date.month, date.day);
+  }
+
+  String? _birthDateToJson() {
+    final date = birthDate;
+    if (date == null) return null;
+    final year = date.year.toString().padLeft(4, '0');
+    final month = date.month.toString().padLeft(2, '0');
+    final day = date.day.toString().padLeft(2, '0');
+    return '$year-$month-${day}T00:00:00';
+  }
+
   Map<String, dynamic> toJson() {
     return {
       "userid": userid ?? 0,
@@ -151,7 +167,7 @@ class CreateUserRequest {
       "email": email ?? "",
       "password": password ?? "",
       "gander": gander ?? 0,
-      "age": age ?? 0,
+      "birthdate": _birthDateToJson(),
       "type": type ?? 0,
       "nationality": nationality ?? "",
       "isactive": isActive ?? true,

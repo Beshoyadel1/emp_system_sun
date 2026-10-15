@@ -1,3 +1,5 @@
+import 'package:emp_system_sun/core/language/language.dart';
+import 'package:emp_system_sun/core/pages_widgets/birth_date_field.dart';
 import 'package:emp_system_sun/core/theming/auth_local_storage.dart';
 import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/create_user_request.dart';
 import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/employee_details_request.dart';
@@ -29,7 +31,7 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
   final phoneController = TextEditingController();
   final emailController = TextEditingController();
   final genderController = TextEditingController();
-  final ageController = TextEditingController();
+  DateTime? _birthDate;
   final dateController = TextEditingController();
   final idController = TextEditingController();
   final userNameController = TextEditingController();
@@ -46,7 +48,6 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
       phoneController,
       emailController,
       genderController,
-      ageController,
       dateController,
       idController,
       userNameController,
@@ -83,7 +84,7 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
           user.employeeDetails?.employeeDetails?.joblatinname ?? "";
       phoneController.text = user.phone ?? "";
       emailController.text = user.email ?? "";
-      ageController.text = user.age?.toString() ?? "";
+      _birthDate = user.birthDate;
       genderController.text = user.gander?.toString() ?? "";
       dateController.text =
           OrderFunctions.formatDateFromDateTime(user.joinDate);
@@ -106,9 +107,7 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
       type: user?.type,
       phone: safe(phoneController.text),
       email: safe(emailController.text),
-      age: ageController.text.isNotEmpty
-          ? int.tryParse(ageController.text)
-          : null,
+      birthDate: _birthDate,
       gander: genderController.text.isNotEmpty
           ? int.tryParse(genderController.text)
           : null,
@@ -186,9 +185,9 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
               readOnly: true,
               width: 250,
             ),
-            UserTextFieldWidget(
-              controller: ageController,
-              text: AppLanguageKeys.age,
+            BirthDateField(
+              value: _birthDate,
+              onChanged: (value) => setState(() => _birthDate = value),
               readOnly: !isEditMode,
               width: 250,
             ),
@@ -239,7 +238,7 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
 
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(state.error),
+                  content: Text(AppLocalizations.of(context).translate(state.error)),
                 ),
               );
             }

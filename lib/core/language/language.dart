@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import 'language_constant.dart';
 
-List<Locale> supportedLocales = [
-  const Locale('ar', 'SA'),
-  const Locale('en', 'US'),
+const List<Locale> supportedLocales = [
+  Locale('ar', 'SA'),
+  Locale('en', 'US'),
 ];
 
 class AppLocalizations {
@@ -14,6 +15,26 @@ class AppLocalizations {
 
   static final Map<String, Map<String, String>> _localizedValues = {
     'ar': {
+      AppLanguageKeys.fieldRequired: 'هذا الحقل مطلوب',
+      AppLanguageKeys.invalidEmail: 'يرجى إدخال بريد إلكتروني صحيح',
+      AppLanguageKeys.invalidNumber: 'يرجى إدخال رقم صحيح',
+      AppLanguageKeys.invalidPhoneNumber: 'يرجى إدخال رقم جوال صحيح',
+      AppLanguageKeys.searchCountry: 'ابحث عن الدولة',
+      AppLanguageKeys.confirmExit: 'تأكيد الخروج',
+      AppLanguageKeys.confirmLeave: 'هل أنت متأكد من مغادرة الصفحة؟',
+      AppLanguageKeys.ok: 'موافق',
+      AppLanguageKeys.genericError: 'حدث خطأ ما',
+      AppLanguageKeys.noPagesAvailable: 'لا توجد صفحات متاحة',
+      AppLanguageKeys.invalidHarageId: 'رقم الحراج غير صحيح',
+      AppLanguageKeys.invalidUserInformation: 'بيانات المستخدم غير صحيحة',
+      AppLanguageKeys.noBrandsWithModels: 'لا توجد ماركات تحتوي على موديلات',
+      AppLanguageKeys.noModelsFound: 'لا توجد موديلات',
+      AppLanguageKeys.noUserData: 'لا توجد بيانات للمستخدم',
+      AppLanguageKeys.appTitle: 'نظام موظفي صان',
+      AppLanguageKeys.userNameKey: 'اسم المستخدم',
+      AppLanguageKeys.forgetPassword: 'نسيت كلمة المرور',
+      AppLanguageKeys.dontHaveAccount: 'ليس لديك حساب؟',
+      AppLanguageKeys.yourName: 'اسمك',
       //status//
       AppLanguageKeys.notSold: 'لم يتم البيع',
       AppLanguageKeys.sold: 'تم البيع',
@@ -34,12 +55,10 @@ class AppLocalizations {
 
       //others//
       AppLanguageKeys.verificationCodeSent: 'تم إرسال رمز التحقق',
-      AppLanguageKeys.failedToSendVerificationCode:
-      'فشل إرسال رمز التحقق',
+      AppLanguageKeys.failedToSendVerificationCode: 'فشل إرسال رمز التحقق',
       AppLanguageKeys.phoneNumberNotFoundForThisAccount:
-      'رقم الهاتف غير موجود لهذا الحساب',
-      AppLanguageKeys.phoneNumberNotFound:
-      'رقم الهاتف غير موجود',
+          'رقم الهاتف غير موجود لهذا الحساب',
+      AppLanguageKeys.phoneNumberNotFound: 'رقم الهاتف غير موجود',
       AppLanguageKeys.codeSentTo: 'تم إرسال الرمز إلى',
       AppLanguageKeys.pleaseEnterYourEmail: 'يرجى إدخال بريدك الإلكتروني',
       AppLanguageKeys.yourEmailIsEmpty: 'البريد الإلكتروني فارغ',
@@ -107,9 +126,9 @@ class AppLocalizations {
       AppLanguageKeys.status: 'الحالة',
       AppLanguageKeys.selectDate: 'يرجى اختيار التاريخ',
       AppLanguageKeys.endDateCannotBeBeforeStartDate:
-      'لا يمكن أن يكون تاريخ النهاية قبل تاريخ البداية',
+          'لا يمكن أن يكون تاريخ النهاية قبل تاريخ البداية',
       AppLanguageKeys.pleaseEnterAtLeastOneProvider:
-      'يرجى إدخال مزود خدمة واحد على الأقل',
+          'يرجى إدخال مزود خدمة واحد على الأقل',
       AppLanguageKeys.invalidProviderId: 'رقم مزود الخدمة غير صالح',
       AppLanguageKeys.pleaseSelectDiscountType: 'يرجى اختيار نوع الخصم',
       AppLanguageKeys.startDate: 'تاريخ البداية',
@@ -147,7 +166,7 @@ class AppLocalizations {
       AppLanguageKeys.valueAddedTax: 'ضريبة القيمة المضافة',
       AppLanguageKeys.dubaiPlate: 'لوحة دبي :',
       AppLanguageKeys.totalVehicle: 'إجمالي المركبة',
-      AppLanguageKeys.dirham: 'درهم',
+      AppLanguageKeys.dirham: 'ريال سعودي',
       AppLanguageKeys.serviceTypes: 'أنواع الخدمات',
       AppLanguageKeys.orderDate: 'تاريخ الطلب',
       AppLanguageKeys.expectedDeliveryDate: 'موعد التسليم المتوقع',
@@ -155,11 +174,10 @@ class AppLocalizations {
       AppLanguageKeys.orderDetailsNumber: 'تفاصيل طلب رقم #',
       AppLanguageKeys.notificationConnected: 'الإشعارات متصلة',
       AppLanguageKeys.notificationReconnecting:
-      'جارٍ إعادة الاتصال الإشعارات...',
-      AppLanguageKeys.notificationConnecting:
-      'جارٍ الاتصال الإشعارات...',
+          'جارٍ إعادة الاتصال الإشعارات...',
+      AppLanguageKeys.notificationConnecting: 'جارٍ الاتصال الإشعارات...',
       AppLanguageKeys.notificationDisconnectedTapToReconnect:
-      'الإشعارات غير متصلة (اضغط لإعادة الاتصال)',
+          'الإشعارات غير متصلة (اضغط لإعادة الاتصال)',
       AppLanguageKeys.youHaveOrderUpdate: 'لديك تحديث على الطلب.',
       AppLanguageKeys.viewMore: 'عرض المزيد',
       AppLanguageKeys.petrol: 'بنزين',
@@ -173,7 +191,8 @@ class AppLocalizations {
       AppLanguageKeys.enterSystem: 'دخول النظام',
       AppLanguageKeys.check: 'تحقق',
       AppLanguageKeys.addAtLeastOneBranch: 'أضف فرع واحد على الأقل',
-      AppLanguageKeys.addAtLeastOneWorkingHours: 'أضف مواعيد عمل واحدة على الأقل',
+      AppLanguageKeys.addAtLeastOneWorkingHours:
+          'أضف مواعيد عمل واحدة على الأقل',
 
       AppLanguageKeys.noBranchesYet: 'لا توجد فروع حتى الآن',
       AppLanguageKeys.isSold: 'تم البيع',
@@ -268,7 +287,7 @@ class AppLocalizations {
       AppLanguageKeys.filling: 'التعبئة',
       AppLanguageKeys.fillingDate: 'تاريخ التعبئة',
       AppLanguageKeys.gender: 'الجنس',
-      AppLanguageKeys.age: 'العمر',
+      AppLanguageKeys.birthDate: 'تاريخ الميلاد',
       AppLanguageKeys.order: 'طلب',
       AppLanguageKeys.authCompanyNameRequired: 'اسم الشركة مطلوب',
       AppLanguageKeys.authEmailRequired: 'البريد الإلكتروني مطلوب',
@@ -283,6 +302,8 @@ class AppLocalizations {
       AppLanguageKeys.passwordsDoNotMatch: 'كلمتا المرور غير متطابقتين',
       AppLanguageKeys.wrongUsername: 'اسم المستخدم غير صحيحة',
       AppLanguageKeys.somethingWentWrong: 'حدث خطأ ما',
+      AppLanguageKeys.logoutFailed: 'تعذر إكمال تسجيل الخروج. أعد المحاولة.',
+      AppLanguageKeys.retry: 'أعد المحاولة',
       AppLanguageKeys.emailExist: 'البريد الإلكتروني موجود بالفعل',
       AppLanguageKeys.emailNotExist: 'البريد الإلكتروني غير موجود',
       AppLanguageKeys.phoneExist: 'رقم الهاتف موجود بالفعل',
@@ -746,7 +767,7 @@ class AppLocalizations {
       AppLanguageKeys.reviewsKey: 'التقييمات',
       AppLanguageKeys.socialPagesAndPoliciesKey: 'صفحات التواصل والسياسات',
       AppLanguageKeys.logoutKey: 'تسجيل الخروج',
-      AppLanguageKeys.priceKey: '450.00ريال',
+      AppLanguageKeys.priceKey: '450.00 ريال سعودي',
 
       //End///
 
@@ -1438,6 +1459,26 @@ class AppLocalizations {
       AppLanguageKeys.from: "من",
     },
     'en': {
+      AppLanguageKeys.fieldRequired: 'This field is required',
+      AppLanguageKeys.invalidEmail: 'Please enter a valid email address',
+      AppLanguageKeys.invalidNumber: 'Please enter a valid number',
+      AppLanguageKeys.invalidPhoneNumber: 'Please enter a valid mobile number',
+      AppLanguageKeys.searchCountry: 'Search for a country',
+      AppLanguageKeys.confirmExit: 'Confirm exit',
+      AppLanguageKeys.confirmLeave: 'Are you sure you want to leave this page?',
+      AppLanguageKeys.ok: 'OK',
+      AppLanguageKeys.genericError: 'Something went wrong',
+      AppLanguageKeys.noPagesAvailable: 'No pages available',
+      AppLanguageKeys.invalidHarageId: 'Invalid car market ID',
+      AppLanguageKeys.invalidUserInformation: 'Invalid user information',
+      AppLanguageKeys.noBrandsWithModels: 'No brands with models found',
+      AppLanguageKeys.noModelsFound: 'No models found',
+      AppLanguageKeys.noUserData: 'No user data found',
+      AppLanguageKeys.appTitle: 'San Employee System',
+      AppLanguageKeys.userNameKey: 'Username',
+      AppLanguageKeys.forgetPassword: 'Forgot password',
+      AppLanguageKeys.dontHaveAccount: "Don't have an account?",
+      AppLanguageKeys.yourName: 'Your name',
       //status//
       AppLanguageKeys.notSold: 'Not Sold',
       AppLanguageKeys.sold: 'Sold',
@@ -1458,11 +1499,10 @@ class AppLocalizations {
       //others//
       AppLanguageKeys.verificationCodeSent: 'Verification code sent',
       AppLanguageKeys.failedToSendVerificationCode:
-      'Failed to send verification code',
+          'Failed to send verification code',
       AppLanguageKeys.phoneNumberNotFoundForThisAccount:
-      'Phone number not found for this account',
-      AppLanguageKeys.phoneNumberNotFound:
-      'Phone number not found',
+          'Phone number not found for this account',
+      AppLanguageKeys.phoneNumberNotFound: 'Phone number not found',
       AppLanguageKeys.codeSentTo: 'Code sent to',
       AppLanguageKeys.pleaseEnterYourEmail: 'Please enter your email',
       AppLanguageKeys.yourEmailIsEmpty: 'Your email is empty',
@@ -1486,7 +1526,8 @@ class AppLocalizations {
       AppLanguageKeys.totalConsumption: 'Total Consumption',
       AppLanguageKeys.expectedSpend: 'Expected Spend',
       AppLanguageKeys.consumptionPercentage: 'Consumption Percentage',
-      AppLanguageKeys.previousOrdersAndMaintenance: 'Previous Orders and Maintenance',
+      AppLanguageKeys.previousOrdersAndMaintenance:
+          'Previous Orders and Maintenance',
       AppLanguageKeys.carInvoiceDetails: 'Car Invoice Details',
       AppLanguageKeys.noInvoices: 'No Invoices',
       AppLanguageKeys.invoiceItem: 'Invoice Item',
@@ -1504,7 +1545,8 @@ class AppLocalizations {
       AppLanguageKeys.warranty: 'Warranty',
       AppLanguageKeys.durationType: 'Duration Type',
       AppLanguageKeys.durationValue: 'Duration Value',
-      AppLanguageKeys.employeeAvailablePermissions: 'Available Permissions for Employee',
+      AppLanguageKeys.employeeAvailablePermissions:
+          'Available Permissions for Employee',
       AppLanguageKeys.employeePermissions: 'Employee Permissions',
       AppLanguageKeys.acceptAllOrders: 'Accept All Orders',
       AppLanguageKeys.changeOrderStatus: 'Change Order Status',
@@ -1530,9 +1572,9 @@ class AppLocalizations {
       AppLanguageKeys.status: 'Status',
       AppLanguageKeys.selectDate: 'Select date',
       AppLanguageKeys.endDateCannotBeBeforeStartDate:
-      'End date cannot be before start date',
+          'End date cannot be before start date',
       AppLanguageKeys.pleaseEnterAtLeastOneProvider:
-      'Please enter at least one provider',
+          'Please enter at least one provider',
       AppLanguageKeys.invalidProviderId: 'Invalid provider ID',
       AppLanguageKeys.pleaseSelectDiscountType: 'Please select discount type',
       AppLanguageKeys.startDate: 'Start Date',
@@ -1570,7 +1612,7 @@ class AppLocalizations {
       AppLanguageKeys.valueAddedTax: 'Value Added Tax',
       AppLanguageKeys.dubaiPlate: 'Dubai Plate :',
       AppLanguageKeys.totalVehicle: 'Total Vehicle',
-      AppLanguageKeys.dirham: 'AED',
+      AppLanguageKeys.dirham: 'SAR',
       AppLanguageKeys.serviceTypes: 'Service Types',
       AppLanguageKeys.orderDate: 'Order Date',
       AppLanguageKeys.expectedDeliveryDate: 'Expected Delivery Date',
@@ -1578,11 +1620,10 @@ class AppLocalizations {
       AppLanguageKeys.orderDetailsNumber: 'Order Details #',
       AppLanguageKeys.notificationConnected: 'Notification connected',
       AppLanguageKeys.notificationReconnecting:
-      'Reconnecting to notification ...',
-      AppLanguageKeys.notificationConnecting:
-      'Connecting to notification ...',
+          'Reconnecting to notification ...',
+      AppLanguageKeys.notificationConnecting: 'Connecting to notification ...',
       AppLanguageKeys.notificationDisconnectedTapToReconnect:
-      'Notification disconnected (Tap to reconnect)',
+          'Notification disconnected (Tap to reconnect)',
       AppLanguageKeys.youHaveOrderUpdate: 'You have an order update.',
       AppLanguageKeys.viewMore: 'View More',
       AppLanguageKeys.petrol: 'Petrol',
@@ -1596,7 +1637,8 @@ class AppLocalizations {
       AppLanguageKeys.enterSystem: 'Enter System',
       AppLanguageKeys.check: 'Check',
       AppLanguageKeys.addAtLeastOneBranch: 'Add at least one branch',
-      AppLanguageKeys.addAtLeastOneWorkingHours: 'Add at least one working hour',
+      AppLanguageKeys.addAtLeastOneWorkingHours:
+          'Add at least one working hour',
       AppLanguageKeys.noBranchesYet: 'No branches yet',
       AppLanguageKeys.isSold: 'Is Sold',
       AppLanguageKeys.releaseDate: 'Release Date',
@@ -1690,7 +1732,7 @@ class AppLocalizations {
       AppLanguageKeys.filling: 'Filling',
       AppLanguageKeys.fillingDate: 'Filling Date',
       AppLanguageKeys.gender: 'Gender',
-      AppLanguageKeys.age: 'Age',
+      AppLanguageKeys.birthDate: 'Date of birth',
       AppLanguageKeys.order: 'Order',
       AppLanguageKeys.authCompanyNameRequired: 'Company name is required',
       AppLanguageKeys.authEmailRequired: 'Email is required',
@@ -1707,6 +1749,9 @@ class AppLocalizations {
       AppLanguageKeys.passwordsDoNotMatch: 'Passwords do not match',
       AppLanguageKeys.wrongUsername: 'Wrong username',
       AppLanguageKeys.somethingWentWrong: 'Something went wrong',
+      AppLanguageKeys.logoutFailed:
+          'Could not finish signing out. Please retry.',
+      AppLanguageKeys.retry: 'Retry',
       AppLanguageKeys.phoneExist: 'Phone number already exists',
       AppLanguageKeys.emailExist: 'Email already exists',
       AppLanguageKeys.emailNotExist: 'Email does not exist',
@@ -2032,8 +2077,7 @@ class AppLocalizations {
       AppLanguageKeys.selectCarModelKey: 'Select your car api_functions',
       AppLanguageKeys.searchCarModelKey:
           'You can search to choose the car api_functions',
-      AppLanguageKeys.continueFacilityDataKey:
-          'Continue filling information',
+      AppLanguageKeys.continueFacilityDataKey: 'Continue filling information',
       AppLanguageKeys.fillFacilityDataKey:
           'Fill in your facility account information',
       AppLanguageKeys.saturdayKey: 'Saturday',
@@ -2890,8 +2934,11 @@ Providers will be notified of any major changes via the platform or email.
   }
 
   String translate(String key) {
-    return _localizedValues[locale.languageCode]![key] ?? key;
+    return (_localizedValues[locale.languageCode] ?? _localizedValues['en']!)[key] ?? key;
   }
+
+  bool containsKey(String key) =>
+      (_localizedValues[locale.languageCode] ?? _localizedValues['en']!).containsKey(key);
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
@@ -2899,12 +2946,14 @@ class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
 
   @override
   bool isSupported(Locale locale) {
-    return supportedLocales.contains(locale);
+    return supportedLocales.any(
+      (supported) => supported.languageCode == locale.languageCode,
+    );
   }
 
   @override
-  Future<AppLocalizations> load(Locale locale) async {
-    return AppLocalizations(locale);
+  Future<AppLocalizations> load(Locale locale) {
+    return SynchronousFuture(AppLocalizations(locale));
   }
 
   @override

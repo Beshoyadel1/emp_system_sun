@@ -21,7 +21,7 @@ class FreeTrialWidget extends StatelessWidget {
           hoverColor: Colors.transparent,
           onTap: () {},
           child: SizedBox(
-            width: context.read<AppCubit>().isAllAppLanguageArabic ? 150 : 100,
+            width: Localizations.localeOf(context).languageCode == 'ar' ? 150 : 100,
             child: const Column(
               children: [
                 TextInAppWidget(

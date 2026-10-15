@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:emp_system_sun/core/theming/app_currency.dart';
 import '../../../../../../../features/internal_services/presentation/pages/internal_orders/custom_widget/row_text_icon_orange.dart';
 import '../../../../../../../core/theming/assets.dart';
 import '../../../../../../../core/language/language_constant.dart';
@@ -24,7 +25,7 @@ class ColumnPriceOrderWidget extends StatelessWidget {
           fontWeightIndex: FontSelectionData.mediumFontFamily,
           textColor: AppColors.greyColor,
         ),
-        RowTextIconOrange(text: price, imagePath: AppImageKeys.coin),
+        RowTextIconOrange(text: AppCurrency.format(context, num.tryParse(price)), imagePath: AppImageKeys.coin),
       ],
     );
   }

@@ -34,6 +34,24 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   late TextEditingController confirmPasswordController;
 
   late GlobalKey<FormState> formKey;
+  final _passwordFieldKey = GlobalKey<FormFieldState<String>>();
+  final _confirmFieldKey = GlobalKey<FormFieldState<String>>();
+  String? _languageCode;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final code = Localizations.localeOf(context).languageCode;
+    if (_languageCode != null && code != _languageCode) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        for (final key in [_passwordFieldKey, _confirmFieldKey]) {
+          if (key.currentState?.hasError == true) key.currentState!.validate();
+        }
+      });
+    }
+    _languageCode = code;
+  }
 
   @override
   void initState() {
@@ -102,6 +120,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     bool isConfirm = false,
   }) {
     return TextFormField(
+      key: isConfirm ? _confirmFieldKey : _passwordFieldKey,
       controller: controller,
       enabled: !isSaving,
       obscureText: !isVisible,

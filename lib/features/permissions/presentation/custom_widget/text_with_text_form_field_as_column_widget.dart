@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:emp_system_sun/core/pages_widgets/phone_text_field.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../../../features/permissions/presentation/bloc/option_dashboard_cubit.dart';
 import '../../../../../core/pages_widgets/text_form_field_widget.dart';
@@ -9,6 +10,7 @@ import '../../../../../core/theming/text_styles.dart';
 class TextWithTextFormFieldAsColumnWidget extends StatelessWidget {
   final String text, hint;
   final List<String>? options;
+  final bool isPhone;
   final TextEditingController textFormController = TextEditingController();
   final int? maxLines;
   final double? textFormWidth, textFormHeight, borderRadius, textSize;
@@ -17,6 +19,7 @@ class TextWithTextFormFieldAsColumnWidget extends StatelessWidget {
       {super.key,
       required this.text,
       required this.hint,
+      this.isPhone = false,
       this.options,
       this.maxLines,
       this.textFormWidth,
@@ -37,7 +40,17 @@ class TextWithTextFormFieldAsColumnWidget extends StatelessWidget {
             textColor: AppColors.blackColor,
           ),
           const SizedBox(height: 8),
-          options != null && options!.isNotEmpty
+          isPhone
+              ? PhoneTextField(
+                  controller: textFormController,
+                  hintText: hint,
+                  width: textFormWidth,
+                  textSize: textSize ?? 11,
+                  borderRadius: borderRadius ?? 15,
+                  fillColor: AppColors.transparent,
+                  borderColor: AppColors.darkColor.withValues(alpha: 0.2),
+                )
+              : options != null && options!.isNotEmpty
               ? BlocProvider(
                   create: (_) => OptionDashboardCubit(),
                   child: BlocBuilder<OptionDashboardCubit, String?>(
