@@ -18,7 +18,12 @@ class NotificationNavigationService {
   void openPayload(NotificationPayload payload) {
     final context = navigatorKey.currentContext;
     if (context == null) return;
-    if (payload.isOrder && payload.orderId != null) {
+    final employeeChat = getIt<EmployeeChatCubit>();
+    if (!payload.isFor(
+        employeeChat.currentUserId, employeeChat.currentUserType)) {
+      return;
+    }
+    if (payload.isOrder && (payload.orderId ?? 0) > 0) {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (_) => OrderDetails(
                 order: OrderModel(id: payload.orderId)
@@ -32,15 +37,8 @@ class NotificationNavigationService {
             builder: (_) => PageDetailsHarag(harageId: harageId)));
         return;
       }
-      final chat = getIt<EmployeeChatCubit>();
-      final id = payload.integer('fromuser');
-      final type = payload.integer('fromusertype');
-      if (id == null || type == null) {
-        openChat();
-        return;
-      }
-      chat.openConversation(
-          id, type, payload.get('fromusername')?.toString() ?? '');
+      final chat = employeeChat;
+      if (!chat.openFromNotification(payload)) return;
       Navigator.of(context).push(MaterialPageRoute(
           builder: (_) => BlocProvider.value(
                 value: chat,

@@ -5,8 +5,8 @@ import '../../../../../../../../../core/cubit/new_orders_cubit/new_orders_state.
 import '../widgets/orders_page_order_services_type.dart';
 
 class OrderServicesTypePage extends StatelessWidget {
-  final int serviceId;
-  const OrderServicesTypePage({super.key,required this.serviceId});
+  final int? serviceId;
+  const OrderServicesTypePage({super.key, this.serviceId});
 
   @override
   Widget build(BuildContext context) {
@@ -14,13 +14,15 @@ class OrderServicesTypePage extends StatelessWidget {
       create: (_) => NewOrdersCubit(),
       child: BlocBuilder<NewOrdersCubit, NewOrdersState>(
         buildWhen: (previous, current) {
-          return current is NewOrdersInitial ||
-              current is NewOrderDetails;
+          return current is NewOrdersInitial || current is NewOrderDetails;
         },
         builder: (context, state) {
           final cubit = context.read<NewOrdersCubit>();
 
-          return OrdersPageMobileServicesStatistics(cubit: cubit,serviceId:serviceId,);
+          return OrdersPageMobileServicesStatistics(
+            cubit: cubit,
+            serviceId: serviceId,
+          );
         },
       ),
     );

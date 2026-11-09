@@ -91,7 +91,12 @@ class AppLanguageKeys {
       'employeeAvailablePermissions';
   static const String employeePermissions = 'employeePermissions';
   static const String acceptAllOrders = 'acceptAllOrders';
-  static const String changeOrderStatus = 'changeOrderStatus';
+  static const String acceptAndRefuseAndAssignOrders =
+      'acceptAndRefuseAndAssignOrders';
+  static const String myServiceOrders = 'myServiceOrders';
+  static const String assignOrder = 'assignOrder';
+  static const String chooseEligibleEmployees = 'chooseEligibleEmployees';
+  static const String noEligibleEmployees = 'noEligibleEmployees';
   static const String maintenance = 'maintenance';
   static const String noServicesAssigned = 'noServicesAssigned';
   static const String orders = 'orders';

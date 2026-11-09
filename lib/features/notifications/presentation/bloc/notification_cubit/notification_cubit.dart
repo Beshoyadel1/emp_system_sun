@@ -37,7 +37,8 @@ class NotificationCubit extends Cubit<NotificationState> {
 
   void receiveNotification(NotificationPayload payload) {
     if (isClosed ||
-        payload.kind == NotificationKind.chatStatus ||
+        payload.kind == NotificationKind.supportTicket ||
+        payload.kind == NotificationKind.offerAccepted ||
         payload.kind == NotificationKind.chat ||
         !_seen.add(payload.key)) {
       return;
@@ -168,7 +169,7 @@ class NotificationCubit extends Cubit<NotificationState> {
           if (item.id != null) item.id!: item,
       }.values.toList();
 
-      notifications.removeWhere((n) => n.isChatRelated);
+      notifications.removeWhere((n) => n.excludedFromEmployeeInbox);
       _historyLoaded = true;
       if (!_unreadLoaded) {
         for (final n in notifications) {
@@ -213,7 +214,7 @@ class NotificationCubit extends Cubit<NotificationState> {
         _unread.clear();
         for (final n in unread) {
           if (n.id != null &&
-              !n.isChatRelated &&
+              !n.excludedFromEmployeeInbox &&
               n.isViewed != true &&
               (_readVersions[n.id] ?? 0) <= revision) {
             _unread[n.id!] = n;
@@ -307,8 +308,10 @@ class NotificationCubit extends Cubit<NotificationState> {
       if (isClosed || request != _request) return;
       _pageNumber = nextPage;
       notifications = [
-        ...userResponse.data.where((n) => !n.isChatRelated).map((n) =>
-            _readVersions.containsKey(n.id) ? n.copyWith(isViewed: true) : n),
+        ...userResponse.data.where((n) => !n.excludedFromEmployeeInbox).map(
+            (n) => _readVersions.containsKey(n.id)
+                ? n.copyWith(isViewed: true)
+                : n),
         ...notifications
       ];
 

@@ -102,8 +102,14 @@ class AppLocalizations {
       AppLanguageKeys.durationValue: 'قيمة المدة',
       AppLanguageKeys.employeeAvailablePermissions: 'الصلاحيات المتاحة للموظف',
       AppLanguageKeys.employeePermissions: 'صلاحيات الموظف',
-      AppLanguageKeys.acceptAllOrders: 'قبول جميع الطلبات',
-      AppLanguageKeys.changeOrderStatus: 'تغيير حالة الطلب',
+      AppLanguageKeys.acceptAllOrders: 'الوصول لكل الطلبات',
+      AppLanguageKeys.acceptAndRefuseAndAssignOrders:
+          'قبول ورفض وإسناد الطلبات',
+      AppLanguageKeys.myServiceOrders: 'طلبات خدماتي',
+      AppLanguageKeys.assignOrder: 'إسناد الطلب',
+      AppLanguageKeys.chooseEligibleEmployees: 'اختر الموظفين المؤهلين',
+      AppLanguageKeys.noEligibleEmployees:
+          'لا يوجد موظفون مسجلون في خدمات هذا الطلب',
       AppLanguageKeys.maintenance: 'الصيانة',
       AppLanguageKeys.noServicesAssigned: 'لم يتم تعيين خدمات',
       AppLanguageKeys.orders: 'الطلبات',
@@ -1548,8 +1554,14 @@ class AppLocalizations {
       AppLanguageKeys.employeeAvailablePermissions:
           'Available Permissions for Employee',
       AppLanguageKeys.employeePermissions: 'Employee Permissions',
-      AppLanguageKeys.acceptAllOrders: 'Accept All Orders',
-      AppLanguageKeys.changeOrderStatus: 'Change Order Status',
+      AppLanguageKeys.acceptAllOrders: 'Access All Orders',
+      AppLanguageKeys.acceptAndRefuseAndAssignOrders:
+          'Accept, Refuse and Assign Orders',
+      AppLanguageKeys.myServiceOrders: 'My Service Orders',
+      AppLanguageKeys.assignOrder: 'Assign order',
+      AppLanguageKeys.chooseEligibleEmployees: 'Choose eligible employees',
+      AppLanguageKeys.noEligibleEmployees:
+          'No employees registered for this order’s services',
       AppLanguageKeys.maintenance: 'Maintenance',
       AppLanguageKeys.noServicesAssigned: 'No services assigned',
       AppLanguageKeys.orders: 'Orders',
@@ -2934,11 +2946,14 @@ Providers will be notified of any major changes via the platform or email.
   }
 
   String translate(String key) {
-    return (_localizedValues[locale.languageCode] ?? _localizedValues['en']!)[key] ?? key;
+    return (_localizedValues[locale.languageCode] ??
+            _localizedValues['en']!)[key] ??
+        key;
   }
 
   bool containsKey(String key) =>
-      (_localizedValues[locale.languageCode] ?? _localizedValues['en']!).containsKey(key);
+      (_localizedValues[locale.languageCode] ?? _localizedValues['en']!)
+          .containsKey(key);
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

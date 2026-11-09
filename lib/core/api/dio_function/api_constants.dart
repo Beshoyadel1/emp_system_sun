@@ -68,8 +68,7 @@ class ApiLink {
 
   static const String getUserInfo =
       "${ApiConfig.baseUrlApi}/${ApiConfig.user}/getUserInfo";
-  static const String notificationHub =
-      "${ApiConfig.baseUrlApi}/sunStatusHub";
+  static const String notificationHub = "${ApiConfig.baseUrlApi}/sunStatusHub";
   static const String makeNotificationViewed =
       "${ApiConfig.baseUrlApi}/${ApiConfig.notification}/MakeNotificationViewed";
 
@@ -107,6 +106,8 @@ class ApiLink {
   //Employee
   static const String getProviderEmployees =
       "${ApiConfig.baseUrlApi}/${ApiConfig.employeeService}/GetProviderEmployees";
+  static const String getProviderEmployeesByServices =
+      "${ApiConfig.baseUrlApi}/${ApiConfig.employeeService}/GetProviderEmployeesByServices";
   static const String getEmployeeServices =
       "${ApiConfig.baseUrlApi}/${ApiConfig.employeeService}/GetEmployeeServices";
   static const String getBranchEmployees =
@@ -249,7 +250,6 @@ class ApiLink {
   static const String setDefaultCard =
       "${ApiConfig.baseUrlApi}/${ApiConfig.paymentCard}/SetDefaultCard";
 
-
   //Packages
   static const String getPackage =
       "${ApiConfig.baseUrlApi}/${ApiConfig.packages}/GetPackage";
@@ -391,6 +391,9 @@ class NotificationTopic {
 
 class NotificationTypes {
   static const String chat = "chat";
+  static const String openCloseChat = "OpenCloseChat";
+  static const String supportTicket = "support_ticket";
+  static const String orderAssigned = "order_assigned";
   static const String newOrder = "new_order";
   static const String updateOrderStatus = "update_order_status";
   static const String cancelOrder = "cancel_order";
@@ -422,17 +425,17 @@ class FuelTypeModel {
 }
 
 class FuelTypes {
-  static  const FuelTypeModel petrol =
-  FuelTypeModel(id: 1, name: AppLanguageKeys.petrol);
+  static const FuelTypeModel petrol =
+      FuelTypeModel(id: 1, name: AppLanguageKeys.petrol);
 
   static const FuelTypeModel diesel =
-  FuelTypeModel(id: 2, name: AppLanguageKeys.diesel);
+      FuelTypeModel(id: 2, name: AppLanguageKeys.diesel);
 
   static const FuelTypeModel electricity =
-  FuelTypeModel(id: 3, name: AppLanguageKeys.electricity);
+      FuelTypeModel(id: 3, name: AppLanguageKeys.electricity);
 
   static const FuelTypeModel hybrid =
-  FuelTypeModel(id: 4, name: AppLanguageKeys.hybrid);
+      FuelTypeModel(id: 4, name: AppLanguageKeys.hybrid);
 
   static const List<FuelTypeModel> all = [
     petrol,
@@ -534,7 +537,6 @@ class UserType {
   static const int adminUser = 6;
 }
 
-
 Color legendColor(int index) {
   const colors = [
     AppColors.brownColor,
@@ -622,7 +624,7 @@ class WalletTransactionType {
   static const bool withdrawal = false;
 }
 
-class DiscountType{
+class DiscountType {
   static const int fixedAmount = 1;
   static const int percentage = 2;
 }

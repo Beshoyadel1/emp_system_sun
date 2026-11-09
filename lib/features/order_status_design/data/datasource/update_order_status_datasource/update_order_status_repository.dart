@@ -7,7 +7,7 @@ Future<bool> updateOrderStatusFunction({
 }) async {
   try {
     final response = await Network.postDataWithBodyAndParams(
-      null,
+      updateOrderStatusRequest.employeeIds,
       updateOrderStatusRequest.toJson(),
       ApiLink.updateOrderStatus,
     );

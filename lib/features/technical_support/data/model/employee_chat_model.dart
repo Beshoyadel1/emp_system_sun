@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:emp_system_sun/features/notifications/data/model/notification_payload.dart';
 
 /// Represents an active or historical conversation item with another entity.
 class GetAllMessagesModel {
@@ -100,7 +101,8 @@ class GetAllMessagesModel {
           ? unviewedCount.toInt()
           : (int.tryParse('$unviewedCount') ?? 0),
       directLastMessage: directLastMsg,
-      closed: json['isclosed'] is bool ? json['isclosed'] : null,
+      closed: NotificationPayload.boolean(
+          NotificationPayload.value(json, 'isclosed')),
     );
   }
 
@@ -127,6 +129,8 @@ class GetAllMessagesModel {
 /// Represents an individual chat message entity.
 class ChatMessageModel {
   final int id;
+  // Local correlation only; never sent as a backend field.
+  final int? localId;
   final int fromUser;
   final int toUser;
   final int fromUserType;
@@ -141,6 +145,7 @@ class ChatMessageModel {
 
   ChatMessageModel({
     required this.id,
+    this.localId,
     required this.fromUser,
     required this.toUser,
     required this.fromUserType,
@@ -162,7 +167,6 @@ class ChatMessageModel {
     } else if (rawDate is DateTime) {
       parsedDate = rawDate;
     }
-    parsedDate ??= DateTime.now();
 
     int parseNum(dynamic val) {
       if (val is num) return val.toInt();
@@ -231,14 +235,13 @@ class ChatMessageModel {
       toUserType: parseNum(rawToUserType),
       message: rawMessage.toString(),
       date: parsedDate,
-      viewed: json['viewed'] == true ||
-          json['VIEWED'] == true ||
-          json['viewed'] == 1 ||
-          json['isviewed'] == true ||
-          json['isViewed'] == true,
-      isClosed: json['isclosed'] == true ||
-          json['ISCLOSED'] == true ||
-          json['isclosed'] == 1,
+      viewed: NotificationPayload.boolean(
+              NotificationPayload.value(json, 'viewed') ??
+                  NotificationPayload.value(json, 'isviewed')) ??
+          false,
+      isClosed: NotificationPayload.boolean(
+              NotificationPayload.value(json, 'isclosed')) ??
+          false,
       orderId: rawOrderId != null ? parseNum(rawOrderId) : null,
       harageId: rawHarageId != null ? parseNum(rawHarageId) : null,
       fromUserName: json['fromusername'] ??
@@ -271,6 +274,22 @@ class ChatMessageModel {
   bool isOutgoing(int myUserId, int myUserType) {
     return fromUser == myUserId && fromUserType == myUserType;
   }
+
+  ChatMessageModel copyWith({int? localId, bool? viewed}) => ChatMessageModel(
+        id: id,
+        localId: localId ?? this.localId,
+        fromUser: fromUser,
+        toUser: toUser,
+        fromUserType: fromUserType,
+        toUserType: toUserType,
+        message: message,
+        date: date,
+        viewed: viewed ?? this.viewed,
+        isClosed: isClosed,
+        orderId: orderId,
+        harageId: harageId,
+        fromUserName: fromUserName,
+      );
 }
 
 /// Payload sent to the backend when sending a chat message.
@@ -353,8 +372,12 @@ class WorkTeamMemberModel {
       decodedImage = rawImage;
     }
 
-    final idVal = json['userid'] ?? json['USERID'] ?? json['userId'] ?? json['id'];
-    final typeVal = json['usertype'] ?? json['USERTYPE'] ?? json['userType'] ?? json['type'];
+    final idVal =
+        json['userid'] ?? json['USERID'] ?? json['userId'] ?? json['id'];
+    final typeVal = json['usertype'] ??
+        json['USERTYPE'] ??
+        json['userType'] ??
+        json['type'];
 
     return WorkTeamMemberModel(
       userid: idVal is num ? idVal.toInt() : int.tryParse('$idVal'),
@@ -362,7 +385,8 @@ class WorkTeamMemberModel {
       name: json['name'] ?? json['NAME'] ?? json['username'],
       latinname: json['latinname'] ?? json['LATINNAME'] ?? json['name'],
       jobname: json['jobname'] ?? json['JOBNAME'],
-      latinjobname: json['latinjobname'] ?? json['LATINJOBNAME'] ?? json['jobname'],
+      latinjobname:
+          json['latinjobname'] ?? json['LATINJOBNAME'] ?? json['jobname'],
       image: decodedImage,
     );
   }

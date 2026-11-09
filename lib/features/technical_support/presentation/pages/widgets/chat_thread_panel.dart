@@ -41,10 +41,23 @@ class ChatThreadPanel extends StatelessWidget {
                 showBackButton: showBackButton,
                 onBack: onBack,
               ),
+              if (state.errorMessage != null)
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Flexible(child: Text(state.errorMessage!)),
+                  TextButton.icon(
+                    onPressed: state.isLoadingOlder
+                        ? null
+                        : () => cubit.getOlderMessages(initialLoad: true),
+                    icon: const Icon(Icons.refresh),
+                    label: Text(
+                        Localizations.localeOf(context).languageCode == 'ar'
+                            ? 'إعادة تحميل الرسائل'
+                            : 'Retry loading messages'),
+                  ),
+                ]),
               Expanded(
                 child: ChatMessagesScrollView(
-                  key:
-                      ValueKey('${activeChat.touser}:${activeChat.tousertype}'),
+                  key: ValueKey(cubit.selectionVersion),
                   messages: activeChat.messages ?? [],
                   noOldMessages: activeChat.noOldMessages,
                   isLoadingOlder: state.isLoadingOlder,
@@ -60,12 +73,13 @@ class ChatThreadPanel extends StatelessWidget {
                       Localizations.localeOf(context).languageCode == 'ar'
                           ? 'المحادثة مغلقة'
                           : 'Conversation closed',
-                    ))
-              else
-                ChatComposeBar(
-                  isSending: state.isSendingMessage,
-                  onSend: (text) => cubit.sendMessage(text),
-                ),
+                    )),
+              ChatComposeBar(
+                key: ValueKey(cubit.selectionVersion),
+                enabled: !activeChat.isClosed,
+                isSending: state.isSendingMessage,
+                onSend: (text) => cubit.sendMessage(text),
+              ),
             ],
           ),
         );

@@ -41,8 +41,16 @@ if (!firebase.apps.length) {
 
 const messaging = firebase.messaging();
 
-messaging.onBackgroundMessage((payload) => {
-  console.log("[firebase-messaging-sw.js] Received background message for Employee: ", payload);
+messaging.onBackgroundMessage(async (payload) => {
+  // Deliver the event to mounted tabs even while hidden. Returning to the tab
+  // must not need a history refresh, or a click, to update the open conversation.
+  const scope = new URL('./', self.location.href).href;
+  const windows = await clients.matchAll({ type: 'window', includeUncontrolled: true });
+  for (const client of windows) {
+    if (client.url.startsWith(scope)) {
+      client.postMessage({ type: 'SUN_NOTIFICATION_RECEIVED', payload });
+    }
+  }
 
   if (payload.notification && (payload.notification.title || payload.notification.body)) {
     return;
@@ -60,5 +68,5 @@ messaging.onBackgroundMessage((payload) => {
     data: payload,
   };
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  await self.registration.showNotification(notificationTitle, notificationOptions);
 });

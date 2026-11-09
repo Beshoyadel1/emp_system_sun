@@ -2,7 +2,7 @@ import '../../data/model/notification_payload.dart';
 import '../../../technical_support/data/model/chat_events/chat_events.dart';
 import 'notification_audio_service/notification_audio_service.dart';
 
-enum NotificationAlert { silent, chat, order }
+enum NotificationAlert { silent, chat, soundOnly, order, notice }
 
 class NotificationAlertService {
   const NotificationAlertService(
@@ -11,10 +11,18 @@ class NotificationAlertService {
 
   NotificationAlert alertFor(NotificationPayload payload,
       {required int userId, required int userType}) {
+    if (payload.kind == NotificationKind.chatStatus) {
+      return NotificationAlert.soundOnly;
+    }
     if (payload.kind == NotificationKind.newOrder ||
         payload.kind == NotificationKind.orderStatus ||
         payload.kind == NotificationKind.orderAssigned) {
       return NotificationAlert.order;
+    }
+    if (payload.kind == NotificationKind.serviceRequest ||
+        payload.kind == NotificationKind.serviceOffer ||
+        payload.kind == NotificationKind.ownership) {
+      return NotificationAlert.notice;
     }
     if (payload.kind != NotificationKind.chat) return NotificationAlert.silent;
     final sender = payload.integer('fromuser') ?? payload.integer('fromuserid');

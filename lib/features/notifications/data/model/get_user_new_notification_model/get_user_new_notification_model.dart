@@ -110,19 +110,21 @@ class NotificationModel {
       }
     }
 
+    final fields = NotificationPayload(json);
     return NotificationModel(
-      id: json["id"],
+      id: fields.integer('id'),
       title: json["title"],
       latinTitle: json["latintitle"],
       description: json["description"],
       latinDesc: json["latindesc"],
-      toUserId: json["touserid"],
-      toUserType: json["tousertype"],
-      fromUserId: json["fromuserid"],
-      fromUserType: json["fromusertype"],
-      isViewed: json["isviewed"],
+      toUserId: fields.integer('touserid') ?? fields.integer('touser'),
+      toUserType: fields.integer('tousertype'),
+      fromUserId: fields.integer('fromuserid') ?? fields.integer('fromuser'),
+      fromUserType: fields.integer('fromusertype'),
+      isViewed: NotificationPayload.boolean(fields.get('isviewed')),
       date: parseDate(json["date"]),
-      payload: NotificationPayload.value(json, 'type') == null
+      payload: NotificationPayload.value(json, 'type') == null &&
+              NotificationPayload.value(json, 'eventType') == null
           ? null
           : NotificationPayload(json),
     );
@@ -170,8 +172,7 @@ class NotificationModel {
 
   bool get isChatRelated {
     if (payload?.type.isNotEmpty == true) {
-      return payload!.kind == NotificationKind.chat ||
-          payload!.kind == NotificationKind.chatStatus;
+      return payload!.kind == NotificationKind.chat;
     }
     final text =
         "${title ?? ''} ${latinTitle ?? ''} ${description ?? ''} ${latinDesc ?? ''}"
@@ -182,4 +183,9 @@ class NotificationModel {
         text.contains("رسالة") ||
         text.contains("شات");
   }
+
+  bool get excludedFromEmployeeInbox =>
+      isChatRelated ||
+      payload?.kind == NotificationKind.supportTicket ||
+      payload?.kind == NotificationKind.offerAccepted;
 }

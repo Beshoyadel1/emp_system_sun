@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:emp_system_sun/core/api/dio_function/api_constants.dart';
 
 enum NotificationKind {
   newOrder,
@@ -10,6 +11,7 @@ enum NotificationKind {
   serviceOffer,
   chat,
   chatStatus,
+  supportTicket,
   ownership,
   general,
 }
@@ -99,6 +101,39 @@ class NotificationPayload {
 
   dynamic get(String key) => value(data, key);
   int? integer(String key) => int.tryParse('${get(key)}');
+  static bool? boolean(dynamic raw) => switch ('$raw'.toLowerCase()) {
+        'true' || '1' => true,
+        'false' || '0' => false,
+        _ => null,
+      };
+  bool? get chatClosed => boolean(get('isclosed'));
+
+  /// Both identity and account type are required, in either direction.
+  ({int id, int type})? chatPeer(int userId, int userType) {
+    final from = integer('fromuser') ?? integer('fromuserid');
+    final to = integer('touser') ?? integer('touserid');
+    final fromType = integer('fromusertype');
+    final toType = integer('tousertype');
+    if (userId <= 0 ||
+        from == null ||
+        to == null ||
+        fromType == null ||
+        toType == null ||
+        fromType <= 0 ||
+        toType <= 0 ||
+        from < 0 ||
+        to < 0) {
+      return null;
+    }
+    if (from == userId && fromType == userType) {
+      return (id: to, type: toType);
+    }
+    if (to == userId && toType == userType) {
+      return (id: from, type: fromType);
+    }
+    return null;
+  }
+
   String get type => normalize('${get('type') ?? get('eventType') ?? ''}');
 
   NotificationKind get kind => switch (type) {
@@ -116,6 +151,7 @@ class NotificationPayload {
         'newserviceoffer' => NotificationKind.serviceOffer,
         'chat' || 'receivemessage' => NotificationKind.chat,
         'openclosechat' => NotificationKind.chatStatus,
+        'supportticket' => NotificationKind.supportTicket,
         'transferownership' => NotificationKind.ownership,
         _ => NotificationKind.general,
       };
@@ -124,7 +160,6 @@ class NotificationPayload {
         NotificationKind.newOrder,
         NotificationKind.orderStatus,
         NotificationKind.orderAssigned,
-        NotificationKind.offerAccepted,
       }.contains(kind);
 
   Map<String, dynamic> get orderPatch {
@@ -158,8 +193,31 @@ class NotificationPayload {
       integer('notificationId') ?? int.tryParse('${value(notification, 'id')}');
 
   bool isFor(int userId, int userType) {
+    if (kind == NotificationKind.supportTicket &&
+        userType != UserType.adminUser) {
+      return false;
+    }
+    if (kind == NotificationKind.offerAccepted &&
+        userType != UserType.providerUser) {
+      return false;
+    }
     final chat =
         kind == NotificationKind.chat || kind == NotificationKind.chatStatus;
+    // Harage chat already uses a broadcast recipient (0/type 0), with a
+    // separate HARAGEID. Its existing consumer validates that context.
+    if (chat &&
+        !(kind == NotificationKind.chat && (integer('harageid') ?? 0) > 0)) {
+      final peer = chatPeer(userId, userType);
+      if (peer == null) return false;
+      if (kind == NotificationKind.chatStatus) {
+        return peer.id > 0 &&
+            peer.type == UserType.adminUser &&
+            chatClosed != null &&
+            (integer('orderid') ?? 0) == 0 &&
+            (integer('harageid') ?? 0) == 0;
+      }
+      return true;
+    }
     final id = integer('toUserId') ??
         integer('toUser') ??
         (chat ? null : integer('userId'));
@@ -170,6 +228,11 @@ class NotificationPayload {
 
   String get key {
     if (messageId?.isNotEmpty == true) return 'push:$messageId';
+    // Identical open/close data can recur across tickets. Without a transport
+    // event ID, content alone cannot identify a status transition forever.
+    if (kind == NotificationKind.chatStatus) {
+      return 'chatStatus:${sentAt.microsecondsSinceEpoch}:${jsonEncode(data)}';
+    }
     if (kind == NotificationKind.chat && (integer('id') ?? 0) > 0) {
       return 'chat:${integer('id')}';
     }

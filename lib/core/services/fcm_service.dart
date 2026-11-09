@@ -3,7 +3,6 @@ import 'auth_session.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:emp_system_sun/core/api/dio_function/api_constants.dart';
 import 'package:emp_system_sun/core/services/browser_notification.dart';
 import 'package:emp_system_sun/core/setup_git_it.dart';
@@ -39,8 +38,6 @@ class FcmService {
   StreamSubscription<String>? _tokenSubscription;
   StreamSubscription<RemoteMessage>? _messageSubscription, _openSubscription;
   void Function()? _stopWebClicks;
-  AppLifecycleListener? _lifecycleListener;
-  bool _wasInBackground = false;
   final Set<String> _opened = {};
   final List<({NotificationPayload payload, bool opened})> _pendingDisplay = [];
 
@@ -65,15 +62,6 @@ class FcmService {
     }
     _authVersion = version;
     getIt<EmployeeChatCubit>().configureUser(userId, userType);
-    _lifecycleListener ??= AppLifecycleListener(onStateChange: (state) {
-      if (state == AppLifecycleState.paused ||
-          state == AppLifecycleState.hidden) {
-        _wasInBackground = true;
-      } else if (state == AppLifecycleState.resumed && _wasInBackground) {
-        _wasInBackground = false;
-        if (_userId > 0) ChatEvents.instance.requestSync();
-      }
-    });
     if (!isSupported || _isInitialized) return;
     _isInitialized = true;
     final session = _session;
@@ -93,7 +81,7 @@ class FcmService {
                       (raw['sentTime'] as num).toInt())
                   : DateTime.tryParse('${raw['sentAt'] ?? ''}'),
             ),
-            opened: true);
+            opened: raw['sunOpened'] != false);
       });
       _tokenSubscription = messaging.onTokenRefresh.listen((token) {
         if (session != _session || !AuthSession.isCurrent(version)) return;
@@ -180,9 +168,6 @@ class FcmService {
       if (fresh && payload.kind == NotificationKind.chat) {
         final data = Map<String, dynamic>.from(payload.data);
         data['message'] ??= payload.body;
-        if (NotificationPayload.value(data, 'date') == null) {
-          data['date'] = payload.sentAt.toIso8601String();
-        }
         ChatEvents.instance.add(ReceiveMessageData.fromJson(data));
       } else if (fresh && payload.kind == NotificationKind.chatStatus) {
         getIt<EmployeeChatCubit>().updateChatStatus(payload);
@@ -239,7 +224,8 @@ class FcmService {
     final alert = module.alertService
         .alertFor(payload, userId: _userId, userType: _userType);
     if (alert == NotificationAlert.silent) return;
-    if (alert == NotificationAlert.chat) {
+    if (alert == NotificationAlert.chat ||
+        alert == NotificationAlert.soundOnly) {
       unawaited(module.alertService.playChat().catchError((Object error) {
         debugPrint('Chat sound: $error');
       }));
@@ -289,9 +275,6 @@ class FcmService {
     if (getIt.isRegistered<EmployeeChatCubit>()) {
       getIt<EmployeeChatCubit>().reset();
     }
-    _lifecycleListener?.dispose();
-    _lifecycleListener = null;
-    _wasInBackground = false;
     ChatEvents.instance.clearActiveHarages();
     await NotificationModule.instance.dialogService.dismiss();
     await NotificationModule.instance.alertService

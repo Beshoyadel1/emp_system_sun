@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/employee_chat_cubit/employee_chat_cubit.dart';
+import '../bloc/employee_chat_cubit/employee_chat_state.dart';
 import 'widgets/chat_thread_panel.dart';
 
 class MobileChatPage extends StatefulWidget {
@@ -11,19 +12,17 @@ class MobileChatPage extends StatefulWidget {
 
 class _MobileChatPageState extends State<MobileChatPage> {
   late final EmployeeChatCubit _chat;
-  int? _userId, _userType;
+  late final int _selectionVersion;
   @override
   void initState() {
     super.initState();
     _chat = context.read<EmployeeChatCubit>();
-    _userId = _chat.state.selectedChat?.touser;
-    _userType = _chat.state.selectedChat?.tousertype;
+    _selectionVersion = _chat.selectionVersion;
   }
 
   @override
   void dispose() {
-    if (_chat.state.selectedChat?.touser == _userId &&
-        _chat.state.selectedChat?.tousertype == _userType) {
+    if (_chat.selectionVersion == _selectionVersion) {
       _chat.clearSelectedChat();
     }
     super.dispose();
@@ -31,11 +30,20 @@ class _MobileChatPageState extends State<MobileChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: ChatThreadPanel(
-          showBackButton: true,
-          onBack: () => Navigator.of(context).maybePop(),
+    return BlocListener<EmployeeChatCubit, EmployeeChatState>(
+      listenWhen: (previous, current) =>
+          previous.selectedChat != null && current.selectedChat == null,
+      listener: (context, state) {
+        if (ModalRoute.of(context)?.isCurrent == true) {
+          Navigator.of(context).maybePop();
+        }
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: ChatThreadPanel(
+            showBackButton: true,
+            onBack: () => Navigator.of(context).maybePop(),
+          ),
         ),
       ),
     );

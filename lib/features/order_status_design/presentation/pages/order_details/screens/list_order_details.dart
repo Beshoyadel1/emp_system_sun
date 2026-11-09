@@ -35,7 +35,6 @@ class ListOrderDetails extends StatelessWidget {
             ),
           )..getOrderDetails(),
         ),
-
         BlocProvider<OrderStatusCubit>(
           create: (_) => OrderStatusCubit(),
         ),
@@ -43,15 +42,14 @@ class ListOrderDetails extends StatelessWidget {
       child: BlocListener<OrderStatusCubit, OrderStatusState>(
         listener: (context, state) {
           if (state is OrderStatusSuccess) {
-            context
-                .read<GetOrderDetailsCubit>()
-                .getOrderDetails();
+            context.read<GetOrderDetailsCubit>().getOrderDetails();
           }
 
           if (state is OrderStatusError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(AppLocalizations.of(context).translate(state.message)),
+                content:
+                    Text(AppLocalizations.of(context).translate(state.message)),
               ),
             );
           }
@@ -71,7 +69,8 @@ class ListOrderDetails extends StatelessWidget {
               return Center(
                 child: Padding(
                   padding: const EdgeInsets.all(40),
-                  child: Text(AppLocalizations.of(context).translate(state.message),
+                  child: Text(
+                    AppLocalizations.of(context).translate(state.message),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -93,11 +92,9 @@ class ListOrderDetails extends StatelessWidget {
                         status: orderDetails.status ?? 0,
                         id: orderDetails.id.toString(),
                       ),
-
                       ViewListDataOrder(
                         orderDetailsModel: orderDetails,
                       ),
-
                       if (!isMobile)
                         Row(
                           spacing: 10,
@@ -107,39 +104,45 @@ class ListOrderDetails extends StatelessWidget {
                               flex: 2,
                               child: Column(
                                 spacing: 10,
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   DesignCarDataOrders(
                                     orderDetailsModel: orderDetails,
                                   ),
-
                                   OrderStatusActionsWidget(
                                     status: orderDetails.status,
                                     orderId: orderDetails.id ?? 0,
+                                    providerId: orderDetails.provid,
+                                    branchId: orderDetails.branchid,
+                                    serviceIds: orderDetails.services
+                                            ?.map((service) => service.id)
+                                            .whereType<int>()
+                                            .toList() ??
+                                        const [],
+                                    serviceScopeIds: orderDetails.services
+                                            ?.expand((service) =>
+                                                [service.id, service.parentid])
+                                            .whereType<int>()
+                                            .toList() ??
+                                        const [],
                                   ),
                                 ],
                               ),
                             ),
-
                             Expanded(
                               child: Column(
                                 spacing: 10,
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   DataTimeLineTileOrderDetailsWidget(
                                     orderStatus: orderDetails.status,
                                   ),
-
                                   DesignNotesOrder(
                                     note: orderDetails.notes ?? "",
                                   ),
-
                                   ContainerContactWithCustomerOrderDetails(
                                     orderDetailsModel: orderDetails,
                                   ),
-
                                   DesignBillOrder(
                                     orderDetailsModel: orderDetails,
                                   ),
@@ -156,24 +159,32 @@ class ListOrderDetails extends StatelessWidget {
                             DesignCarDataOrders(
                               orderDetailsModel: orderDetails,
                             ),
-
                             OrderStatusActionsWidget(
                               status: orderDetails.status,
                               orderId: orderDetails.id ?? 0,
+                              providerId: orderDetails.provid,
+                              branchId: orderDetails.branchid,
+                              serviceIds: orderDetails.services
+                                      ?.map((service) => service.id)
+                                      .whereType<int>()
+                                      .toList() ??
+                                  const [],
+                              serviceScopeIds: orderDetails.services
+                                      ?.expand((service) =>
+                                          [service.id, service.parentid])
+                                      .whereType<int>()
+                                      .toList() ??
+                                  const [],
                             ),
-
                             DataTimeLineTileOrderDetailsWidget(
                               orderStatus: orderDetails.status,
                             ),
-
                             DesignNotesOrder(
                               note: orderDetails.notes ?? "",
                             ),
-
                             ContainerContactWithCustomerOrderDetails(
                               orderDetailsModel: orderDetails,
                             ),
-
                             DesignBillOrder(
                               orderDetailsModel: orderDetails,
                             ),

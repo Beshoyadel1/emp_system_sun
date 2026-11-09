@@ -3,11 +3,13 @@ import '../../../../../../core/theming/colors.dart';
 
 class ChatComposeBar extends StatefulWidget {
   final bool isSending;
+  final bool enabled;
   final ValueChanged<String> onSend;
 
   const ChatComposeBar({
     super.key,
     required this.isSending,
+    this.enabled = true,
     required this.onSend,
   });
 
@@ -41,7 +43,7 @@ class _ChatComposeBarState extends State<ChatComposeBar> {
 
   void _submit() {
     final text = _controller.text.trim();
-    if (text.isEmpty || widget.isSending) return;
+    if (text.isEmpty || widget.isSending || !widget.enabled) return;
     widget.onSend(text);
     _controller.clear();
   }
@@ -68,6 +70,7 @@ class _ChatComposeBarState extends State<ChatComposeBar> {
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: TextField(
+                  enabled: widget.enabled,
                   controller: _controller,
                   textInputAction: TextInputAction.send,
                   minLines: 1,
@@ -88,7 +91,7 @@ class _ChatComposeBarState extends State<ChatComposeBar> {
             ),
             const SizedBox(width: 8),
             MouseRegion(
-              cursor: (_hasContent && !widget.isSending)
+              cursor: (_hasContent && !widget.isSending && widget.enabled)
                   ? SystemMouseCursors.click
                   : SystemMouseCursors.basic,
               child: AnimatedContainer(
@@ -96,7 +99,7 @@ class _ChatComposeBarState extends State<ChatComposeBar> {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: (_hasContent && !widget.isSending)
+                  color: (_hasContent && !widget.isSending && widget.enabled)
                       ? AppColors.mainColor
                       : AppColors.scaffoldBackground,
                   shape: BoxShape.circle,
@@ -120,7 +123,9 @@ class _ChatComposeBarState extends State<ChatComposeBar> {
                               : AppColors.appGrey,
                         ),
                   onPressed:
-                      (_hasContent && !widget.isSending) ? _submit : null,
+                      (_hasContent && !widget.isSending && widget.enabled)
+                          ? _submit
+                          : null,
                 ),
               ),
             ),

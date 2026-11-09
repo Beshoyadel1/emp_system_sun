@@ -12,60 +12,63 @@ class EmployeeWrapperRequest {
   });
 
   factory EmployeeWrapperRequest.fromJson(
-      dynamic json,
-      ) {
+    dynamic json,
+  ) {
     if (json == null || json is! Map) {
       return const EmployeeWrapperRequest();
     }
 
-    final employeeJson = json["employeeDetails"];
+    dynamic field(String name) {
+      for (final entry in json.entries) {
+        if (entry.key.toString().toLowerCase() == name.toLowerCase()) {
+          return entry.value;
+        }
+      }
+      return null;
+    }
+
+    final employeeJson = field('employeeDetails');
+    final servicesJson = field('serviceIds');
+    final permissionsJson = field('permissions');
 
     return EmployeeWrapperRequest(
-      employeeDetails:
-      employeeJson is Map
+      employeeDetails: employeeJson is Map
           ? EmployeeDetailsRequest.fromJson(
-        Map<String, dynamic>.from(
-          employeeJson,
-        ),
-      )
+              Map<String, dynamic>.from(
+                employeeJson,
+              ),
+            )
           : null,
-
-      serviceIds:
-      json["serviceIds"] is List
-          ? List<int>.from(
-        json["serviceIds"],
-      )
+      serviceIds: servicesJson is List
+          ? servicesJson
+              .map((id) => int.tryParse('$id'))
+              .whereType<int>()
+              .toList()
           : const [],
-
-      permissions:
-      json["permissions"] is Map
+      permissions: permissionsJson is Map
           ? EmployeePermissionsRequest.fromJson(
-        Map<String, dynamic>.from(
-          json["permissions"],
-        ),
-      )
+              Map<String, dynamic>.from(
+                permissionsJson,
+              ),
+            )
           : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      "employeeDetails":
-      employeeDetails?.toJson(),
-
-      "serviceIds":
-      serviceIds,
-
-      "permissions":
-      permissions?.toJson(),
+      "employeeDetails": employeeDetails?.toJson(),
+      "serviceIds": serviceIds,
+      "permissions": permissions?.toJson(),
     };
   }
 }
+
 class EmployeePermissionsRequest {
   final int? employeeId;
 
   final bool? acceptAllOrders;
-  final bool? changeOrderStatus;
+  final bool? acceptAndRefuseAndAssignOrders;
   final bool? harage;
   final bool? maintenanceAndInternalServices;
   final bool? mobileServices;
@@ -76,7 +79,7 @@ class EmployeePermissionsRequest {
   const EmployeePermissionsRequest({
     this.employeeId,
     this.acceptAllOrders,
-    this.changeOrderStatus,
+    this.acceptAndRefuseAndAssignOrders,
     this.harage,
     this.maintenanceAndInternalServices,
     this.mobileServices,
@@ -86,31 +89,26 @@ class EmployeePermissionsRequest {
   });
 
   factory EmployeePermissionsRequest.fromJson(
-      Map<String, dynamic> json,
-      ) {
+    Map<String, dynamic> json,
+  ) {
+    dynamic permission(String name) {
+      for (final entry in json.entries) {
+        if (entry.key.toLowerCase() == name.toLowerCase()) return entry.value;
+      }
+      return null;
+    }
+
     return EmployeePermissionsRequest(
-      employeeId: json["employeeid"],
-
-      acceptAllOrders: json["acceptallorders"],
-
-      changeOrderStatus: json["changeorderstatus"],
-
+      employeeId: permission('employeeid'),
+      acceptAllOrders: permission('acceptallorders'),
+      acceptAndRefuseAndAssignOrders:
+          permission("acceptandrefuseandassignorders"),
       harage: json["harage"],
-
-      maintenanceAndInternalServices:
-      json["maintenanceandinternalservices"],
-
-      mobileServices:
-      json["mobileservices"],
-
-      spareParts:
-      json["spareparts"],
-
-      servicePackage:
-      json["servicepackage"],
-
-      petrol:
-      json["petrol"],
+      maintenanceAndInternalServices: json["maintenanceandinternalservices"],
+      mobileServices: json["mobileservices"],
+      spareParts: json["spareparts"],
+      servicePackage: json["servicepackage"],
+      petrol: json["petrol"],
     );
   }
 
@@ -118,10 +116,9 @@ class EmployeePermissionsRequest {
     return {
       "employeeid": employeeId,
       "acceptallorders": acceptAllOrders,
-      "changeorderstatus": changeOrderStatus,
+      "acceptandrefuseandassignorders": acceptAndRefuseAndAssignOrders,
       "harage": harage,
-      "maintenanceandinternalservices":
-      maintenanceAndInternalServices,
+      "maintenanceandinternalservices": maintenanceAndInternalServices,
       "mobileservices": mobileServices,
       "spareparts": spareParts,
       "servicepackage": servicePackage,

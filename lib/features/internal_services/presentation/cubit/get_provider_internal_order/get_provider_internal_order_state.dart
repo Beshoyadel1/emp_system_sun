@@ -20,6 +20,7 @@ class GetProviderInternalOrderCubit
   final NotificationUpdates _updates;
   late final StreamSubscription<NotificationPayload> _subscription;
   int? _orderType, _serviceId, _branchId, _providerId;
+  Set<int>? _allowedServiceIds;
   int _request = 0;
   final Map<int, Map<String, dynamic>> _pendingPatches = {};
 
@@ -46,6 +47,14 @@ class GetProviderInternalOrderCubit
       if (order.services == null) return null;
       if (!order.services!
           .any((s) => s.id == _serviceId || s.parentId == _serviceId)) {
+        return false;
+      }
+    }
+    if (_allowedServiceIds != null) {
+      if (order.services == null) return null;
+      if (!order.services!.any((s) =>
+          _allowedServiceIds!.contains(s.id) ||
+          _allowedServiceIds!.contains(s.parentId))) {
         return false;
       }
     }
@@ -118,26 +127,71 @@ class GetProviderInternalOrderCubit
         }
         return;
       }
-      _providerId = user.employeeDetails?.employeeDetails?.provid;
-      _branchId = user.employeeDetails?.employeeDetails?.branchid;
+      final employee = user.employeeDetails;
+      if (employee == null) {
+        emit(const GetProviderInternalOrderError('Employee details missing'));
+        return;
+      }
+      final allOrders = employee.permissions?.acceptAllOrders == true;
+      final managesOrders =
+          employee.permissions?.acceptAndRefuseAndAssignOrders == true;
+      _providerId = employee.employeeDetails?.provid;
+      _branchId = allOrders || managesOrders
+          ? null
+          : employee.employeeDetails?.branchid;
+      _allowedServiceIds =
+          managesOrders && !allOrders ? employee.serviceIds.toSet() : null;
+      if (_allowedServiceIds?.isEmpty == true) {
+        emit(const GetProviderInternalOrderSuccess([]));
+        return;
+      }
 
+      final requestedPage = pageNumber ?? 1;
+      final providerRequest = GetProviderOrdersRequest.forEmployee(
+          employee: employee,
+          pageNumber: _allowedServiceIds == null ? requestedPage : 1,
+          orderType: orderType,
+          serviceId: serviceId);
       final response = await getProviderOrdersFunction(
-        getProviderOrdersRequest: GetProviderOrdersRequest(
-            providerId: user.employeeDetails?.employeeDetails?.provid,
-            employeeId: user.employeeDetails?.employeeDetails?.id,
-            pageNumber: pageNumber ?? 1,
-            orderType: orderType,
-            serviceId: serviceId,
-            branchId: user.employeeDetails?.employeeDetails?.branchid),
+        getProviderOrdersRequest: providerRequest,
       );
+      var visibleOrders = response.data;
+      var visiblePage = response.currentPage;
+      var visiblePageCount = response.pageCount;
+      var visibleTotal = response.totalCount;
+      if (_allowedServiceIds != null) {
+        final allProviderOrders = <OrderModel>[...response.data];
+        for (var page = 2; page <= response.pageCount; page++) {
+          if (isClosed || request != _request) return;
+          final next = await getProviderOrdersFunction(
+            getProviderOrdersRequest: GetProviderOrdersRequest.forEmployee(
+              employee: employee,
+              pageNumber: page,
+              orderType: orderType,
+              serviceId: serviceId,
+            ),
+          );
+          allProviderOrders.addAll(next.data);
+        }
+        final matching = allProviderOrders
+            .where((order) => _matches(order) == true)
+            .toList();
+        final pageSize = response.data.isEmpty ? 10 : response.data.length;
+        visibleTotal = matching.length;
+        visiblePageCount =
+            (matching.length / pageSize).ceil().clamp(1, 1 << 30);
+        visiblePage = requestedPage.clamp(1, visiblePageCount);
+        visibleOrders =
+            matching.skip((visiblePage - 1) * pageSize).take(pageSize).toList();
+      }
 
       if (!isClosed && request == _request) {
         emit(
           GetProviderInternalOrderSuccess(
-            response.data,
-            currentPage: response.currentPage,
-            pageCount: response.pageCount,
-            totalCount: response.totalCount,
+            visibleOrders,
+            currentPage: visiblePage,
+            pageCount: visiblePageCount,
+            totalCount: visibleTotal,
           ),
         );
         for (final entry in _pendingPatches.entries.toList()) {

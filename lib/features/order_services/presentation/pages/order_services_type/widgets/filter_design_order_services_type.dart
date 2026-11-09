@@ -13,11 +13,8 @@ import '../../../../../../../core/theming/assets.dart';
 import '../../../../../../../core/language/language_constant.dart';
 
 class FilterDesignOrderServicesType extends StatelessWidget {
-  final int serviceId;
-  const FilterDesignOrderServicesType({
-    super.key,
-    required this.serviceId
-  });
+  final int? serviceId;
+  const FilterDesignOrderServicesType({super.key, this.serviceId});
 
   @override
   Widget build(BuildContext context) {
@@ -58,20 +55,20 @@ class FilterDesignOrderServicesType extends StatelessWidget {
                     );
 
                     return ContainerOfSecondPartDataContainerInListDataFirstScreenInternalOrdersWidget(
-                        imagePathPart1: service?.image,
-                        titlePart1: serviceTitle,
-                        subTitlePart1: '',
-                        imagePathPart2: AppImageKeys.car501,
-                        textCarPart2: order.branchName ?? "",
-                        titlePart2: order.providerName ?? "",
-                        imagePathPart3: order.providerImage,
-                        titlePart3: AppLanguageKeys.name,
-                        subTitlePart3: order.username ?? "",
-                        status: order.orderStatus,
-                        timePart5: OrderFunctions.formatDate(order.orderDate),
-                        pricePart6: order.totalPrice?.toString() ?? "0",
-                        order: order,
-                        serviceId: null,
+                      imagePathPart1: service?.image,
+                      titlePart1: serviceTitle,
+                      subTitlePart1: '',
+                      imagePathPart2: AppImageKeys.car501,
+                      textCarPart2: order.branchName ?? "",
+                      titlePart2: order.providerName ?? "",
+                      imagePathPart3: order.providerImage,
+                      titlePart3: AppLanguageKeys.name,
+                      subTitlePart3: order.username ?? "",
+                      status: order.orderStatus,
+                      timePart5: OrderFunctions.formatDate(order.orderDate),
+                      pricePart6: order.totalPrice?.toString() ?? "0",
+                      order: order,
+                      serviceId: null,
                     );
                   },
                 ),
@@ -85,7 +82,7 @@ class FilterDesignOrderServicesType extends StatelessWidget {
                   context
                       .read<GetProviderInternalOrderCubit>()
                       .loadInternalOrders(
-                        serviceId:serviceId,
+                        serviceId: serviceId,
                         pageNumber: page,
                         orderType: mapOrderType(selectedTab),
                       );

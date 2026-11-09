@@ -88,10 +88,13 @@ class ChatWorkTeamPanel extends StatelessWidget {
                             onTap: () {
                               final langCode =
                                   Localizations.localeOf(context).languageCode;
-                              final targetUserId =
-                                  member.usertype == UserType.adminUser
-                                      ? 1
-                                      : (member.userid ?? 0);
+                              if (member.usertype == UserType.adminUser) {
+                                cubit.openSupportConversation(
+                                    name: member.getLocalizedName(langCode));
+                                onSelectMember?.call(cubit.state.selectedChat!);
+                                return;
+                              }
+                              final targetUserId = member.userid ?? 0;
                               final targetUserType = member.usertype ?? 0;
 
                               GetAllMessagesModel? targetChat;
