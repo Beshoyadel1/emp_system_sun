@@ -36,7 +36,6 @@ class ValuesOfAllApp {
   static const int balanceRadioIndex = 1;
   static const int smatRadioIndex = 2;
   static const int subscriptionEliteButtonIndex = 1;
-  static const String version = '2.0.0';
 }
 
 class PagesOfAllApp {

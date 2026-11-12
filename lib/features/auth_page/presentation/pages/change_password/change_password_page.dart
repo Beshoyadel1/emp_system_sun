@@ -6,12 +6,11 @@ import '../../../../../core/pages_widgets/general_widgets/snakbar.dart';
 import '../../../../../core/theming/colors.dart';
 import '../../../../../core/theming/fonts.dart';
 import '../../../../../core/theming/text_styles.dart';
-import '../../../../../core/utilies/map_of_all_app.dart';
 import '../../../../../features/auth_page/presentation/bloc/auth_cubit/auth_cubit.dart';
 import '../../../../../features/auth_page/presentation/bloc/auth_cubit/auth_state.dart';
 import '../../../../../features/auth_page/presentation/pages/login_page/login_widgets/login_button_widget.dart';
-import '../../../../../features/auth_page/presentation/pages/login_page/login_widgets/login_image.dart';
 import '../../../../../features/auth_page/presentation/pages/login_page/login_widgets/user_text_field_widget.dart';
+import '../auth_form_layout.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   final String email;
@@ -184,58 +183,54 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 onPressed: isSaving ? null : returnToAccount,
               ),
             ),
-            body: Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(32),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 500),
-                  child: Form(
-                    key: formKey,
-                    child: Column(
-                      spacing: 10,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const TextInAppWidget(
-                          text: AppLanguageKeys.changePassword,
-                          textSize: 22,
-                          textColor: AppColors.darkColor,
-                          fontWeightIndex: FontSelectionData.boldFontFamily,
-                        ),
-                        const TextInAppWidget(
-                          text: AppLanguageKeys.password,
-                          textSize: 20,
-                          textColor: AppColors.darkColor,
-                        ),
-                        _accountPasswordField(
-                          controller: passwordController,
-                          isVisible: _passwordVisible,
-                          isSaving: isSaving,
-                          toggleVisibility: () => setState(() {
-                            _passwordVisible = !_passwordVisible;
-                          }),
-                        ),
-                        const TextInAppWidget(
-                          text: AppLanguageKeys.confirmPasswordKey,
-                          textSize: 20,
-                          textColor: AppColors.darkColor,
-                        ),
-                        _accountPasswordField(
-                          controller: confirmPasswordController,
-                          isConfirm: true,
-                          isVisible: _confirmPasswordVisible,
-                          isSaving: isSaving,
-                          toggleVisibility: () => setState(() {
-                            _confirmPasswordVisible = !_confirmPasswordVisible;
-                          }),
-                        ),
-                        LoginButtonWidget(
-                          text: AppLanguageKeys.save,
-                          isLoading: isSaving,
-                          onPressed: isSaving ? null : _changePassword,
-                        ),
-                      ],
+            body: AuthFormLayout(
+              showImage: false,
+              showVersion: false,
+              child: Form(
+                key: formKey,
+                child: Column(
+                  spacing: 10,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const TextInAppWidget(
+                      text: AppLanguageKeys.changePassword,
+                      textSize: 22,
+                      textColor: AppColors.darkColor,
+                      fontWeightIndex: FontSelectionData.boldFontFamily,
                     ),
-                  ),
+                    const TextInAppWidget(
+                      text: AppLanguageKeys.password,
+                      textSize: 20,
+                      textColor: AppColors.darkColor,
+                    ),
+                    _accountPasswordField(
+                      controller: passwordController,
+                      isVisible: _passwordVisible,
+                      isSaving: isSaving,
+                      toggleVisibility: () => setState(() {
+                        _passwordVisible = !_passwordVisible;
+                      }),
+                    ),
+                    const TextInAppWidget(
+                      text: AppLanguageKeys.confirmPasswordKey,
+                      textSize: 20,
+                      textColor: AppColors.darkColor,
+                    ),
+                    _accountPasswordField(
+                      controller: confirmPasswordController,
+                      isConfirm: true,
+                      isVisible: _confirmPasswordVisible,
+                      isSaving: isSaving,
+                      toggleVisibility: () => setState(() {
+                        _confirmPasswordVisible = !_confirmPasswordVisible;
+                      }),
+                    ),
+                    LoginButtonWidget(
+                      text: AppLanguageKeys.save,
+                      isLoading: isSaving,
+                      onPressed: isSaving ? null : _changePassword,
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -249,139 +244,103 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   Widget build(BuildContext context) {
     if (widget.returnToAccount) return _buildAccountPage();
     return Scaffold(
-      body: Row(
-        children: [
-          // ===================================================
-          // FORM
-          // ===================================================
+      body: AuthFormLayout(
+        header: SizedBox(
+          height: 40,
+          child: AppBar(backgroundColor: AppColors.blueColor),
+        ),
+        child: Form(
+          key: formKey,
+          autovalidateMode: AutovalidateMode.disabled,
+          child: Column(
+            spacing: 10,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // =================================
+              // PASSWORD
+              // =================================
 
-          Expanded(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 40,
-                  child: AppBar(
-                    backgroundColor: AppColors.blueColor,
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 32,
-                    ),
-                    child: Center(
-                      child: SingleChildScrollView(
-                        child: Form(
-                          key: formKey,
-                          autovalidateMode: AutovalidateMode.disabled,
-                          child: Column(
-                            spacing: 10,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // =================================
-                              // PASSWORD
-                              // =================================
+              const TextInAppWidget(
+                text: AppLanguageKeys.password,
+                textColor: AppColors.darkColor,
+                textSize: 20,
+                fontWeightIndex: FontSelectionData.semiBoldFontFamily,
+              ),
 
-                              const TextInAppWidget(
-                                text: AppLanguageKeys.password,
-                                textColor: AppColors.darkColor,
-                                textSize: 20,
-                                fontWeightIndex:
-                                    FontSelectionData.semiBoldFontFamily,
-                              ),
+              UserTextFieldWidget(
+                type: UserFieldType.password,
+                controller: passwordController,
+              ),
 
-                              UserTextFieldWidget(
-                                type: UserFieldType.password,
-                                controller: passwordController,
-                              ),
+              // =================================
+              // CONFIRM PASSWORD
+              // =================================
 
-                              // =================================
-                              // CONFIRM PASSWORD
-                              // =================================
+              const TextInAppWidget(
+                text: AppLanguageKeys.confirmPasswordKey,
+                textColor: AppColors.darkColor,
+                textSize: 20,
+                fontWeightIndex: FontSelectionData.semiBoldFontFamily,
+              ),
 
-                              const TextInAppWidget(
-                                text: AppLanguageKeys.confirmPasswordKey,
-                                textColor: AppColors.darkColor,
-                                textSize: 20,
-                                fontWeightIndex:
-                                    FontSelectionData.semiBoldFontFamily,
-                              ),
+              UserTextFieldWidget(
+                type: UserFieldType.password,
+                controller: confirmPasswordController,
+              ),
 
-                              UserTextFieldWidget(
-                                type: UserFieldType.password,
-                                controller: confirmPasswordController,
-                              ),
+              // =================================
+              // BUTTON
+              // =================================
 
-                              // =================================
-                              // BUTTON
-                              // =================================
+              BlocConsumer<AuthCubit, AuthState>(
+                listenWhen: (
+                  previous,
+                  current,
+                ) =>
+                    current is ChangePasswordSuccess ||
+                    current is ChangePasswordError,
+                listener: (
+                  context,
+                  state,
+                ) {
+                  // =========================
+                  // SUCCESS
+                  // =========================
 
-                              BlocConsumer<AuthCubit, AuthState>(
-                                listenWhen: (
-                                  previous,
-                                  current,
-                                ) =>
-                                    current is ChangePasswordSuccess ||
-                                    current is ChangePasswordError,
-                                listener: (
-                                  context,
-                                  state,
-                                ) {
-                                  // =========================
-                                  // SUCCESS
-                                  // =========================
+                  if (state is ChangePasswordSuccess) {
+                    AppSnackBar.showSuccess(
+                      state.message,
+                    );
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  }
 
-                                  if (state is ChangePasswordSuccess) {
-                                    AppSnackBar.showSuccess(
-                                      state.message,
-                                    );
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                  }
+                  // =========================
+                  // ERROR
+                  // =========================
 
-                                  // =========================
-                                  // ERROR
-                                  // =========================
+                  if (state is ChangePasswordError) {
+                    AppSnackBar.showError(
+                      state.message,
+                    );
+                  }
+                },
+                builder: (
+                  context,
+                  state,
+                ) {
+                  final isLoading = state is ChangePasswordLoading;
 
-                                  if (state is ChangePasswordError) {
-                                    AppSnackBar.showError(
-                                      state.message,
-                                    );
-                                  }
-                                },
-                                builder: (
-                                  context,
-                                  state,
-                                ) {
-                                  final isLoading =
-                                      state is ChangePasswordLoading;
-
-                                  return LoginButtonWidget(
-                                    text: AppLanguageKeys.send,
-                                    isLoading: isLoading,
-                                    onPressed:
-                                        isLoading ? null : _changePassword,
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+                  return LoginButtonWidget(
+                    text: AppLanguageKeys.send,
+                    isLoading: isLoading,
+                    onPressed: isLoading ? null : _changePassword,
+                  );
+                },
+              ),
+            ],
           ),
-
-          // ===================================================
-          // IMAGE
-          // ===================================================
-
-          if (MediaQuery.of(context).size.width > ValuesOfAllApp.mobileWidth)
-            const LoginImage(),
-        ],
+        ),
       ),
     );
   }

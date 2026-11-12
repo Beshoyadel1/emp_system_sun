@@ -1,8 +1,8 @@
-import 'package:emp_system_sun/core/utilies/map_of_all_app.dart';
 import 'package:flutter/material.dart';
+
 import '../../../../../../core/theming/assets.dart';
 import '../../../../../../core/theming/colors.dart';
-import '../login_widgets/login_image.dart';
+import '../../auth_form_layout.dart';
 import '../login_widgets/login_language_button_widget.dart';
 import '../login_widgets/login_widget.dart';
 
@@ -11,64 +11,27 @@ class LoginWebWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Flexible(
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Column(
-                    children: [
-                      Container(
-                        color: AppColors.seaBlueColor,
-                        height: 30,
-                        width: double.infinity,
-                      ),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 16.0, right: 16.0, top: 50),
-                                child: Center(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const LoginLanguageButtonWidget(),
-                                      Image.asset(
-                                        AppImageKeys.sarLogoEmp,
-                                        height: 50,
-                                        width: 170,
-                                        fit: BoxFit.fill,
-                                      ),
-                                      const SizedBox(height: 30),
-                                      const LoginWidget(),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              // const NewUserWidget(),
-                              // const SizedBox(height: 30),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+    return AuthFormLayout(
+      header: Container(
+        color: AppColors.seaBlueColor,
+        height: 30,
+        width: double.infinity,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const LoginLanguageButtonWidget(),
+          Image.asset(
+            AppImageKeys.sarLogoEmp,
+            height: 50,
+            width: 170,
+            fit: BoxFit.fill,
           ),
-        ),
-        if(MediaQuery.of(context).size.width > ValuesOfAllApp.mobileWidth) const LoginImage(),
-      ],
+          const SizedBox(height: 30),
+          const LoginWidget(),
+        ],
+      ),
     );
   }
 }

@@ -9,6 +9,7 @@ import 'package:emp_system_sun/core/language/language_constant.dart';
 import 'package:emp_system_sun/core/theming/fonts.dart';
 import 'package:emp_system_sun/core/theming/text_styles.dart';
 import 'package:emp_system_sun/features/auth_page/presentation/bloc/auth_cubit/auth_state.dart';
+import '../auth_form_layout.dart';
 
 enum OtpPurpose {
   forgotPassword,
@@ -184,18 +185,8 @@ class _OtpPageState extends State<OtpPage> {
 // BUILD
 // =========================================================
 
-  Widget _wrapAccountContent(Widget child) {
-    if (!widget.returnToAccount) return child;
-    return Center(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: child,
-      ),
-    );
-  }
-
   Widget _wrapOtpInput(Widget child) {
-    if (!widget.returnToAccount) return child;
+    if (!widget.returnToAccount) return Flexible(child: child);
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -250,7 +241,9 @@ class _OtpPageState extends State<OtpPage> {
       child: Scaffold(
         appBar: AppBar(),
         backgroundColor: AppColors.scaffoldColor,
-        body: _wrapAccountContent(Center(
+        body: AuthFormLayout(
+          showImage: false,
+          showVersion: !widget.returnToAccount,
           child: Container(
             width: 400,
             padding: const EdgeInsets.all(25),
@@ -259,7 +252,7 @@ class _OtpPageState extends State<OtpPage> {
               borderRadius: BorderRadius.circular(25),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 20,
                 ),
               ],
@@ -587,7 +580,7 @@ class _OtpPageState extends State<OtpPage> {
               ],
             ),
           ),
-        )),
+        ),
       ),
     );
   }

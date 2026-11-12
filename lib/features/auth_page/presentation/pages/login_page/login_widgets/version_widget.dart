@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../../../core/utilies/map_of_all_app.dart';
+import '../../../../../../core/constants.dart';
 import '../../../../../../core/language/language_constant.dart';
 import '../../../../../../core/theming/colors.dart';
 import '../../../../../../core/theming/fonts.dart';
@@ -21,7 +21,7 @@ class VersionWidget extends StatelessWidget {
           textColor: AppColors.darkColor,
         ),
         TextInAppWidget(
-          text: ValuesOfAllApp.version,
+          text: AppInfo.version,
           textSize: 12,
           fontWeightIndex: FontSelectionData.semiBoldFontFamily,
           textColor: AppColors.darkColor,
