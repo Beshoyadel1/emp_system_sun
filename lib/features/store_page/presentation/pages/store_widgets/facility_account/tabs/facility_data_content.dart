@@ -30,6 +30,7 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
   final jobLatinNameController = TextEditingController();
   final phoneController = TextEditingController();
   final emailController = TextEditingController();
+  final nationalAddressController = TextEditingController();
   final genderController = TextEditingController();
   DateTime? _birthDate;
   final dateController = TextEditingController();
@@ -48,6 +49,7 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
       phoneController,
       emailController,
       genderController,
+      nationalAddressController,
       dateController,
       idController,
       userNameController,
@@ -85,6 +87,7 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
       phoneController.text = user.phone ?? "";
       emailController.text = user.email ?? "";
       _birthDate = user.birthDate;
+      nationalAddressController.text = user.nationalAddress ?? "";
       genderController.text = user.gander?.toString() ?? "";
       dateController.text =
           OrderFunctions.formatDateFromDateTime(user.joinDate);
@@ -108,6 +111,7 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
       phone: safe(phoneController.text),
       email: safe(emailController.text),
       birthDate: _birthDate,
+      nationalAddress: nationalAddressController.text.trim(),
       gander: genderController.text.isNotEmpty
           ? int.tryParse(genderController.text)
           : null,
@@ -183,6 +187,13 @@ class _FacilityDataContentState extends State<FacilityDataContent> {
               text: AppLanguageKeys.email,
               type: UserFieldType.email,
               readOnly: true,
+              width: 250,
+            ),
+            UserTextFieldWidget(
+              controller: nationalAddressController,
+              text: AppLanguageKeys.nationalAddress,
+              type: UserFieldType.name,
+              readOnly: !isEditMode,
               width: 250,
             ),
             BirthDateField(

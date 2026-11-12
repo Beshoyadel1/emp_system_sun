@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:emp_system_sun/features/notifications/data/model/notification_payload.dart';
+import '../request/send_message_request/send_message_request.dart';
 
 /// Represents an active or historical conversation item with another entity.
 class GetAllMessagesModel {
@@ -81,14 +82,26 @@ class GetAllMessagesModel {
 
     final unviewedCount = json['unViewedMessagesCount'] ??
         json['unviewedmessagescount'] ??
-        json['unViewedCount'] ??
-        0;
+        json['unViewedCount'];
+    final toUser =
+        toUserVal is num ? toUserVal.toInt() : int.tryParse('$toUserVal');
+    final toUserType = toUserTypeVal is num
+        ? toUserTypeVal.toInt()
+        : int.tryParse('$toUserTypeVal');
+    final unread = unviewedCount is num
+        ? unviewedCount.toInt()
+        : int.tryParse('$unviewedCount') ??
+            messagesList
+                ?.where((message) =>
+                    !message.viewed &&
+                    message.fromUser == toUser &&
+                    message.fromUserType == toUserType)
+                .length ??
+            0;
 
     return GetAllMessagesModel(
-      touser: toUserVal is num ? toUserVal.toInt() : int.tryParse('$toUserVal'),
-      tousertype: toUserTypeVal is num
-          ? toUserTypeVal.toInt()
-          : int.tryParse('$toUserTypeVal'),
+      touser: toUser,
+      tousertype: toUserType,
       userName: json['userName'] ??
           json['username'] ??
           json['USERNAME'] ??
@@ -97,25 +110,11 @@ class GetAllMessagesModel {
       messages: messagesList ?? [],
       noOldMessages: json['noOldMessages'] ?? json['NoOldMessages'] ?? false,
       image: decodedImage,
-      unViewedMessagesCount: unviewedCount is num
-          ? unviewedCount.toInt()
-          : (int.tryParse('$unviewedCount') ?? 0),
+      unViewedMessagesCount: unread,
       directLastMessage: directLastMsg,
       closed: NotificationPayload.boolean(
           NotificationPayload.value(json, 'isclosed')),
     );
-  }
-
-  int unreadCount(int currentUserId, int currentUserType) {
-    if (messages != null && messages!.isNotEmpty) {
-      return messages!
-          .where((m) =>
-              !m.viewed &&
-              (m.fromUser != currentUserId ||
-                  m.fromUserType != currentUserType))
-          .length;
-    }
-    return unViewedMessagesCount;
   }
 
   ChatMessageModel? get lastMessage {
@@ -275,7 +274,8 @@ class ChatMessageModel {
     return fromUser == myUserId && fromUserType == myUserType;
   }
 
-  ChatMessageModel copyWith({int? localId, bool? viewed}) => ChatMessageModel(
+  ChatMessageModel copyWith({int? localId, DateTime? date, bool? viewed}) =>
+      ChatMessageModel(
         id: id,
         localId: localId ?? this.localId,
         fromUser: fromUser,
@@ -283,7 +283,7 @@ class ChatMessageModel {
         fromUserType: fromUserType,
         toUserType: toUserType,
         message: message,
-        date: date,
+        date: date ?? this.date,
         viewed: viewed ?? this.viewed,
         isClosed: isClosed,
         orderId: orderId,
@@ -310,33 +310,14 @@ class SendChatMessageModel {
     required this.message,
   });
 
-  Map<String, dynamic> toJson() {
-    final nowIso = DateTime.now().toIso8601String();
-    return {
-      'ID': 0,
-      'id': 0,
-      'FROMUSER': fromUser,
-      'fromuser': fromUser,
-      'FROMUSERTYPE': fromUserType,
-      'fromusertype': fromUserType,
-      'TOUSER': (toUser != null && toUser! > 0) ? toUser : 0,
-      'touser': (toUser != null && toUser! > 0) ? toUser : 0,
-      'TOUSERTYPE': (toUserType != null && toUserType! > 0) ? toUserType : 0,
-      'tousertype': (toUserType != null && toUserType! > 0) ? toUserType : 0,
-      'MESSAGE': message,
-      'message': message,
-      'ORDERID': orderId,
-      'orderid': orderId,
-      'HARAGEID': 0,
-      'harageid': 0,
-      'VIEWED': false,
-      'viewed': false,
-      'ISCLOSED': false,
-      'isclosed': false,
-      'DATE': nowIso,
-      'date': nowIso,
-    };
-  }
+  Map<String, dynamic> toJson() => SendMessageRequest(
+        fromuser: fromUser,
+        fromusertype: fromUserType,
+        touser: toUser != null && toUser! > 0 ? toUser : 0,
+        tousertype: toUserType != null && toUserType! > 0 ? toUserType : 0,
+        message: message,
+        orderid: orderId,
+      ).toJson();
 }
 
 /// Team member representation for the Work Team panel (employees, supervisor/provider, and system admin).

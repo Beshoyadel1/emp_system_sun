@@ -31,6 +31,9 @@ class OrderDetailsModel {
     this.paymentmethod,
     this.providerInfo,
     this.status,
+    this.deliveryOrder,
+    this.isDeliveryOrder,
+    this.isOnSite,
   });
 
   DateTime? date;
@@ -56,6 +59,9 @@ class OrderDetailsModel {
   int? paymentmethod;
   ProviderInfo? providerInfo;
   int? status;
+  DeliveryOrderModel? deliveryOrder;
+  bool? isDeliveryOrder;
+  bool? isOnSite;
 
   OrderDetailsModel applyNotificationPatch(Map<String, dynamic> patch) {
     final normalized = Map<String, dynamic>.from(patch);
@@ -132,6 +138,15 @@ class OrderDetailsModel {
         : ProviderInfo.fromJson(json["providerInfo"]),
 
     status: json["status"],
+    deliveryOrder: DeliveryOrderModel.fromValue(
+      NotificationPayload.value(json, 'deliveryOrder'),
+    ),
+    isDeliveryOrder: NotificationPayload.boolean(
+      NotificationPayload.value(json, 'isDeliveryOrder'),
+    ),
+    isOnSite: NotificationPayload.boolean(
+      NotificationPayload.value(json, 'isOnSite'),
+    ),
   );
 
   Map<dynamic, dynamic> toJson() => {
@@ -159,6 +174,67 @@ class OrderDetailsModel {
     "paymentmethod": paymentmethod,
     "providerInfo": providerInfo?.toJson(),
     "status": status,
+    "deliveryOrder": deliveryOrder?.toJson(),
+    "isDeliveryOrder": isDeliveryOrder,
+    "isOnSite": isOnSite,
+  };
+}
+
+class DeliveryOrderModel {
+  final int? orderId;
+  final int? providerId;
+  final int? deliveryOrderId;
+  final String? status;
+  final String? courierName;
+  final String? courierPhone;
+  final DateTime? acceptedAt;
+  final DateTime? receivedAt;
+  final DateTime? deliveredAt;
+  final num? fee;
+
+  const DeliveryOrderModel({
+    this.orderId,
+    this.providerId,
+    this.deliveryOrderId,
+    this.status,
+    this.courierName,
+    this.courierPhone,
+    this.acceptedAt,
+    this.receivedAt,
+    this.deliveredAt,
+    this.fee,
+  });
+
+  static DeliveryOrderModel? fromValue(dynamic value) {
+    if (value is! Map) return null;
+    dynamic field(String key) => NotificationPayload.value(value, key);
+    int? id(String key) => int.tryParse('${field(key)}');
+    DateTime? date(String key) => DateTime.tryParse('${field(key)}');
+    return DeliveryOrderModel(
+      orderId: id('orderid'),
+      providerId: id('provid'),
+      deliveryOrderId: id('deliveryorderid'),
+      status: field('deliveryorderstatus')?.toString(),
+      courierName: field('mandoobname')?.toString(),
+      courierPhone: field('mandoobphone')?.toString(),
+      acceptedAt: date('mandoobacceptorderdate'),
+      receivedAt: date('mandoobreceiveorderdate'),
+      deliveredAt: date('mandoobdeliverorderdate'),
+      fee: num.tryParse('${field('deliveryfee')}'),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'orderid': orderId,
+    'provid': providerId,
+    'deliveryorderid': deliveryOrderId,
+    'deliveryorderstatus': status,
+    'mandoobname': courierName,
+    'mandoobphone': courierPhone,
+    'mandoobacceptorderdate': acceptedAt?.toIso8601String(),
+    'mandoobreceiveorderdate': receivedAt?.toIso8601String(),
+    'mandoobdeliverorderdate': deliveredAt?.toIso8601String(),
+    'deliveryfee': fee,
   };
 }
 

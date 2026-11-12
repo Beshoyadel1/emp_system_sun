@@ -16,18 +16,28 @@ class GetUserNotificationResponse {
   });
 
   factory GetUserNotificationResponse.fromJson(Map<String, dynamic> json) {
-    final raw = json["data"] ?? {};
+    final raw = json['data'] ?? NotificationPayload.value(json, 'data');
     final body = raw is Map ? raw : json;
-    final items = raw is List ? raw : body['data'] as List? ?? [];
+    dynamic field(String key) => body[key] ?? NotificationPayload.value(body, key);
+    int? number(String key) => int.tryParse('${field(key)}');
+    final legacy = field('data');
+    final documented = field('items');
+    final List items = switch (raw) {
+      List list => list,
+      _ when legacy is List => legacy,
+      _ when documented is List => documented,
+      _ => const [],
+    };
 
     return GetUserNotificationResponse(
       data: items
           .whereType<Map>()
           .map((e) => NotificationModel.fromJson(Map<String, dynamic>.from(e)))
           .toList(),
-      pageCount: body["pageCount"] ?? (items.isEmpty ? 0 : 1),
-      totalCount: body["totalCount"] ?? items.length,
-      currentPage: body["currentPage"] ?? 1,
+      pageCount:
+          number('pageCount') ?? number('totalPages') ?? (items.isEmpty ? 0 : 1),
+      totalCount: number('totalCount') ?? items.length,
+      currentPage: number('currentPage') ?? number('pageNumber') ?? 1,
     );
   }
 }
@@ -113,16 +123,16 @@ class NotificationModel {
     final fields = NotificationPayload(json);
     return NotificationModel(
       id: fields.integer('id'),
-      title: json["title"],
-      latinTitle: json["latintitle"],
-      description: json["description"],
-      latinDesc: json["latindesc"],
+      title: fields.get("title")?.toString(),
+      latinTitle: fields.get("latintitle")?.toString(),
+      description: fields.get("description")?.toString(),
+      latinDesc: fields.get("latindesc")?.toString(),
       toUserId: fields.integer('touserid') ?? fields.integer('touser'),
       toUserType: fields.integer('tousertype'),
       fromUserId: fields.integer('fromuserid') ?? fields.integer('fromuser'),
       fromUserType: fields.integer('fromusertype'),
       isViewed: NotificationPayload.boolean(fields.get('isviewed')),
-      date: parseDate(json["date"]),
+      date: parseDate(fields.get("date")),
       payload: NotificationPayload.value(json, 'type') == null &&
               NotificationPayload.value(json, 'eventType') == null
           ? null

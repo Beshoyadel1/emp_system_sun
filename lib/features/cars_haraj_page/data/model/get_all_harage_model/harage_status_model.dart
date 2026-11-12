@@ -16,6 +16,7 @@ class HarageStatusModel {
   factory HarageStatusModel.fromJson(
       Map<String, dynamic> json,
       ) {
+    json = json.map((key, value) => MapEntry(key.toLowerCase(), value));
     return HarageStatusModel(
       id: json['id'],
       harageId: json['harageid'],

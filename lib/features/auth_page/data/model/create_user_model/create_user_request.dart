@@ -17,6 +17,7 @@ class CreateUserRequest {
   final DateTime? birthDate;
   final int? type;
   final String? nationality;
+  final String? nationalAddress;
   final bool? isActive;
   final DateTime? joinDate;
   final String? referralCode;
@@ -40,6 +41,7 @@ class CreateUserRequest {
     this.birthDate,
     this.type,
     this.nationality,
+    this.nationalAddress,
     this.isActive,
     this.joinDate,
     this.referralCode,
@@ -59,6 +61,8 @@ class CreateUserRequest {
       Map<String, dynamic> json,
       ) {
 
+    final driverInfo = json["driverInfo"];
+    final driver = driverInfo is Map ? driverInfo["driverDetails"] : json["driverDetails"];
     return CreateUserRequest(
 
       userid: json["userid"],
@@ -81,6 +85,7 @@ class CreateUserRequest {
 
       nationality:
       json["nationality"],
+      nationalAddress: json["nationaladdress"],
 
       isActive:
       json["isactive"],
@@ -135,11 +140,8 @@ class CreateUserRequest {
       )
           : null,
 
-      driverDetails:
-      json["driverDetails"] != null
-          ? DriverDetailsRequest.fromJson(
-        json["driverDetails"],
-      )
+      driverDetails: driver is Map<String, dynamic>
+          ? DriverDetailsRequest.fromJson(driver)
           : null,
     );
   }
@@ -159,6 +161,17 @@ class CreateUserRequest {
     return '$year-$month-${day}T00:00:00';
   }
 
+  Map<String, dynamic> toApiJson({required bool isUpdate}) {
+    final body = toJson();
+    body['gender'] = body.remove('gander');
+    body['defaultcarid'] = body.remove('currentcarid');
+    body.remove('joindate');
+    if (!isUpdate) body.remove('userid');
+    final driver = body.remove('driverDetails');
+    if (driver != null) body['driverInfo'] = {'driverDetails': driver};
+    return body;
+  }
+
   Map<String, dynamic> toJson() {
     return {
       "userid": userid ?? 0,
@@ -170,6 +183,7 @@ class CreateUserRequest {
       "birthdate": _birthDateToJson(),
       "type": type ?? 0,
       "nationality": nationality ?? "",
+      if (nationalAddress != null) "nationaladdress": nationalAddress,
       "isactive": isActive ?? true,
       "joindate": (joinDate ?? DateTime.now()).toIso8601String(),
       "referralcode": referralCode ?? "",

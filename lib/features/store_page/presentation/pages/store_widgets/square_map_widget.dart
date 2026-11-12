@@ -17,6 +17,7 @@ class SquareMapWidget extends StatelessWidget {
       listener: (context, state) {
         if (state is LocationLoaded) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (!context.mounted) return;
             mapController.move(
               state.latLng,
               13,
@@ -52,6 +53,7 @@ class SquareMapWidget extends StatelessWidget {
             child: FlutterMapWidget(
               centerLocation: center,
               mapController: mapController,
+              onLocationSelected: context.read<LocationCubit>().selectLocation,
             ),
           );
         }

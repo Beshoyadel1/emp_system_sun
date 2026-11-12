@@ -60,7 +60,7 @@ class EmployeeChatState extends Equatable {
     );
   }
 
-  int calculateTotalUnread(int currentUserId, int currentUserType) {
+  int get totalUnreadCount {
     int count = 0;
     for (final chat in allMessages) {
       if (selectedChat != null &&
@@ -68,12 +68,10 @@ class EmployeeChatState extends Equatable {
           selectedChat!.tousertype == chat.tousertype) {
         continue;
       }
-      count += chat.unreadCount(currentUserId, currentUserType);
+      count += chat.unViewedMessagesCount;
     }
     return count;
   }
-
-  int get totalUnreadCount => calculateTotalUnread(0, 0);
 
   @override
   List<Object?> get props => [

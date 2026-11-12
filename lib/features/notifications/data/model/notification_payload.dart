@@ -227,14 +227,15 @@ class NotificationPayload {
   }
 
   String get key {
+    // The browser bridge and Firebase SDK can wrap the same chat differently.
+    if (kind == NotificationKind.chat && (integer('id') ?? 0) > 0) {
+      return 'chat:${integer('id')}';
+    }
     if (messageId?.isNotEmpty == true) return 'push:$messageId';
     // Identical open/close data can recur across tickets. Without a transport
     // event ID, content alone cannot identify a status transition forever.
     if (kind == NotificationKind.chatStatus) {
       return 'chatStatus:${sentAt.microsecondsSinceEpoch}:${jsonEncode(data)}';
-    }
-    if (kind == NotificationKind.chat && (integer('id') ?? 0) > 0) {
-      return 'chat:${integer('id')}';
     }
     final sorted = {
       for (final key in (data.keys.toList()..sort())) key: data[key]

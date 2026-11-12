@@ -77,10 +77,14 @@ class AuthCubit extends Cubit<AuthState> {
         _tokenProvider = tokenProvider ??
             (() =>
                 FcmService.instance.getToken(vapidKey: FcmConfig.webVapidKey)),
-        _connectNotifications = connectNotifications ??
-            ((user) => FcmService.instance.init(
-                userId: user.userid ?? 0,
-                userType: user.type ?? UserType.employeeUser)),
+        _connectNotifications = ((user, loginToken) {
+          if (connectNotifications != null) return connectNotifications(user);
+          return FcmService.instance.init(
+            userId: user.userid ?? 0,
+            userType: user.type ?? UserType.employeeUser,
+            loginToken: loginToken,
+          );
+        }),
         _disconnectNotifications =
             disconnectNotifications ?? FcmService.instance.disconnect,
         _facilityCheck = facilityCheck,
@@ -96,7 +100,7 @@ class AuthCubit extends Cubit<AuthState> {
   final Future<ChangePasswordResult> Function(
       {required ChangePasswordRequest changePasswordRequest}) _passwordRequest;
   final Future<String> Function() _tokenProvider;
-  final Future<void> Function(CreateUserRequest) _connectNotifications;
+  final Future<void> Function(CreateUserRequest, String) _connectNotifications;
   final Future<void> Function() _disconnectNotifications;
   final Future<List<String>> Function(CreateUserRequest)? _facilityCheck;
   Future<void>? _logoutFuture;
@@ -193,7 +197,7 @@ class AuthCubit extends Cubit<AuthState> {
       await AuthSession.runEffect(() async {
         if (!_isCurrent(version)) return;
         try {
-          await _connectNotifications(user);
+          await _connectNotifications(user, token);
         } catch (e) {
           debugPrint('FCM Init note: $e');
         }
@@ -419,6 +423,7 @@ class AuthCubit extends Cubit<AuthState> {
         type: oldUser.type,
 
         nationality: request.nationality ?? oldUser.nationality,
+        nationalAddress: request.nationalAddress ?? oldUser.nationalAddress,
 
         isActive: request.isActive ?? oldUser.isActive,
 

@@ -10,6 +10,7 @@ class GetWorkTeamChatRequest {
 
   Map<String, dynamic> toJson() {
     return {
+      "userId": user,
       "user": user,
       "userType": userType,
     };

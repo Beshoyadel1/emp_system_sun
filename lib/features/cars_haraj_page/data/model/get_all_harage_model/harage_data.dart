@@ -79,6 +79,7 @@ class HarageData {
   });
 
   factory HarageData.fromJson(Map<String, dynamic> json) {
+    json = json.map((key, value) => MapEntry(key.toLowerCase(), value));
     return HarageData(
       id: json['id'],
       userid: json['userid'],
@@ -111,17 +112,17 @@ class HarageData {
       // =========================
       // CURRENT STATUS
       // =========================
-      currentStatus: json['currentStatus'] is Map<String, dynamic>
+      currentStatus: json['currentstatus'] is Map<String, dynamic>
           ? HarageStatusModel.fromJson(
-        json['currentStatus'] as Map<String, dynamic>,
+        json['currentstatus'] as Map<String, dynamic>,
       )
           : null,
 
       // =========================
       // STATUS HISTORY
       // =========================
-      statusHistory: json['statusHistory'] is List
-          ? (json['statusHistory'] as List)
+      statusHistory: json['statushistory'] is List
+          ? (json['statushistory'] as List)
           .whereType<Map<String, dynamic>>()
           .map(
             (e) => HarageStatusModel.fromJson(e),

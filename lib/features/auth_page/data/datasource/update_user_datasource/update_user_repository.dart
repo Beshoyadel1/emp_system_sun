@@ -22,7 +22,7 @@ Future<UpdateUserResult> updateUserFunction({
   try {
 
     final response = await Network.postDataWithBody(
-      createUserRequest.toJson(),
+      createUserRequest.toApiJson(isUpdate: true),
       ApiLink.updateUser,
     );
     final Map<String, dynamic> body =

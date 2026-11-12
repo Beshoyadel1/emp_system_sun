@@ -5,6 +5,9 @@ class ProviderBranchModel {
   final String? branchName;
   final String? branchLatinName;
   final String? address;
+  final String? nationalAddress;
+  final double? latitude;
+  final double? longitude;
   final String? addressText;
   final String? addressLatinText;
   final int? providerId;
@@ -15,6 +18,9 @@ class ProviderBranchModel {
      this.branchName,
      this.branchLatinName,
      this.address,
+    this.nationalAddress,
+    this.latitude,
+    this.longitude,
      this.addressText,
      this.addressLatinText,
      this.providerId,
@@ -22,15 +28,28 @@ class ProviderBranchModel {
   });
 
   factory ProviderBranchModel.fromJson(Map<String, dynamic> json) {
+    final fields = json.map((key, value) => MapEntry(key.toLowerCase(), value));
+    final legacyCoordinates = fields['address']?.toString().split(',');
+    double? coordinate(String key, int index) {
+      final value = double.tryParse(fields[key]?.toString() ?? '');
+      if (value != null && value.isFinite) return value;
+      if (legacyCoordinates?.length != 2) return null;
+      final legacy = double.tryParse(legacyCoordinates![index].trim());
+      return legacy?.isFinite == true ? legacy : null;
+    }
+
     return ProviderBranchModel(
-      branchId: json['branchid'],
-      branchName: json['branchname'] ?? '',
-      branchLatinName: json['branchlatinname'] ?? '',
-      address: json['address'] ?? '',
-      addressText: json['addresstext'] ?? '',
-      addressLatinText: json['addresslatintext'] ?? '',
-      providerId: json['provid'],
-      isActive: json['isactive'] ?? false,
+      nationalAddress: fields['nationaladdress']?.toString(),
+      latitude: coordinate('lat', 0),
+      longitude: coordinate('long', 1),
+      branchId: fields['branchid'],
+      branchName: fields['branchname'] ?? '',
+      branchLatinName: fields['branchlatinname'] ?? '',
+      address: fields['address'] ?? '',
+      addressText: fields['addresstext'] ?? '',
+      addressLatinText: fields['addresslatintext'] ?? '',
+      providerId: fields['provid'],
+      isActive: fields['isactive'] ?? false,
     );
   }
 

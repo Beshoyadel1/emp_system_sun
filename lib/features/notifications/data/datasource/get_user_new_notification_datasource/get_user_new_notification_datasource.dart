@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import '../../model/notification_payload.dart';
 import '../../../../../../features/notifications/data/model/get_user_new_notification_model/get_user_new_notification_model.dart';
 import '../../../../../../features/notifications/data/request/get_user_new_notification_request/get_user_new_notification_request.dart';
 import '../../../../../core/api/dio_function/api_constants.dart';
@@ -23,7 +24,7 @@ Future<List<NotificationModel>> getUserNewNotificationFunction({
     if (raw is Map && raw.containsKey('data')) raw = raw['data'];
     final items = raw is List
         ? raw
-        : raw is Map && raw['id'] != null
+        : raw is Map && NotificationPayload.value(raw, 'id') != null
             ? [raw]
             : [];
     return items

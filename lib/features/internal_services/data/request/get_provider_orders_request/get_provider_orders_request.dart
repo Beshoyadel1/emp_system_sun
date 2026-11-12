@@ -1,6 +1,7 @@
 import 'package:emp_system_sun/features/auth_page/data/model/create_user_model/employee_wrapper_request.dart';
 
 class GetProviderOrdersRequest {
+  static const int pageSize = 10;
   final int? providerId;
   final int? employeeId;
   final int? pageNumber;
@@ -40,6 +41,7 @@ class GetProviderOrdersRequest {
       if (providerId != null) "providerId": providerId,
       if (employeeId != null) "employeeId": employeeId,
       "pageNumber": pageNumber,
+      "pageSize": pageSize,
       if (orderType != null) "orderType": orderType,
       if (serviceId != null) "ServiceId": serviceId,
       if (branchId != null) "branchId": branchId,

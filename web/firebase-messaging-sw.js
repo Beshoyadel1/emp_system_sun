@@ -42,6 +42,9 @@ if (!firebase.apps.length) {
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(async (payload) => {
+  if (['localhost', '127.0.0.1', '[::1]'].includes(self.location.hostname)) {
+    console.log('FCM web background:', payload);
+  }
   // Deliver the event to mounted tabs even while hidden. Returning to the tab
   // must not need a history refresh, or a click, to update the open conversation.
   const scope = new URL('./', self.location.href).href;

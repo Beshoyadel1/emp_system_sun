@@ -1,6 +1,13 @@
 import 'dart:convert';
 import 'dart:js_interop';
 
+@JS('prepareSunFcmWorker')
+external JSPromise<JSAny?> _prepareFcmWorker();
+
+Future<void> prepareFcmWorker() async {
+  await _prepareFcmWorker().toDart;
+}
+
 @JS('listenForSunNotificationClicks')
 external JSFunction _listen(JSFunction callback);
 

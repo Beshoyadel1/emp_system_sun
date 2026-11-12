@@ -32,7 +32,20 @@ class _AddBranchUIState extends State<AddBranchUI> {
   final addressLatinController = TextEditingController();
   final addressController = TextEditingController();
 
+  final nationalAddressController = TextEditingController();
+
   bool isInit = false;
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    latinController.dispose();
+    addressTextController.dispose();
+    addressLatinController.dispose();
+    addressController.dispose();
+    nationalAddressController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +59,7 @@ class _AddBranchUIState extends State<AddBranchUI> {
           addressTextController.clear();
           addressLatinController.clear();
           addressController.clear();
+          nationalAddressController.clear();
 
           isInit = false;
         }
@@ -78,7 +92,8 @@ class _AddBranchUIState extends State<AddBranchUI> {
           latinController.text = branch.branchLatinName ?? '';
           addressTextController.text = branch.addressText ?? '';
           addressLatinController.text = branch.addressLatinText ?? '';
-          addressController.text = branch.address ?? '';
+          addressController.text = branch.addressText ?? '';
+          nationalAddressController.text = branch.nationalAddress ?? '';
 
           isInit = true;
         }
@@ -164,6 +179,18 @@ class _AddBranchUIState extends State<AddBranchUI> {
                     : null,
               ),
 
+              TextFormFieldWidget(
+                textFormController: nationalAddressController,
+                text: AppLanguageKeys.nationalAddress,
+                hintText: AppLanguageKeys.nationalAddress,
+                isColumn: true,
+                textSize: 16,
+                textColor: AppColors.darkGreyColor,
+                borderColor: AppColors.lightGreyColor,
+                fillColor: AppColors.whiteColor,
+                textFormHeight: 35,
+              ),
+
               /// Address
               TextFormFieldWidget(
                 textFormController: addressController,
@@ -175,10 +202,6 @@ class _AddBranchUIState extends State<AddBranchUI> {
                 hintText: AppLanguageKeys.addressDetailsKey,
                 textFormHeight: 35,
                 borderColor: AppColors.lightGreyColor,
-                validator: (value) =>
-                value == null || value.isEmpty
-                    ? AppLanguageKeys.enterYourData
-                    : null,
                 onChanged: (value) {
                   if (value.trim().isNotEmpty) {
                     context
@@ -224,43 +247,23 @@ class _AddBranchUIState extends State<AddBranchUI> {
                         return;
                       }
 
-                      /// ✅ EDIT
-                      if (editingId != null && branch != null) {
-                        final request = AddBranchRequest(
-                          branchId: branch.branchId,
-                          branchName: nameController.text,
-                          branchLatinName: latinController.text,
-                          address:
-                          "${locationState.latLng.latitude},${locationState.latLng.longitude}",
-                          addressText:
-                          addressTextController.text,
-                          addressLatinText:
-                          addressLatinController.text,
-                          isActive: branch.isActive ?? true,
-                        );
+                      final request = AddBranchRequest(
+                        branchId: editingId,
+                        branchName: nameController.text.trim(),
+                        branchLatinName: latinController.text.trim(),
+                        nationalAddress: nationalAddressController.text.trim(),
+                        latitude: locationState.latLng.latitude,
+                        longitude: locationState.latLng.longitude,
+                        addressText: addressTextController.text.trim(),
+                        addressLatinText: addressLatinController.text.trim(),
+                        isActive: branch?.isActive ?? true,
+                      );
 
-                        context
-                            .read<BranchCubit>()
-                            .updateBranch(request);
-                      }
-
-                      /// ✅ ADD
-                      else {
-                        final request = AddBranchRequest(
-                          branchName: nameController.text,
-                          branchLatinName: latinController.text,
-                          address:
-                          "${locationState.latLng.latitude},${locationState.latLng.longitude}",
-                          addressText:
-                          addressTextController.text,
-                          addressLatinText:
-                          addressLatinController.text,
-                          isActive: true,
-                        );
-
-                        context
-                            .read<BranchCubit>()
-                            .addBranch(request);
+                      final cubit = context.read<BranchCubit>();
+                      if (editingId == null) {
+                        cubit.addBranch(request);
+                      } else {
+                        cubit.updateBranch(request);
                       }
                     },
                     typeWidget: isLoading

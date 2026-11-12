@@ -32,14 +32,6 @@
   <title>San Employee System</title>
   <link rel="manifest" href="manifest.json">
   <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker.register('/firebase-messaging-sw.js', { scope: '/' }).catch(function (error) {
-          console.warn('Firebase Messaging Service Worker registration failed: ', error);
-        });
-      });
-    }
-
     window.showBrowserNotification = function(title, body, onClick) {
       const show = function() {
         try {

@@ -1,5 +1,6 @@
 import 'package:emp_system_sun/core/language/language.dart';
 import 'package:flutter/material.dart';
+import 'order_delivery_details.dart';
 import '../../../../../../../../../features/order_status_design/presentation/cubit/order_status_cubit/order_status_cubit.dart';
 import '../../../../../../../../../features/order_status_design/presentation/cubit/order_status_cubit/order_status_state.dart';
 import '../../../../../../../../../features/order_status_design/presentation/custom_widget/order_status_actions_widget.dart';
@@ -95,6 +96,7 @@ class ListOrderDetails extends StatelessWidget {
                       ViewListDataOrder(
                         orderDetailsModel: orderDetails,
                       ),
+                      OrderDeliveryDetails(order: orderDetails),
                       if (!isMobile)
                         Row(
                           spacing: 10,

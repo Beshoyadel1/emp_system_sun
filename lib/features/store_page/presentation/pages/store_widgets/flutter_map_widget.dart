@@ -6,10 +6,16 @@ import '../../../../../core/theming/colors.dart';
 
 class FlutterMapWidget extends StatelessWidget {
   const FlutterMapWidget(
-      {super.key, required this.centerLocation, required this.mapController});
+      {
+    super.key,
+    required this.centerLocation,
+    required this.mapController,
+    this.onLocationSelected,
+  });
 
   final LatLng centerLocation;
   final MapController mapController;
+  final ValueChanged<LatLng>? onLocationSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +24,7 @@ class FlutterMapWidget extends StatelessWidget {
       options: MapOptions(
         center: centerLocation,
         zoom: 13.0,
+        onTap: (_, point) => onLocationSelected?.call(point),
       ),
       children: [
         TileLayer(

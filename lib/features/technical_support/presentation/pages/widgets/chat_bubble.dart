@@ -15,7 +15,7 @@ class ChatBubble extends StatelessWidget {
 
   String _formatTime(DateTime? date) {
     if (date == null) return '';
-    return DateFormat('HH:mm').format(date);
+    return DateFormat('HH:mm').format(date.toLocal());
   }
 
   @override

@@ -34,8 +34,7 @@ class EmployeeChatCubit extends Cubit<EmployeeChatState> {
   int get currentUserId => _cachedUserId;
   int get currentUserType => _cachedUserType;
   int get selectionVersion => _selectionVersion;
-  int get totalUnreadCount =>
-      state.calculateTotalUnread(currentUserId, currentUserType);
+  int get totalUnreadCount => state.totalUnreadCount;
   String _chatKey(int? id, int? type) => '$id:$type';
   String _key(GetAllMessagesModel chat) =>
       _chatKey(chat.touser, chat.tousertype);
@@ -425,6 +424,7 @@ class EmployeeChatCubit extends Cubit<EmployeeChatState> {
 
   void selectChat(GetAllMessagesModel chat) {
     if (isClosed) return;
+    chat = _find(_key(chat)) ?? chat;
     if (_support(chat) &&
         (chat.isClosed || _deletedSupportKeys.contains(_key(chat)))) {
       return;
@@ -614,12 +614,17 @@ class EmployeeChatCubit extends Cubit<EmployeeChatState> {
   }
 
   ChatMessageModel? _sentMessage(dynamic raw, ChatMessageModel outgoing) {
-    // Only consume a complete response in the existing message schema.
-    // A success flag or unrelated ID is not a message.
     final root = NotificationPayload.object(raw);
+    final success =
+        NotificationPayload.boolean(NotificationPayload.value(root, 'success'));
+    if (success == false) {
+      throw Exception(NotificationPayload.value(root, 'message') ??
+          'Failed to send message');
+    }
+    final responseData = NotificationPayload.value(root, 'data');
     for (final data in [
       root,
-      NotificationPayload.object(NotificationPayload.value(root, 'data'))
+      NotificationPayload.object(responseData),
     ]) {
       final fields = NotificationPayload(data);
       if ((fields.integer('id') ?? 0) <= 0 ||
@@ -639,6 +644,11 @@ class EmployeeChatCubit extends Cubit<EmployeeChatState> {
           (message.harageId ?? 0) == (outgoing.harageId ?? 0)) {
         return message.copyWith(localId: outgoing.localId, viewed: true);
       }
+    }
+    // SendMessage can confirm the send with a timestamp and no message ID.
+    if (responseData is String) {
+      final date = DateTime.tryParse(responseData);
+      if (date != null) return outgoing.copyWith(date: date);
     }
     return null;
   }
@@ -784,10 +794,11 @@ class EmployeeChatCubit extends Cubit<EmployeeChatState> {
         message.copyWith(viewed: selected || fromMe || message.viewed);
     _replaceChat(_copyChat(chat,
         messages: _mergeMessages(chat.messages ?? [], [incoming]),
-        unread: selected || fromMe
+        unread: selected
             ? 0
-            : chat.unViewedMessagesCount + (duplicate ? 0 : 1)));
-    if (selected && !fromMe && !duplicate) {
+            : chat.unViewedMessagesCount +
+                (incoming.viewed || duplicate ? 0 : 1)));
+    if (selected && !fromMe && !message.viewed && !duplicate) {
       unawaited(markChatViewed(chat.touser!, chat.tousertype!));
     }
   }

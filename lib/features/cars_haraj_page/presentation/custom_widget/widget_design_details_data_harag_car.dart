@@ -1,5 +1,6 @@
 import 'package:emp_system_sun/core/theming/app_currency.dart';
 import 'package:flutter/material.dart';
+import 'package:emp_system_sun/core/language/language.dart';
 import '../../../../../../../features/cars_haraj_page/presentation/custom_widget/text_with_harage_container_status.dart';
 import '../../../../../../../core/api/dio_function/api_constants.dart';
 import '../../../../../../../core/language/language_constant.dart';
@@ -99,7 +100,7 @@ class WidgetDesignDetailsDataHaragCar extends StatelessWidget {
 
                   TextWithHarageContainerStatus(
                     text: AppLanguageKeys.orderStatus,
-                    status:harage.currentStatus?.status,
+                    status: harage.currentStatus?.status ?? harage.status,
                   ),
                 ],
               ),
@@ -122,6 +123,29 @@ class WidgetDesignDetailsDataHaragCar extends StatelessWidget {
               ),
             if (harage.user != null)
               _buildUser(context),
+            if (harage.statusHistory.isNotEmpty)
+              SizedBox(
+                width: double.infinity,
+                child: ExpansionTile(
+                  title: Text(AppLocalizations.of(context).translate(
+                    AppLanguageKeys.harageStatusHistory,
+                  )),
+                  children: [
+                    for (final entry in harage.statusHistory)
+                      ListTile(
+                        title: TextWithHarageContainerStatus(
+                          text: AppLanguageKeys.orderStatus,
+                          status: entry.status,
+                        ),
+                        subtitle: Text([
+                          if (entry.date case final String date)
+                            _formatStatusDate(context, date),
+                          if (entry.notes?.isNotEmpty == true) entry.notes!,
+                        ].join('\n')),
+                      ),
+                  ],
+                ),
+              ),
           ],
         ),
       ),
@@ -287,6 +311,13 @@ class WidgetDesignDetailsDataHaragCar extends StatelessWidget {
       ],
     );
   }
+  String _formatStatusDate(BuildContext context, String value) {
+    final date = DateTime.tryParse(value);
+    return date == null
+        ? value
+        : MaterialLocalizations.of(context).formatMediumDate(date.toLocal());
+  }
+
   String _getFuelTypeName(dynamic fuelType) {
     if (fuelType == null) {
       return '-';

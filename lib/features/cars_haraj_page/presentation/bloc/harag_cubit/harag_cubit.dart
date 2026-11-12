@@ -540,10 +540,6 @@ class HaragCubit extends Cubit<HaragState> {
       final now =
       DateTime.now();
 
-      final utcDate =
-      now.toUtc()
-          .toIso8601String();
-
       // ========================================================
       // REQUEST
       // ========================================================
@@ -556,9 +552,6 @@ class HaragCubit extends Cubit<HaragState> {
 
       final request =
       SendMessageRequest(
-        id:
-        0,
-
         fromuser:
         fromUser,
 
@@ -567,15 +560,6 @@ class HaragCubit extends Cubit<HaragState> {
 
         message:
         text,
-
-        date:
-        utcDate,
-
-        viewed:
-        true,
-
-        isclosed:
-        true,
 
         harageid:
         harageId,
@@ -1102,9 +1086,14 @@ class HaragCubit extends Cubit<HaragState> {
   // GET USER HARAGES
   // ============================================================
 
+  bool? _includeSuspendedHarages;
+  bool get includeSuspendedHarages => _includeSuspendedHarages ?? false;
+
   Future<void> getUserHarages({
     required int currentPage,
+    bool? includeSuspended,
   }) async {
+    _includeSuspendedHarages = includeSuspended ?? _includeSuspendedHarages;
     final previousPageCount =
         state.pageCount;
 
@@ -1144,6 +1133,7 @@ class HaragCubit extends Cubit<HaragState> {
           user.type ?? 0,
           pageNumber:
           currentPage,
+          includeSuspended: _includeSuspendedHarages,
         ),
       );
 

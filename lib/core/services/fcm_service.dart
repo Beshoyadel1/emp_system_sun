@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:emp_system_sun/core/api/dio_function/api_constants.dart';
+import 'package:emp_system_sun/core/api/dio_function/dio_controller.dart';
 import 'package:emp_system_sun/core/services/browser_notification.dart';
 import 'package:emp_system_sun/core/setup_git_it.dart';
 import 'package:emp_system_sun/core/theming/auth_local_storage.dart';
@@ -19,18 +20,22 @@ import 'package:emp_system_sun/features/notifications/presentation/services/noti
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  if (kDebugMode) {
+    debugPrint('FCM background: ${message.toMap()}', wrapWidth: 120);
+  }
   if (Firebase.apps.isEmpty) {
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
   }
-  debugPrint('FCM background: ${message.messageId}');
 }
 
 class FcmService {
   FcmService._();
   static final FcmService instance = FcmService._();
-  String? _fcmToken;
-  String? get fcmToken => _fcmToken;
+  ({int version, String value})? _deviceToken;
+  String? get fcmToken => _deviceToken?.value;
+  String _submittedToken = '';
+  Future<void> _tokenUpdates = Future.value();
   bool _isInitialized = false, _uiReady = false;
   bool get isInitialized => _isInitialized;
   int _userId = 0, _userType = 0, _session = 0;
@@ -49,26 +54,35 @@ class FcmService {
         TargetPlatform.macOS,
       }.contains(defaultTargetPlatform);
 
-  /// Login registers the current token and topics on the backend.
-  Future<void> init({required int userId, required int userType}) async {
+  Future<void> init({
+    required int userId,
+    required int userType,
+    String loginToken = '',
+  }) async {
     final version = AuthSession.version;
     if (_userId != userId || _userType != userType || _authVersion != version) {
-      final deviceToken = _fcmToken;
+      final deviceToken = _deviceToken;
       await disconnect();
       if (!AuthSession.isCurrent(version)) return;
-      _fcmToken = deviceToken;
+      if (deviceToken?.version == version) _deviceToken ??= deviceToken;
       _userId = userId;
       _userType = userType;
+      _submittedToken = loginToken.trim();
     }
     _authVersion = version;
     getIt<EmployeeChatCubit>().configureUser(userId, userType);
     if (!isSupported || _isInitialized) return;
+    _syncDeviceToken(version);
     _isInitialized = true;
     final session = _session;
     try {
       final messaging = FirebaseMessaging.instance;
       _stopWebClicks = listenForNotificationClicks((raw) {
         if (session != _session) return;
+        if (kDebugMode) {
+          final source = raw['sunOpened'] == false ? 'background' : 'opened';
+          debugPrint('FCM web $source: $raw', wrapWidth: 120);
+        }
         final notification = NotificationPayload.object(raw['notification']);
         _handlePayload(
             NotificationPayload(
@@ -84,10 +98,7 @@ class FcmService {
             opened: raw['sunOpened'] != false);
       });
       _tokenSubscription = messaging.onTokenRefresh.listen((token) {
-        if (session != _session || !AuthSession.isCurrent(version)) return;
-        _fcmToken = token;
-        // Submit the latest device token at the next login.
-        unawaited(AuthLocalStorage.saveFcmToken(token, version: version));
+        if (session == _session) _recordDeviceToken(token, version);
       });
       _messageSubscription = FirebaseMessaging.onMessage.listen((message) {
         if (session == _session) handleRemoteMessage(message, opened: false);
@@ -106,46 +117,138 @@ class FcmService {
     }
   }
 
-  Future<String>? _pendingGetToken;
+  ({int version, Future<String> token})? _pendingGetToken;
   Future<String> getToken({String? vapidKey}) async {
-    if (!isSupported) return '';
-    if (_pendingGetToken != null) return _pendingGetToken!;
-    final pending = _getDeviceToken(vapidKey: vapidKey);
-    _pendingGetToken = pending;
+    if (!isSupported) {
+      _traceToken('unsupported-platform: ${defaultTargetPlatform.name}');
+      return '';
+    }
+    final version = AuthSession.version;
+    final current = _pendingGetToken;
+    if (current != null && current.version == version) return current.token;
+    final pending = _getDeviceToken(version, vapidKey: vapidKey);
+    _pendingGetToken = (version: version, token: pending);
     try {
       return await pending;
     } finally {
-      if (identical(_pendingGetToken, pending)) _pendingGetToken = null;
+      if (identical(_pendingGetToken?.token, pending)) _pendingGetToken = null;
     }
   }
 
-  Future<String> _getDeviceToken({String? vapidKey}) async {
-    final version = AuthSession.version;
+  Future<String> _getDeviceToken(int version, {String? vapidKey}) async {
+    var stage = 'permission';
     try {
       final messaging = FirebaseMessaging.instance;
       final settings = await messaging.requestPermission(
           alert: true, badge: true, sound: true);
-      if (settings.authorizationStatus == AuthorizationStatus.denied) return '';
-      final key = vapidKey?.trim() ?? FcmConfig.webVapidKey;
-      final token = await messaging
-          .getToken(
-            vapidKey: kIsWeb && key.isNotEmpty ? key : null,
-          )
-          .timeout(const Duration(seconds: 10), onTimeout: () => null);
-      if (token?.trim().isNotEmpty == true) {
-        if (!AuthSession.isCurrent(version)) return '';
-        _fcmToken = token!.trim();
-        await AuthLocalStorage.saveFcmToken(_fcmToken!, version: version);
-        return AuthSession.isCurrent(version) ? token.trim() : '';
+      if (!AuthSession.isCurrent(version)) return '';
+      final status = settings.authorizationStatus;
+      _traceToken('permission: ${status.name}');
+      if (status != AuthorizationStatus.authorized &&
+          status != AuthorizationStatus.provisional) {
+        return '';
       }
+
+      if (kIsWeb) {
+        stage = 'worker-activation';
+        await prepareFcmWorker().timeout(const Duration(seconds: 15));
+        if (!AuthSession.isCurrent(version)) return '';
+        _traceToken('worker-ready');
+      }
+
+      stage = 'get-token';
+      final key = (vapidKey ?? FcmConfig.webVapidKey).trim();
+      return await messaging
+          .getToken(vapidKey: kIsWeb && key.isNotEmpty ? key : null)
+          .then((token) {
+        if (!AuthSession.isCurrent(version)) return '';
+        final current = _deviceToken;
+        if (current != null && current.version == version) return current.value;
+        // This still runs if the login deadline has already expired.
+        final value = _recordDeviceToken(token, version);
+        _traceToken(value.isEmpty ? 'get-token-empty' : 'get-token-ready');
+        return value;
+      }).timeout(const Duration(seconds: 40));
+    } on TimeoutException {
+      _traceToken('$stage-timeout');
+    } on FirebaseException catch (e) {
+      _traceToken('$stage-failed: ${e.code}');
     } catch (e) {
-      debugPrint('FCM token unavailable: $e');
+      _traceToken('$stage-failed: ${e.runtimeType}');
     }
-    // Never submit a fabricated token or one belonging to a different device.
     return '';
   }
 
+  String _recordDeviceToken(String? token, int version) {
+    final value = token?.trim() ?? '';
+    if (value.isEmpty || !AuthSession.isCurrent(version)) return '';
+    final deviceToken = (version: version, value: value);
+    if (_deviceToken != deviceToken) {
+      _deviceToken = deviceToken;
+      unawaited(_saveDeviceToken(value, version));
+    }
+    _syncDeviceToken(version);
+    return value;
+  }
+
+  void _syncDeviceToken(int version) {
+    final deviceToken = _deviceToken;
+    if (_authVersion != version ||
+        _userId <= 0 ||
+        _userType <= 0 ||
+        deviceToken == null ||
+        deviceToken.version != version) {
+      return;
+    }
+    final session = _session;
+    final userId = _userId;
+    final userType = _userType;
+    final value = deviceToken.value;
+    _tokenUpdates = _tokenUpdates.then((_) async {
+      if (!AuthSession.isCurrent(version) ||
+          session != _session ||
+          _deviceToken != deviceToken ||
+          _submittedToken == value) {
+        return;
+      }
+      try {
+        final response = await Network.postDataWithBodyAndParams(
+          null,
+          {'userId': userId, 'userType': userType, 'fcmToken': value},
+          ApiLink.updateFcmToken,
+        );
+        final body = response.data;
+        if (body is Map && (body['success'] ?? body['status']) == false) {
+          _traceToken('token-update-rejected');
+          return;
+        }
+        if (AuthSession.isCurrent(version) && session == _session) {
+          _submittedToken = value;
+          _traceToken('token-update-sent');
+        }
+      } catch (e) {
+        _traceToken('token-update-failed: ${e.runtimeType}');
+      }
+    });
+  }
+
+  Future<void> _saveDeviceToken(String token, int version) async {
+    try {
+      await AuthLocalStorage.saveFcmToken(token, version: version);
+    } catch (e) {
+      _traceToken('token-storage-failed: ${e.runtimeType}');
+    }
+  }
+
+  void _traceToken(String message) {
+    if (kDebugMode) debugPrint('[FCM] $message');
+  }
+
   void handleRemoteMessage(RemoteMessage message, {bool opened = false}) {
+    if (kDebugMode) {
+      final source = opened ? 'opened' : 'foreground';
+      debugPrint('FCM $source: ${message.toMap()}', wrapWidth: 120);
+    }
     _handlePayload(
         NotificationPayload(
           message.data,
@@ -267,7 +370,8 @@ class FcmService {
     _userId = 0;
     _userType = 0;
     _uiReady = false;
-    _fcmToken = null;
+    _deviceToken = null;
+    _submittedToken = '';
     _pendingGetToken = null;
     _opened.clear();
     _pendingDisplay.clear();

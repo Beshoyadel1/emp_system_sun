@@ -176,7 +176,7 @@ class GetProviderInternalOrderCubit
         final matching = allProviderOrders
             .where((order) => _matches(order) == true)
             .toList();
-        final pageSize = response.data.isEmpty ? 10 : response.data.length;
+        const pageSize = GetProviderOrdersRequest.pageSize;
         visibleTotal = matching.length;
         visiblePageCount =
             (matching.length / pageSize).ceil().clamp(1, 1 << 30);

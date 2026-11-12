@@ -4,7 +4,9 @@ class AddBranchRequest {
   final int? branchId;
   final String? branchName;
   final String? branchLatinName;
-  final String? address;
+  final String? nationalAddress;
+  final double? latitude;
+  final double? longitude;
   final String? addressText;
   final String? addressLatinText;
   final bool? isActive;
@@ -13,7 +15,9 @@ class AddBranchRequest {
     this.branchId,
      this.branchName,
      this.branchLatinName,
-     this.address,
+     this.nationalAddress,
+    this.latitude,
+    this.longitude,
      this.addressText,
      this.addressLatinText,
     this.isActive = true,
@@ -22,11 +26,13 @@ class AddBranchRequest {
   Map<String, dynamic> toJson(int providerId) {
     return {
       if (branchId != null) "branchid": branchId,
-      "branchname": branchName,
-      "branchlatinname": branchLatinName,
-      "address": address,
-      "addresstext": addressText,
-      "addresslatintext": addressLatinText,
+      if (branchName != null) "branchname": branchName,
+      if (branchLatinName != null) "branchlatinname": branchLatinName,
+      if (nationalAddress != null) "nationaladdress": nationalAddress,
+      if (latitude != null) "lat": latitude,
+      if (longitude != null) "long": longitude,
+      if (addressText != null) "addresstext": addressText,
+      if (addressLatinText != null) "addresslatintext": addressLatinText,
       "provid": providerId,
       "isactive": isActive,
     };

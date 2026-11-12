@@ -25,7 +25,7 @@ Future<CreateUserResult> createUserFunction({
   try {
 
     String jsonString = json.encode(
-      createUserRequest.toJson(),
+      createUserRequest.toApiJson(isUpdate: false),
     );
 
     final response = await Network.postDataWithBody(
