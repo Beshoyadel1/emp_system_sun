@@ -37,7 +37,6 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_bloc:
   dio:
-  pretty_dio_logger: ^1.4.0
   flutter_localizations:
     sdk: flutter
   shared_preferences:

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import '../../../../../../features/notifications/data/model/update_order_status_model_notification/update_order_status_model_notification.dart';
 
 class UpdateOrderStatusParser {
@@ -28,9 +27,7 @@ class UpdateOrderStatusParser {
       }
 
       return UpdateOrderStatusModelNotification.fromJson(root);
-    } catch (e, s) {
-      debugPrint("UpdateOrderStatusParser Error => $e");
-      debugPrintStack(stackTrace: s);
+    } catch (_) {
       return null;
     }
   }

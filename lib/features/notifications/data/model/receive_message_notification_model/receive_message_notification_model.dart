@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import '../notification_payload.dart';
 
 import '../../../../../../core/theming/auth_local_storage.dart';
@@ -80,10 +79,6 @@ class ReceiveMessageNotificationModel {
     // ========================================================
 
     if (userType != null && userType != currentUser.type) {
-      debugPrint(
-        '❌ UserType Not Match',
-      );
-
       return false;
     }
 

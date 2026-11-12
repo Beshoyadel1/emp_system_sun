@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 class RootParser {
   const RootParser();
 
@@ -11,7 +9,6 @@ class RootParser {
     final first = arguments.first;
 
     if (first is! Map) {
-      debugPrint("SignalR: Invalid arguments");
       return null;
     }
 

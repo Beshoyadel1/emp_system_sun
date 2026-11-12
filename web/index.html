@@ -41,9 +41,7 @@
             window.focus();
             if (onClick) onClick();
           };
-        } catch (e) {
-          console.warn('Notification display failed: ', e);
-        }
+        } catch {}
       };
       if (!('Notification' in window)) return;
       if (Notification.permission === 'granted') {

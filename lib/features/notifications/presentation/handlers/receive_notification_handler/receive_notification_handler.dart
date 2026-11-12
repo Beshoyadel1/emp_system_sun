@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import '../../../../../../main.dart';
 import '../../../../../../features/notifications/data/datasource/parsers/receive_notification_parser/receive_notification_parser.dart';
 import '../../../../../../features/notifications/domain/repository/notification_repository/notification_repository.dart';
@@ -66,14 +65,8 @@ class ReceiveNotificationHandler {
           _navigationService.openDashboardOrders();
         },
       );
-    } catch (e, s) {
-      debugPrint(
-        "ReceiveNotification Error => $e",
-      );
-
-      debugPrintStack(
-        stackTrace: s,
-      );
+    } catch (_) {
+      // Ignore a notification that could not be handled.
     }
   }
 }

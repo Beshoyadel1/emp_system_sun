@@ -1,5 +1,4 @@
 import 'package:emp_system_sun/core/language/language_constant.dart';
-import 'package:flutter/foundation.dart';
 import '../../../../../../core/cubit/app_cubit/app_cubit.dart';
 import '../../../../../../core/utilies/map_of_all_app.dart';
 import '../../../../../../main.dart';
@@ -69,9 +68,8 @@ class ReceiveMessageHandler {
           _navigationService.openChat();
         },
       );
-    } catch (e, s) {
-      debugPrint("ReceiveMessage Error => $e");
-      debugPrintStack(stackTrace: s);
+    } catch (_) {
+      // Ignore a notification that could not be handled.
     }
   }
 }

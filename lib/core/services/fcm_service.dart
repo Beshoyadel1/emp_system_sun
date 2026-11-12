@@ -20,9 +20,6 @@ import 'package:emp_system_sun/features/notifications/presentation/services/noti
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  if (kDebugMode) {
-    debugPrint('FCM background: ${message.toMap()}', wrapWidth: 120);
-  }
   if (Firebase.apps.isEmpty) {
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
@@ -79,10 +76,6 @@ class FcmService {
       final messaging = FirebaseMessaging.instance;
       _stopWebClicks = listenForNotificationClicks((raw) {
         if (session != _session) return;
-        if (kDebugMode) {
-          final source = raw['sunOpened'] == false ? 'background' : 'opened';
-          debugPrint('FCM web $source: $raw', wrapWidth: 120);
-        }
         final notification = NotificationPayload.object(raw['notification']);
         _handlePayload(
             NotificationPayload(
@@ -111,18 +104,14 @@ class FcmService {
       if (session == _session && initial != null) {
         handleRemoteMessage(initial, opened: true);
       }
-    } catch (e) {
-      debugPrint('FCM init: $e');
+    } catch (_) {
       if (session == _session) await _cancelListeners();
     }
   }
 
   ({int version, Future<String> token})? _pendingGetToken;
   Future<String> getToken({String? vapidKey}) async {
-    if (!isSupported) {
-      _traceToken('unsupported-platform: ${defaultTargetPlatform.name}');
-      return '';
-    }
+    if (!isSupported) return '';
     final version = AuthSession.version;
     final current = _pendingGetToken;
     if (current != null && current.version == version) return current.token;
@@ -136,27 +125,22 @@ class FcmService {
   }
 
   Future<String> _getDeviceToken(int version, {String? vapidKey}) async {
-    var stage = 'permission';
     try {
       final messaging = FirebaseMessaging.instance;
       final settings = await messaging.requestPermission(
           alert: true, badge: true, sound: true);
       if (!AuthSession.isCurrent(version)) return '';
       final status = settings.authorizationStatus;
-      _traceToken('permission: ${status.name}');
       if (status != AuthorizationStatus.authorized &&
           status != AuthorizationStatus.provisional) {
         return '';
       }
 
       if (kIsWeb) {
-        stage = 'worker-activation';
         await prepareFcmWorker().timeout(const Duration(seconds: 15));
         if (!AuthSession.isCurrent(version)) return '';
-        _traceToken('worker-ready');
       }
 
-      stage = 'get-token';
       final key = (vapidKey ?? FcmConfig.webVapidKey).trim();
       return await messaging
           .getToken(vapidKey: kIsWeb && key.isNotEmpty ? key : null)
@@ -165,18 +149,11 @@ class FcmService {
         final current = _deviceToken;
         if (current != null && current.version == version) return current.value;
         // This still runs if the login deadline has already expired.
-        final value = _recordDeviceToken(token, version);
-        _traceToken(value.isEmpty ? 'get-token-empty' : 'get-token-ready');
-        return value;
+        return _recordDeviceToken(token, version);
       }).timeout(const Duration(seconds: 40));
-    } on TimeoutException {
-      _traceToken('$stage-timeout');
-    } on FirebaseException catch (e) {
-      _traceToken('$stage-failed: ${e.code}');
-    } catch (e) {
-      _traceToken('$stage-failed: ${e.runtimeType}');
+    } catch (_) {
+      return '';
     }
-    return '';
   }
 
   String _recordDeviceToken(String? token, int version) {
@@ -219,15 +196,13 @@ class FcmService {
         );
         final body = response.data;
         if (body is Map && (body['success'] ?? body['status']) == false) {
-          _traceToken('token-update-rejected');
           return;
         }
         if (AuthSession.isCurrent(version) && session == _session) {
           _submittedToken = value;
-          _traceToken('token-update-sent');
         }
-      } catch (e) {
-        _traceToken('token-update-failed: ${e.runtimeType}');
+      } catch (_) {
+        // A failed update must leave the queue available for the next token.
       }
     });
   }
@@ -235,20 +210,12 @@ class FcmService {
   Future<void> _saveDeviceToken(String token, int version) async {
     try {
       await AuthLocalStorage.saveFcmToken(token, version: version);
-    } catch (e) {
-      _traceToken('token-storage-failed: ${e.runtimeType}');
+    } catch (_) {
+      // The token can still be sent to the server if local storage fails.
     }
-  }
-
-  void _traceToken(String message) {
-    if (kDebugMode) debugPrint('[FCM] $message');
   }
 
   void handleRemoteMessage(RemoteMessage message, {bool opened = false}) {
-    if (kDebugMode) {
-      final source = opened ? 'opened' : 'foreground';
-      debugPrint('FCM $source: ${message.toMap()}', wrapWidth: 120);
-    }
     _handlePayload(
         NotificationPayload(
           message.data,
@@ -287,8 +254,8 @@ class FcmService {
         return;
       }
       _display(payload, opened: opened);
-    } catch (e, stack) {
-      debugPrint('FCM processing: $e\n$stack');
+    } catch (_) {
+      // Ignore a notification that could not be processed.
     }
   }
 
@@ -313,15 +280,11 @@ class FcmService {
     if (opened) {
       unawaited(() async {
         await module.dialogService.dismiss();
-        await module.alertService.stopChat().catchError((Object error) {
-          debugPrint('Chat sound: $error');
-        });
+        await module.alertService.stopChat().catchError((Object _) {});
         if (session != _session || !_uiReady) return;
         module.navigationService.openPayload(payload);
       }()
-          .catchError((Object error) {
-        debugPrint('Notification click: $error');
-      }));
+          .catchError((Object _) {}));
       return;
     }
     final alert = module.alertService
@@ -329,9 +292,7 @@ class FcmService {
     if (alert == NotificationAlert.silent) return;
     if (alert == NotificationAlert.chat ||
         alert == NotificationAlert.soundOnly) {
-      unawaited(module.alertService.playChat().catchError((Object error) {
-        debugPrint('Chat sound: $error');
-      }));
+      unawaited(module.alertService.playChat().catchError((Object _) {}));
       return;
     }
     final title = payload.title.isEmpty ? 'إشعار جديد' : payload.title;
@@ -340,17 +301,15 @@ class FcmService {
     });
     unawaited(module.dialogService
         .show(
-      title: title,
-      subtitle: payload.body,
-      onView: () async {
-        if (session == _session && _uiReady) {
-          module.navigationService.openPayload(payload);
-        }
-      },
-    )
-        .catchError((Object error) {
-      debugPrint('Notification display: $error');
-    }));
+          title: title,
+          subtitle: payload.body,
+          onView: () async {
+            if (session == _session && _uiReady) {
+              module.navigationService.openPayload(payload);
+            }
+          },
+        )
+        .catchError((Object _) {}));
   }
 
   Future<void> _cancelListeners() async {
@@ -383,9 +342,7 @@ class FcmService {
     await NotificationModule.instance.dialogService.dismiss();
     await NotificationModule.instance.alertService
         .stopChat()
-        .catchError((Object error) {
-      debugPrint('Chat sound: $error');
-    });
+        .catchError((Object _) {});
     await _cancelListeners();
     // Keep the device registration; login binds it to the next account.
   }

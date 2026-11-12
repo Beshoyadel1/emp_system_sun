@@ -16,8 +16,8 @@ class NotificationDialogService {
   Future<void> _stop() async {
     try {
       await _audio.stop();
-    } catch (error) {
-      debugPrint('Notification sound: $error');
+    } catch (_) {
+      // A sound failure must not block dismissal.
     }
   }
 
@@ -39,9 +39,7 @@ class NotificationDialogService {
     final generation = _generation;
     final pending =
         _tail.then((_) => _present(generation, title, subtitle, onView));
-    _tail = pending.catchError((Object error) {
-      debugPrint('Notification popup: $error');
-    });
+    _tail = pending.catchError((Object _) {});
     return pending;
   }
 
@@ -54,8 +52,8 @@ class NotificationDialogService {
     try {
       try {
         await _audio.play();
-      } catch (error) {
-        debugPrint('Notification sound: $error');
+      } catch (_) {
+        // Display the notification even when its sound fails.
       }
       if (generation != _generation || !context.mounted) return;
       late final DialogRoute<void> route;

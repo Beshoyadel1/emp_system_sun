@@ -32,8 +32,8 @@ void main() async {
         FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
       }
     }
-  } catch (e) {
-    debugPrint("Firebase init note: $e");
+  } catch (_) {
+    // Allow startup to continue when Firebase is unavailable.
   }
 
   setupGetIt();

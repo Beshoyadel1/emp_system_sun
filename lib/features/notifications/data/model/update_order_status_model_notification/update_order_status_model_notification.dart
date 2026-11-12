@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import '../../../../../../core/theming/auth_local_storage.dart';
 import '../../../../../../features/notifications/data/model/new_order_notifications_model/new_order_notifications_model.dart';
-import 'package:flutter/foundation.dart';
 import '../../../../../../features/auth_page/data/datasource/login_datasource/login_repository.dart';
 
 class UpdateOrderStatusModelNotification {
@@ -35,18 +33,15 @@ class UpdateOrderStatusModelNotification {
     }
 
     if (userType != currentUser.type) {
-      debugPrint("❌ UserType Not Match");
       return false;
     }
 
     if (userId != null &&
         userId != 0 &&
         userId != currentUser.userid) {
-      debugPrint("❌ UserId Not Match");
       return false;
     }
 
-    debugPrint("✅ UpdateOrderStatus Accepted");
     return true;
   }
 }

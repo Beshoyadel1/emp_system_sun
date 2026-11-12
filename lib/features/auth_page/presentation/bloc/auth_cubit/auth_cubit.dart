@@ -198,8 +198,8 @@ class AuthCubit extends Cubit<AuthState> {
         if (!_isCurrent(version)) return;
         try {
           await _connectNotifications(user, token);
-        } catch (e) {
-          debugPrint('FCM Init note: $e');
+        } catch (_) {
+          // Notification setup is optional for a successful login.
         }
       });
       if (!_isCurrent(version)) return;
@@ -253,8 +253,8 @@ class AuthCubit extends Cubit<AuthState> {
       }
       try {
         await _disconnectNotifications();
-      } catch (e) {
-        debugPrint('FCM disconnect: $e');
+      } catch (_) {
+        // Continue clearing the rest of the session.
       }
       final ctx = navigatorKey.currentContext;
       if (ctx != null && ctx.mounted) {

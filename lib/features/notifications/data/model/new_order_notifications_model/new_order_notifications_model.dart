@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import '../../../../../../core/theming/auth_local_storage.dart';
 
 class NewOrderNotificationsModel {
@@ -104,16 +103,13 @@ class OrderInfo {
 
 
     if (userType != currentUser.type) {
-      debugPrint("❌ UserType Not Match");
       return false;
     }
 
     if (userId != currentUser.userid&&userId != 0&&userId != null) {
-      debugPrint("❌ UserId Not Match");
       return false;
     }
 
-    debugPrint("✅ Order Accepted");
     return true;
   }
 }

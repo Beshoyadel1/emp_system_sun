@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:emp_system_sun/core/api/dio_function/api_constants.dart';
 import 'package:flutter/foundation.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import '../../constants.dart';
 
 class Network {
@@ -40,28 +39,10 @@ class Network {
             ...options.queryParameters,
             'lang': _languageCode,
           };
-          // PrettyDioLogger skips GET bodies, which Dio can send on native.
-          if (kDebugMode && options.method == 'GET' && options.data != null) {
-            debugPrint('GET ${options.uri}\nRequest body: ${options.data}',
-                wrapWidth: 120);
-          }
           handler.next(options);
         },
       ),
     );
-    if (kDebugMode) {
-      client.interceptors.add(
-        PrettyDioLogger(
-          requestHeader: true,
-          requestBody: true,
-          responseHeader: true,
-          responseBody: true,
-          error: true,
-          compact: false,
-          logPrint: (message) => debugPrint(message.toString()),
-        ),
-      );
-    }
     return client;
   }
 

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import '../../../../../../core/cubit/app_cubit/app_cubit.dart';
 import '../../../../../../core/utilies/map_of_all_app.dart';
 import '../../../../../../main.dart';
@@ -52,9 +51,8 @@ class NewOrderHandler {
           _navigationService.openDashboardOrders();
         },
       );
-    } catch (e, s) {
-      debugPrint("NewOrder Error => $e");
-      debugPrintStack(stackTrace: s);
+    } catch (_) {
+      // Ignore a notification that could not be handled.
     }
   }
 }
